@@ -6,6 +6,7 @@ export function Example() {
 	return (
 		<div className={css.container}>
 			<h1>I'm an example:)</h1>
+			<p>Hello world!</p>
 		</div>
 	);
 }
