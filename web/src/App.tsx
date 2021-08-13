@@ -1,12 +1,13 @@
-import React from "react";
-import { ExamplePage } from "./pages";
+import React from "react"
+import TodoForm from "./components/todo/TodoForm"
+import { ExamplePage } from "./pages"
 
 function App() {
 	return (
 		<div className="App">
-			<ExamplePage />
+			<TodoForm />
 		</div>
-	);
+	)
 }
 
-export default App;
+export default App
