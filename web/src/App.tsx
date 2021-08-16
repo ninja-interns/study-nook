@@ -1,13 +1,9 @@
 import React from "react"
-import TodoForm from "./components/todo/TodoForm"
 import { ExamplePage } from "./pages"
+import { TodoApp } from "./components"
 
 function App() {
-	return (
-		<div className="App">
-			<TodoForm />
-		</div>
-	)
+	return <div className="App"></div>
 }
 
 export default App
