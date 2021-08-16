@@ -1,5 +1,11 @@
 import React from "react";
-import { ExamplePage, HomePage } from "./pages";
+import { HomePage, RegistrationPage } from "./pages";
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Link
+} from "react-router-dom";
 
 function App() {
 	return (
