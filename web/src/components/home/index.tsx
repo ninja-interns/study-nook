@@ -16,7 +16,7 @@ export function Home() {
 
             <div className={css.buttonsClass}>
                 <div className={css.left}>
-                    <Button onClick={() => { history.push('/registration') }} variant="contained" color="primary">
+                    <Button onClick={() => { history.push('/signup') }} variant="contained" color="primary">
                         Create Account
                     </Button>
                 </div>
