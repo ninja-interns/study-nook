@@ -10,11 +10,11 @@ import TodoList from "./TodoList"
 import { TodoInterface } from "../../interfaces"
 
 // Import styles
-import "./../../styles/styles.css"
-//import { makeStyles } from "@material-ui/styles"
+import "./../../styles/styles.css" // this will change later
 
 // TodoListApp component
 export const TodoListApp = () => {
+	// The state is an array of objects. One object will represent an existing todo
 	const [todos, setTodos] = React.useState<TodoInterface[]>([])
 
 	// Creating new todo item

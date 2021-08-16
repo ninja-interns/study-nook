@@ -5,7 +5,6 @@ import { TodoListApp } from "./components/todo"
 function App() {
 	return (
 		<div className="App">
-			<ExamplePage />
 			<TodoListApp />
 		</div>
 	)
