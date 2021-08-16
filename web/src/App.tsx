@@ -1,12 +1,11 @@
 import React from "react";
-import { ExamplePage } from "./pages/examplePage";
+import Routes from "./Routes";
 
 function App() {
 	return (
-		<div className="App">
-			<ExamplePage />
+		<div>
+			<Routes />
 		</div>
 	);
 }
-
 export default App;
