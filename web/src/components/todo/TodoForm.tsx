@@ -1,19 +1,54 @@
-import React, { useState } from "react"
+// Import Dependencies
+import * as React from "react"
+import { v4 as uuidv4 } from "uuid"
 
-function TodoForm() {
-	//Declare a new state variable called "input"
-	const [input, setInput] = useState("")
+// Import interfaces
+import { TodoInterface, TodoFormInterface } from "../../interfaces"
 
-	//Stops the page from reloading when you click the Add todo button
-	const handleSubmit = (event: React.FormEvent) => {
-		event.preventDefault()
+// Todo form component
+const TodoForm = (props: TodoFormInterface) => {
+	// Create ref for form input
+	const inputRef = React.useRef<HTMLInputElement>(null)
+	// Create form state
+	const [formState, setFormState] = React.useState("")
+
+	// Handle todo input change
+	function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+		// Update form state with the text from input
+		setFormState(event.target.value)
+	}
+
+	// Handle 'Enter' in todo input
+	function handleInputEnter(event: React.KeyboardEvent) {
+		// Check for 'Enter' key
+		if (event.key === "Enter") {
+			// Prepare new todo object
+			const newTodo: TodoInterface = {
+				id: uuidv4(),
+				text: formState,
+				isCompleted: false,
+			}
+
+			// Create new todo item
+			props.handleTodoCreate(newTodo)
+
+			// Reset the input field
+			if (inputRef && inputRef.current) {
+				inputRef.current.value = ""
+			}
+		}
 	}
 
 	return (
-		<form className="todo-form" onSubmit={handleSubmit}>
-			<input type="text" placeholder="Add a to" value={input} name="text" className="todo-input" />
-			<button className="todo-button">Add todo</button>
-		</form>
+		<div className="todo-form">
+			<input
+				ref={inputRef}
+				type="text"
+				placeholder="Enter new todo"
+				onChange={(event) => handleInputChange(event)}
+				onKeyPress={(event) => handleInputEnter(event)}
+			/>
+		</div>
 	)
 }
 

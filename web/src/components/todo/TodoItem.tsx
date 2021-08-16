@@ -1,12 +1,12 @@
 // This component represents adding a new item to the todo list
 
-// Import dependencies
+// Import Dependencies
 import * as React from "react"
 
-// Import interfaces
+// Import Interfaces
 import { TodoItemInterface } from "../../interfaces"
 
-/* TodoItem component
+/* TodoItem Component
 	First div element handles the check/unchecking a todo item
 	Second div element renders the title/text of the todo
 	Third div element removes the todo item 
