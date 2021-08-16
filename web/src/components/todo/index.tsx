@@ -10,10 +10,11 @@ import TodoList from "./TodoList"
 import { TodoInterface } from "../../interfaces"
 
 // Import styles
-import "./styles/styles.css"
+import "./../../styles/styles.css"
+//import { makeStyles } from "@material-ui/styles"
 
 // TodoListApp component
-const TodoListApp = () => {
+export const TodoListApp = () => {
 	const [todos, setTodos] = React.useState<TodoInterface[]>([])
 
 	// Creating new todo item
@@ -86,5 +87,5 @@ const TodoListApp = () => {
 	)
 }
 
-//const rootElement = document.getElementById("root")
-//render(<TodoListApp />, rootElement)
+const rootElement = document.getElementById("root")
+render(<TodoListApp />, rootElement)
