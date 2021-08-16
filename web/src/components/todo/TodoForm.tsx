@@ -3,7 +3,7 @@ import * as React from "react"
 import { v4 as uuidv4 } from "uuid"
 
 // Import interfaces
-import { TodoInterface, TodoFormInterface } from "../../interfaces"
+import { TodoInterface, TodoFormInterface } from "./interfaces"
 
 /* Todo form component
     The useState hook stores the text passed into the input element, text for the todo title before you create new todo item

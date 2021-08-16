@@ -5,7 +5,7 @@ import * as React from "react"
 import TodoItem from "./TodoItem"
 
 // Import Interfaces
-import { TodoListInterface } from "../../interfaces"
+import { TodoListInterface } from "./interfaces"
 
 /* TodoList component
 	This component accepts handler methods for the TodoItem and an array of todo objects.

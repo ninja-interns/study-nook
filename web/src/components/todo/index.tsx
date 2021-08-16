@@ -7,7 +7,7 @@ import TodoForm from "./TodoForm"
 import TodoList from "./TodoList"
 
 // Import interfaces
-import { TodoInterface } from "../../interfaces"
+import { TodoInterface } from "./interfaces"
 
 // Import styles
 import "./../../styles/styles.css" // this will change later

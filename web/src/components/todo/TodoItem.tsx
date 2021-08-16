@@ -4,7 +4,7 @@
 import * as React from "react"
 
 // Import Interfaces
-import { TodoItemInterface } from "../../interfaces"
+import { TodoItemInterface } from "./interfaces"
 
 // TodoItem Component
 const TodoItem = (props: TodoItemInterface) => {
