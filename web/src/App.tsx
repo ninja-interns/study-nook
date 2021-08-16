@@ -1,18 +1,11 @@
 import React from "react";
-import { HomePage, RegistrationPage } from "./pages";
-import {
-	BrowserRouter as Router,
-	Switch,
-	Route,
-	Link
-} from "react-router-dom";
+import Routes from './Routes';
 
 function App() {
 	return (
-		<div className="App">
-			<HomePage />
+		<div>
+			<Routes />
 		</div>
 	);
 }
-
 export default App;
