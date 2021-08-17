@@ -9,13 +9,10 @@ import (
 	initializeDB "main.go/initializedb"
 )
 
-type User struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
+func LoginUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("HIT LOGIN")
+	var exists bool
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("HIT")
 	u := &User{}
 	err := json.NewDecoder(r.Body).Decode(u)
 	if err != nil {
@@ -30,10 +27,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sqlStatement := `
-	INSERT INTO users (email, password)
-	VALUES ($1, $2)`
+	SELECT * FROM users WHERE email = $1 AND password = $2`
 
-	_, err = initializeDB.Db.Exec(sqlStatement, u.Email, hashedPassword)
+	err = initializeDB.Db.QueryRow(sqlStatement, u.Email, hashedPassword).Scan()
 	if err != nil {
 		fmt.Println(err)
 	}

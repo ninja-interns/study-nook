@@ -20,6 +20,7 @@ func main() {
 	r := chi.NewRouter()
 
 	r.HandleFunc("/api/createUser", auth.CreateUser)
+	r.HandleFunc("/api/loginUser", auth.LoginUser)
 
 	http.ListenAndServe(":8080", r)
 }
