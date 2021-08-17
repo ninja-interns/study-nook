@@ -12,17 +12,15 @@ export function Home() {
         <div className={css.container}>
             <div className={css.verticalCenter}>
                 <h3 className={css.imageCss}>Cute Image Here</h3>
-            </div>
 
-            <div className={css.buttonsClass}>
-                <div className={css.left}>
+
+                <div className={css.buttonsClass}>
                     <Button onClick={() => { history.push('/signup') }} variant="contained" color="primary">
-                        Create Account
+                        Sign up
                     </Button>
-                </div>
 
-                <div className={css.right}>
-                    <Button variant="contained" color="primary">Login</Button>
+                    <Button variant="contained" color="primary">Sign in</Button>
+
                 </div>
             </div>
         </div>

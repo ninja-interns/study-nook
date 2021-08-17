@@ -6,7 +6,7 @@ import { InputAdornment, TextField, Input, FormControl, Button } from '@material
 export function Registration() {
     const css = useStyles();
 
-    // State objects for username and password
+    // State objects for username, password, email, name
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
