@@ -119,9 +119,14 @@ body {
 	border: 1px solid #1abc9c;
 }
 
+.todo-item-notUrgent:hover {
+	background: hsla(0, 76%, 42%, 0.25);
+	border: 1px solid rgba(188, 26, 26, 0.25);
+}
+
 .todo-item-urgent {
 	color: #fff;
-	background: #ff6e42;
+	background: #bb401b;
 	border: 1px solid #1abc9c;
 	font-size: xx-small;
 }

@@ -84,9 +84,12 @@ export const TodoListApp = () => {
 
 	return (
 		<div className="todo-list-app">
+			<h1>Todo List</h1>
+
 			{/* Todo form component */}
 			<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
 
+			{/* Todo list component */}
 			<TodoList
 				todos={todos}
 				handleTodoUpdate={handleTodoUpdate}
