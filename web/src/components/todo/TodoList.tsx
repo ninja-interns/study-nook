@@ -25,6 +25,7 @@ const TodoList = (props: TodoListInterface) => {
 							handleTodoUpdate={props.handleTodoUpdate}
 							handleTodoRemove={props.handleTodoRemove}
 							handleTodoComplete={props.handleTodoComplete}
+							handleTodoUrgent={props.handleTodoUrgent}
 							handleTodoBlur={props.handleTodoBlur}
 						/>
 					</li>

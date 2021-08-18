@@ -15,6 +15,11 @@ const TodoItem = (props: TodoItemInterface) => {
 				{props.todo.isCompleted ? <span className="todo-item-checked">✔</span> : <span className="todo-item-unchecked" />}
 			</div>
 
+			{/* This element handles making an item urgent/ not urgent */}
+			<div onClick={() => props.handleTodoUrgent(props.todo.id)}>
+				{props.todo.isUrgent ? <span className="todo-item-urgent">URGENT</span> : <span className="todo-item-notUrgent">URGENT</span>}
+			</div>
+
 			{/* This element renders the title/text of the todo */}
 			<div className="todo-item-input-wrapper">
 				<input

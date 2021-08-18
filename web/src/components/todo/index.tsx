@@ -62,6 +62,17 @@ export const TodoListApp = () => {
 		setTodos(newTodosState)
 	}
 
+	function handleTodoUrgent(id: string) {
+		// Copy current todos state
+		const newTodosState: TodoInterface[] = [...todos]
+
+		// Find the correct todo item and update its 'urgent' key
+		newTodosState.find((todo: TodoInterface) => todo.id === id)!.isUrgent = !newTodosState.find((todo: TodoInterface) => todo.id === id)!.isUrgent
+
+		// Update todos state
+		setTodos(newTodosState)
+	}
+
 	// Check if todo item has title
 	function handleTodoBlur(event: React.ChangeEvent<HTMLInputElement>) {
 		if (event.target.value.length === 0) {
@@ -81,6 +92,7 @@ export const TodoListApp = () => {
 				handleTodoUpdate={handleTodoUpdate}
 				handleTodoRemove={handleTodoRemove}
 				handleTodoComplete={handleTodoComplete}
+				handleTodoUrgent={handleTodoUrgent}
 				handleTodoBlur={handleTodoBlur}
 			/>
 		</div>

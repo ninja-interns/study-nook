@@ -30,6 +30,7 @@ const TodoForm = (props: TodoFormInterface) => {
 				id: uuidv4(),
 				text: formState,
 				isCompleted: false,
+				isUrgent: false,
 			}
 
 			// Create new todo item

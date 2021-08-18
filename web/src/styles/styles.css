@@ -75,6 +75,7 @@ body {
 .todo-form + .todo-list ul .todo-item {
 	border-top: 0;
 }
+
 .todo-item-input-wrapper {
 	flex-grow: 1;
 	padding: 0 16px;
@@ -100,8 +101,8 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 32px;
-	height: 32px;
+	width: 50px;
+	height: 50px;
 	border-radius: 50%;
 	border: 1px solid #ececec;
 	transition: 0.25s all ease-in-out;
@@ -116,6 +117,17 @@ body {
 	color: #fff;
 	background: #1abc9c;
 	border: 1px solid #1abc9c;
+}
+
+.todo-item-urgent {
+	color: #fff;
+	background: #ff6e42;
+	border: 1px solid #1abc9c;
+	font-size: xx-small;
+}
+
+.todo-item-notUrgent {
+	font-size: xx-small;
 }
 
 .item-remove {
