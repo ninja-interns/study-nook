@@ -14,6 +14,11 @@ type User struct {
 	Password string `json:"password"`
 }
 
+type LoginAttempt struct {
+	Message string `json:"message"`
+	IsValid bool   `json:"isValid"`
+}
+
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("HIT")
 	u := &User{}
@@ -29,6 +34,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
+
+	fmt.Println("created user", hashedPassword)
 	sqlStatement := `
 	INSERT INTO users (email, password)
 	VALUES ($1, $2)`
