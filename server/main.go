@@ -7,20 +7,26 @@
 package main
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/jackc/pgx/v4"
 	"localmodel.com/authentication"
 )
-
-var db *sql.DB
 
 func main() {
 
 	fmt.Println("Welcome to study nook! :)")
+
+	conn, err := initDB()
+
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	// Initializes Mux object that implements router interface
 	r := chi.NewMux()
@@ -31,7 +37,9 @@ func main() {
 	// Function handler to when a HTTP method is received
 	// This function will only called if the specified URL
 	// is request in the method.
-	r.HandleFunc("/api/signup", authentication.SignupHandler)
+	r.HandleFunc("/api/signup", func(output http.ResponseWriter, request *http.Request) {
+		authentication.SignupHandler(conn, output, request)
+	})
 
 	fmt.Println("Starting server at port 8080!")
 
@@ -40,28 +48,20 @@ func main() {
 
 }
 
-func initDB() {
+// Connecting to database
+func initDB() (*pgx.Conn, error) {
+
 	// Creating connection string
-	conn := "user=postgres dbname=postgres password=12345 host=localhost sslmode=disable"
+	connection_string := "postgres://dev:dev@localhost:5432/studynook_db?sslmode=disable"
 
-	var err error
+	conn, err := pgx.Connect(context.Background(), connection_string)
 
-	// Opening connection with database
-	db, err = sql.Open("postgres", conn)
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		return nil, err
 	}
 
-	// Pinging to check if connection is up
-	err = db.Ping()
-	if err != nil {
-		fmt.Println("Cannot ping!")
-		panic(err)
-	}
+	fmt.Println("Successfully connected to database")
 
-	fmt.Println("Successfully connected to database!")
-}
-
-type Controller struct {
-	*sql.DB
+	return conn, nil
 }

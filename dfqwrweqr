@@ -1,0 +1,82 @@
+[33mcommit 1b217b348f9cac0afa3109fbf82bc26c187d8eb6[m[33m ([m[1;36mHEAD -> [m[1;32mdocker-db-implementation[m[33m, [m[1;31morigin/signup[m[33m, [m[1;32msignup[m[33m)[m
+Author: Joao Soares <62054293+JoaoSoaresDev@users.noreply.github.com>
+Date:   Tue Aug 17 10:44:43 2021 +0800
+
+    Style changes.
+
+[33mcommit 2b7f43d14697462fe7f3334ef4f9e7b02ce9d7ef[m
+Author: Joao Soares <62054293+JoaoSoaresDev@users.noreply.github.com>
+Date:   Mon Aug 16 20:51:13 2021 +0800
+
+    Sign up half implemented. Missing database query
+
+[33mcommit aa36353d7476580e58a117cf7abb905d20963bff[m[33m ([m[1;31morigin/chrome-extension[m[33m, [m[1;32mchrome-extension[m[33m)[m
+Author: Joao Soares <62054293+JoaoSoaresDev@users.noreply.github.com>
+Date:   Mon Aug 16 14:08:47 2021 +0800
+
+    Router implemented
+
+[33mcommit 2ae539694d811c912becb598369890a84ef31dcd[m
+Author: Joao Soares <62054293+JoaoSoaresDev@users.noreply.github.com>
+Date:   Mon Aug 16 12:27:46 2021 +0800
+
+    Extension working
+
+[33mcommit d5d215298ed932d0e26248a11efa94dc3552b79e[m
+Author: Joao Soares <62054293+JoaoSoaresDev@users.noreply.github.com>
+Date:   Thu Aug 12 14:49:57 2021 +0800
+
+    Chrome extensions config added to manifest.json
+
+[33mcommit 9151639aa0fa9ef88708dbf6c98ce525ae2f480c[m[33m ([m[1;31morigin/developer[m[33m, [m[1;31morigin/admin[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mdeveloper[m[33m)[m
+Merge: ecd3e91 6848d38
+Author: Joao Soares <62054293+JoaoSoaresDev@users.noreply.github.com>
+Date:   Thu Aug 12 13:16:10 2021 +0800
+
+    Merge pull request #1 from ninja-interns/file-structure
+    
+    File structure
+
+[33mcommit 6848d383b6bf748e3c003cb52da4464ed5adba23[m
+Merge: 7c5eb5e ecd3e91
+Author: AlyssaThi <aruefenacht14@gmail.com>
+Date:   Thu Aug 12 13:09:37 2021 +0800
+
+    Merge branch 'developer' of github.com:ninja-interns/study-nook into file-structure
+
+[33mcommit 7c5eb5e04b026bcf0ceb10da167274c392672978[m
+Author: AlyssaThi <aruefenacht14@gmail.com>
+Date:   Thu Aug 12 13:06:14 2021 +0800
+
+    example frontend file structure
+
+[33mcommit ecd3e91131d22c4fca86e2bda8e2d92b0f0e93b3[m
+Author: Joao Soares <62054293+JoaoSoaresDev@users.noreply.github.com>
+Date:   Thu Aug 12 13:04:42 2021 +0800
+
+    Adding server folder
+
+[33mcommit 2c9c30ced1669d58f5e692a4889a85ee0dafe353[m
+Merge: 93f7ef4 c32da4e
+Author: oliramilo <olimarramilo@yahoo.com>
+Date:   Thu Aug 12 12:57:27 2021 +0800
+
+    Merge branch 'main' of https://github.com/ninja-interns/study-nook into developer
+
+[33mcommit c32da4ed66c77fe91a63687bc8c527878fffd361[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: oliramilo <olimarramilo@yahoo.com>
+Date:   Thu Aug 12 12:55:45 2021 +0800
+
+    added directory structuring to front end
+
+[33mcommit 93f7ef402860f44c58f4f973b1acdb3d4fdc86c5[m
+Author: Joao Soares <62054293+JoaoSoaresDev@users.noreply.github.com>
+Date:   Thu Aug 12 12:55:19 2021 +0800
+
+    Create README.md
+
+[33mcommit d70ac2dde5d833b2e72a480b8b4826339becd164[m
+Author: AlyssaThi <aruefenacht14@gmail.com>
+Date:   Thu Aug 12 12:51:28 2021 +0800
+
+    initial commit

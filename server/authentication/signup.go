@@ -1,11 +1,15 @@
 package authentication
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/jackc/pgx/v4"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -15,7 +19,7 @@ type User struct {
 	Name     string `json: string`
 }
 
-func SignupHandler(w http.ResponseWriter, r *http.Request) {
+func SignupHandler(conn *pgx.Conn, w http.ResponseWriter, r *http.Request) error {
 
 	// Reading all body of POST method and storing to resposeData
 	responseData, err := ioutil.ReadAll(r.Body)
@@ -33,19 +37,26 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("This is username: " + user.Username)
 	fmt.Println("This is password: " + user.Password)
-	fmt.Println("This is username: " + user.Email)
-	fmt.Println("This is password: " + user.Password)
+	fmt.Println("This is email: " + user.Email)
+	fmt.Println("This is name: " + user.Name)
 
-	// Checking if user is in database
-	/*if UserExists(user.Username, user.Password) {
-		fmt.Println("Login was successful!")
-		flagCheck.Flag = "true"
-	} else {
-		fmt.Println("Login was not successful!")
-		flagCheck.Flag = "false"
+	var hashedPass []byte
+
+	hashedPass, err = bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+
+	if err != nil {
+		fmt.Println(err)
 	}
 
-	w.Header().Set("Conent-Type", "application/json")
+	ctx := context.Background()
+	q := `INSERT INTO users (username, email, password, name) VALUES ($1, $2, $3, $4)`
 
-	json.NewEncoder(w).Encode(flagCheck)*/
+	_, err = conn.Exec(ctx, q, user.Username, user.Email, hashedPass, user.Name)
+
+	fmt.Println("It should be there right now!")
+
+	if err != nil {
+		return err
+	}
+	return nil
 }
