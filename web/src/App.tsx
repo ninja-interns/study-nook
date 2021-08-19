@@ -1,11 +1,11 @@
 import React from "react";
 import Routes from "./Routes";
-import Profile from "./components/profile/"
+import { Route } from "react-router";
 
 function App() {
 	return (
 		<div>
-			<Profile />
+			<Routes />
 		</div>
 	);
 }

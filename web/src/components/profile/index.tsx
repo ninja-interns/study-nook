@@ -5,7 +5,7 @@ import { render } from "react-dom";
 import { fileURLToPath } from "url";
 import { useStyles } from "./profileStyle";
 
-function Profile() {
+export function Profile() {
     const style = useStyles();
     return (
         <div className={style.root}>
@@ -47,5 +47,3 @@ async function postImage(imgFile: any) {
         // expected output: "Success!"
     });
 }
-
-export default Profile;

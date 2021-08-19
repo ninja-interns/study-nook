@@ -1,3 +1,4 @@
 export * from "./home";
-export * from "./registration";
+export * from "./register";
 export * from "./login";
+export * from "./profile";
