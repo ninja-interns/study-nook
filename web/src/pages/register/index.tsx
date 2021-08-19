@@ -7,11 +7,11 @@ import { useHistory } from "react-router-dom";
 
 export function RegisterPage() {
 	const css = useStyles();
-	const emailRef = useRef();
-	const nameRef = useRef();
-	const usernameRef = useRef();
-	const passwordRef = useRef();
-	const passwordConfirmRef = useRef();
+	const emailRef = useRef<HTMLInputElement>();
+	const nameRef = useRef<HTMLInputElement>();
+	const usernameRef = useRef<HTMLInputElement>();
+	const passwordRef = useRef<HTMLInputElement>();
+	const passwordConfirmRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
 	const history = useHistory();
 
@@ -20,15 +20,13 @@ export function RegisterPage() {
 		setError("");
 
 		//not letting user continue to send to DB if the passwords do not match
-		//@ts-ignore
-		if (passwordRef.current.value.trim() !== passwordConfirmRef.current.value) {
+		if (passwordRef?.current?.value.trim() !== passwordConfirmRef?.current?.value) {
 			setError("Passwords do not match.");
 			return;
 		}
 
 		//not letting user continue to send to DB if the password or email ref if there are just spaces filled out.
-		//@ts-ignore
-		if (emailRef.current.value.trim() === "" || passwordRef.current.value.trim() === "") {
+		if (emailRef?.current?.value.trim() === "" || passwordRef?.current?.value.trim() === "") {
 			setError("Please fill out all fields");
 			return;
 		}
@@ -38,14 +36,10 @@ export function RegisterPage() {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({
-					//@ts-ignore
-					email: emailRef.current.value,
-					//@ts-ignore
-					password: passwordRef.current.value,
-					//@ts-ignore
-					username: usernameRef.current.value,
-					//@ts-ignore
-					name: nameRef.current.value,
+					email: emailRef?.current?.value,
+					password: passwordRef?.current?.value,
+					username: usernameRef?.current?.value,
+					name: nameRef?.current?.value,
 				}),
 			});
 			const data = await response.json();

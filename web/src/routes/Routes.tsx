@@ -3,8 +3,6 @@ import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import { HomePage, RegisterPage, LoginPage, Dashboard, ForgetPasswordPage } from "../pages";
 
 const Routes = () => {
-	//const history = createMemoryHistory();
-
 	return (
 		<Router>
 			<Switch>
