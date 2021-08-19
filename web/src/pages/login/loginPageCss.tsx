@@ -22,4 +22,7 @@ export const useStyles = makeStyles({
 		right: "0",
 		margin: "auto",
 	},
+	registerButton: {
+		marginTop: "20px",
+	},
 });

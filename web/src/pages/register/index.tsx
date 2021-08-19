@@ -64,7 +64,7 @@ export function RegisterPage() {
 					<TextField required label="Email" type="email" inputRef={emailRef} />
 					<TextField required label="Password" type="password" inputRef={passwordRef} />
 					<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
-					<Button type="submit" variant="contained" color="primary">Register</Button>
+					<Button className={css.registerButton} type="submit" variant="contained" color="primary">Register</Button>
 				</form>
 			</div>
 		</div>

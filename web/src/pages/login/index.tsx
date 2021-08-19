@@ -47,7 +47,7 @@ export function LoginPage() {
 				<form className={css.form} onSubmit={handleLogin}>
 					<TextField required label="Email or Username" type="text" inputRef={userRef} />
 					<TextField required label="Password" type="password" inputRef={passwordRef} />
-					<Button type="submit" variant="contained" color="primary">Login</Button>
+					<Button className={css.registerButton} type="submit" variant="contained" color="primary">Login</Button>
 				</form>
 
 				<a onClick={() => history.push("../forgetpassword")}>Forget Password</a>
