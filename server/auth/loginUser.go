@@ -46,7 +46,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		response := JsonResponse{
-			Message: "Your username or password is incorrect",
+			Message: "Your password is incorrect.",
 			IsValid: false,
 		}
 		w.WriteHeader(http.StatusBadRequest)
