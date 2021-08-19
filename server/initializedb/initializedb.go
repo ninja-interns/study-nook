@@ -13,8 +13,8 @@ var Db *sql.DB
 const (
 	host     = "localhost"
 	port     = 5432
-	user     = "postgres"
-	password = "postgres"
+	user     = "dev"
+	password = "dev"
 	dbname   = "studynook"
 )
 

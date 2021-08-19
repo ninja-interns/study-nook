@@ -13,13 +13,13 @@ export function LoginPage() {
 	const emailRef = useRef();
 	const passwordRef = useRef();
 	const [error, setError] = useState<string>("");
-
 	const history = useHistory();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setError("");
 
+		//hitting the backend route of /loginUser with the body of necessary values
 		try {
 			const response = await fetch("/api/loginUser", {
 				method: "POST",
@@ -27,8 +27,9 @@ export function LoginPage() {
 				//@ts-ignore
 				body: JSON.stringify({ email: emailRef.current.value, password: passwordRef.current.value }),
 			});
+			//awaiting the response to comeback and turn it into readable json data
 			const data: DataI = await response.json();
-			console.log(data);
+			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 			if (data.isValid) {
 				history.push("/dashboard");
 			} else {

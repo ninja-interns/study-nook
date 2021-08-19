@@ -16,8 +16,6 @@ export function RegisterPage() {
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setError("");
-		//@ts-ignore
-		console.log(emailRef.current.value);
 
 		//not letting user continue to send to DB if the passwords do not match
 		//@ts-ignore
