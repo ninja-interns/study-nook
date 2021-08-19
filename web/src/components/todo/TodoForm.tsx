@@ -10,7 +10,7 @@ import { TodoInterface, TodoFormInterface } from "./interfaces"
     The useRef hook stores the reference to this input
 */
 const TodoForm = (props: TodoFormInterface) => {
-	// Create ref for form input
+	// Create reference for form input
 	const inputRef = React.useRef<HTMLInputElement>(null)
 	// Create form state
 	const [formState, setFormState] = React.useState("")

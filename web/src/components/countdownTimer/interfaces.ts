@@ -2,7 +2,7 @@
 export interface TimerInterface {
 	id: string
 	timerNum: number
-	isPaused: boolean
+	isPaused: boolean 
 }
 
 // Timer Form Interface

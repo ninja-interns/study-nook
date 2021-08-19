@@ -12,7 +12,7 @@ import { TodoInterface } from "./interfaces"
 // Import styles
 import "./../../styles/styles.css" // this will change later
 
-// TodoListApp component
+// TodoListApp Component
 export const TodoListApp = () => {
 	// The state is an array of objects. One object will represent an existing todo
 	const [todos, setTodos] = React.useState<TodoInterface[]>([])
