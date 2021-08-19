@@ -34,7 +34,7 @@ export function RegisterPage() {
 		}
 
 		try {
-			await fetch("/api/createUser", {
+			const response = await fetch("/api/createUser", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({
@@ -48,7 +48,12 @@ export function RegisterPage() {
 					name: nameRef.current.value,
 				}),
 			});
-			history.push("/login");
+			const data = await response.json();
+			if (data.isValid) {
+				history.push("/login");
+			} else {
+				setError(data.message);
+			}
 		} catch (err) {
 			console.log(err);
 		}
