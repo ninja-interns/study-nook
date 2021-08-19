@@ -41,7 +41,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//creating an insert in our database
-	fmt.Println("created user", hashedPassword)
 	sqlStatement := `
 	INSERT INTO users (email, password_hash, name, username)
 	VALUES ($1, $2, $3, $4)`
