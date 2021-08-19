@@ -7,26 +7,25 @@ export const useStyles = makeStyles({
         alignContent: 'center',
         textAlign: 'center',
     },
-    right: {
-        alignSelf: 'center',
-        marginLeft: "45px",
-    },
-    left: {
-        alignSelf: 'center',
 
-    },
     verticalCenter: {
-        margin: '0',
-        position: 'absolute',
-        top: '50%'
+        width: "200px",
+        height: "200px",
+        position: "fixed",
+        top: "0",
+        bottom: "0",
+        left: "0",
+        right: "0",
+        margin: "auto",
     },
     buttonsClass: {
-        position: "fixed",
         bottom: "70px",
+        paddingTop: "150px",
         display: "flex",
-        alignItems: 'center',
+        justifyContent: 'space-evenly',
+
     },
     imageCss: {
-        textAlign: 'center',
+
     }
 });

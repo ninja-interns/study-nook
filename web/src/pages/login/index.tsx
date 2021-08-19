@@ -41,14 +41,18 @@ export function LoginPage() {
 	}
 
 	return (
-		<Card className={css.container}>
-			<Typography variant="h2">Login</Typography>
-			<Typography variant="body1">{error}</Typography>
-			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required label="Email or Username" type="text" inputRef={userRef} />
-				<TextField required label="Password" type="password" inputRef={passwordRef} />
-				<Button type="submit">Login</Button>
-			</form>
-		</Card>
+		<div className={css.container}>
+			<div className={css.verticalCenter}>
+				<Typography variant="h2">Login</Typography>
+				<Typography variant="body1">{error}</Typography>
+				<form className={css.form} onSubmit={handleLogin}>
+					<TextField required label="Email or Username" type="text" inputRef={userRef} />
+					<TextField required label="Password" type="password" inputRef={passwordRef} />
+					<Button type="submit" variant="contained" color="primary">Login</Button>
+				</form>
+
+				<a onClick={() => history.push("../forgetpassword")}>Forget Password</a>
+			</div>
+		</div>
 	);
 }

@@ -60,17 +60,19 @@ export function RegisterPage() {
 	}
 
 	return (
-		<Card className={css.container}>
-			<Typography variant="h2">Register</Typography>
-			<Typography variant="body1">{error}</Typography>
-			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required label="Name" type="text" inputRef={nameRef} />
-				<TextField required label="Username" type="text" inputRef={usernameRef} />
-				<TextField required label="Email" type="email" inputRef={emailRef} />
-				<TextField required label="Password" type="password" inputRef={passwordRef} />
-				<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
-				<Button type="submit">Register</Button>
-			</form>
-		</Card>
+		<div className={css.container}>
+			<div className={css.verticalCenter}>
+				<Typography variant="h2">Register</Typography>
+				<Typography variant="body1">{error}</Typography>
+				<form className={css.form} onSubmit={handleLogin}>
+					<TextField required label="Name" type="text" inputRef={nameRef} />
+					<TextField required label="Username" type="text" inputRef={usernameRef} />
+					<TextField required label="Email" type="email" inputRef={emailRef} />
+					<TextField required label="Password" type="password" inputRef={passwordRef} />
+					<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
+					<Button type="submit" variant="contained" color="primary">Register</Button>
+				</form>
+			</div>
+		</div>
 	);
 }
