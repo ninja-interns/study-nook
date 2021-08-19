@@ -10,7 +10,7 @@ interface DataI {
 
 export function LoginPage() {
 	const css = useStyles();
-	const emailRef = useRef();
+	const userRef = useRef();
 	const passwordRef = useRef();
 	const [error, setError] = useState<string>("");
 	const history = useHistory();
@@ -25,7 +25,7 @@ export function LoginPage() {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				//@ts-ignore
-				body: JSON.stringify({ email: emailRef.current.value, password: passwordRef.current.value }),
+				body: JSON.stringify({ email: userRef.current.value, username: userRef.current.value, password: passwordRef.current.value }),
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: DataI = await response.json();
@@ -45,7 +45,7 @@ export function LoginPage() {
 			<Typography variant="h2">Login</Typography>
 			<Typography variant="body1">{error}</Typography>
 			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required label="Email" type="email" inputRef={emailRef} />
+				<TextField required label="Email or Username" type="text" inputRef={userRef} />
 				<TextField required label="Password" type="password" inputRef={passwordRef} />
 				<Button type="submit">Login</Button>
 			</form>

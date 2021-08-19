@@ -8,6 +8,8 @@ import { useHistory } from "react-router-dom";
 export function RegisterPage() {
 	const css = useStyles();
 	const emailRef = useRef();
+	const nameRef = useRef();
+	const usernameRef = useRef();
 	const passwordRef = useRef();
 	const passwordConfirmRef = useRef();
 	const [error, setError] = useState<string>("");
@@ -35,8 +37,16 @@ export function RegisterPage() {
 			await fetch("/api/createUser", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
-				//@ts-ignore
-				body: JSON.stringify({ email: emailRef.current.value, password: passwordRef.current.value }),
+				body: JSON.stringify({
+					//@ts-ignore
+					email: emailRef.current.value,
+					//@ts-ignore
+					password: passwordRef.current.value,
+					//@ts-ignore
+					username: usernameRef.current.value,
+					//@ts-ignore
+					name: nameRef.current.value,
+				}),
 			});
 			history.push("/login");
 		} catch (err) {
@@ -49,6 +59,8 @@ export function RegisterPage() {
 			<Typography variant="h2">Register</Typography>
 			<Typography variant="body1">{error}</Typography>
 			<form className={css.form} onSubmit={handleLogin}>
+				<TextField required label="Name" type="text" inputRef={nameRef} />
+				<TextField required label="Username" type="text" inputRef={usernameRef} />
 				<TextField required label="Email" type="email" inputRef={emailRef} />
 				<TextField required label="Password" type="password" inputRef={passwordRef} />
 				<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
