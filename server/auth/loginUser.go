@@ -45,17 +45,17 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	err = bcrypt.CompareHashAndPassword([]byte(password_hash), []byte(u.Password))
 	if err != nil {
 		fmt.Println(err)
-		login := LoginAttempt{
+		response := JsonResponse{
 			Message: "Your username or password is incorrect",
 			IsValid: false,
 		}
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(login)
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	//if it reaches this point, the login is suuccessful and writes back a response body to the front end
-	login := LoginAttempt{
+	login := JsonResponse{
 		Message: "Success!",
 		IsValid: true,
 	}
