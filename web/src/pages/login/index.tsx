@@ -10,8 +10,8 @@ interface DataI {
 
 export function LoginPage() {
 	const css = useStyles();
-	const userRef = useRef();
-	const passwordRef = useRef();
+	const userRef = useRef<HTMLInputElement>();
+	const passwordRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
 	const history = useHistory();
 
@@ -24,8 +24,7 @@ export function LoginPage() {
 			const response = await fetch("/api/loginUser", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
-				//@ts-ignore
-				body: JSON.stringify({ email: userRef.current.value, username: userRef.current.value, password: passwordRef.current.value }),
+				body: JSON.stringify({ email: userRef?.current?.value, username: userRef?.current?.value, password: passwordRef?.current?.value }),
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: DataI = await response.json();
