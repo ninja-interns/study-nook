@@ -6,9 +6,21 @@
 
 package main
 
-import "fmt"
+import (
+	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"main.go/auth"
+	initializeDB "main.go/initializedb"
+)
 
 func main() {
+	initializeDB.InitDB()
 
-	fmt.Println("Welcome to study nook! :)")
+	r := chi.NewRouter()
+
+	r.HandleFunc("/api/createUser", auth.CreateUser)
+	r.HandleFunc("/api/loginUser", auth.LoginUser)
+
+	http.ListenAndServe(":8080", r)
 }
