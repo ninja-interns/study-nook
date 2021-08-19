@@ -19,7 +19,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	//initializing variables w/o any value to scan in from our database
 	var id int
 	var email string
-	var password string
+	var name string
+	var username string
+	var password_hash string
 
 	//decoding the request body into the instanced User(u)
 	err := json.NewDecoder(r.Body).Decode(u)
@@ -31,16 +33,16 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	//Querying our database where our email column = the email the user input on the frontend
 	sqlStatement := `
-	SELECT * FROM users WHERE email = $1`
+	SELECT * FROM users WHERE email = $1 OR username = $2`
 
 	//scanning the id, email and password from the DB into the created variables above
-	err = initializeDB.Db.QueryRow(sqlStatement, u.Email).Scan(&id, &email, &password)
+	err = initializeDB.Db.QueryRow(sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	//comparing the password from the DB and from the users input. If theres an error, it writes a response body to send to the front end.
-	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(u.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(password_hash), []byte(u.Password))
 	if err != nil {
 		fmt.Println(err)
 		login := LoginAttempt{
@@ -58,5 +60,5 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		IsValid: true,
 	}
 	json.NewEncoder(w).Encode(login)
-	fmt.Println(email, password)
+	fmt.Println(email, password_hash)
 }

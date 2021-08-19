@@ -11,6 +11,8 @@ import (
 
 type User struct {
 	Email    string `json:"email"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
@@ -41,11 +43,11 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	//creating an insert in our database
 	fmt.Println("created user", hashedPassword)
 	sqlStatement := `
-	INSERT INTO users (email, password)
-	VALUES ($1, $2)`
+	INSERT INTO users (email, password_hash, name, username)
+	VALUES ($1, $2, $3, $4)`
 
 	//actually inserting a record into the DB
-	_, err = initializeDB.Db.Exec(sqlStatement, u.Email, hashedPassword)
+	_, err = initializeDB.Db.Exec(sqlStatement, u.Email, hashedPassword, u.Name, u.Username)
 	if err != nil {
 		fmt.Println(err)
 	}
