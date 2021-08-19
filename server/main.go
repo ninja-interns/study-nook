@@ -45,6 +45,7 @@ func main() {
 	r.Use(middleware.Logger)
 	//receives images and handles the data to be stored in the uploads directory
 	r.Post("/api/image-upload", db_wr.handleImageUpload)
+	r.Get("api/image-get", db_wr.handleImageRetrieve)
 	http.ListenAndServe(":3000", r)
 }
 
