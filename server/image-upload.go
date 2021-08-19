@@ -9,19 +9,19 @@ import (
 	"time"
 )
 
+type File struct {
+	file_name string
+	fileExt   string
+}
+
 //Image size initially set to 1MB Max
 //Image does not save to the database yet, instead the image is stored in a local directory called uploads
 //I used curl to test image uploading example -> curl -F 'file=@file_path' http://localhost:3000/api/image-upload/
 //Source https://freshman.tech/file-upload-golang/
 //
 /**Function handler for images**/
-func handleImageUpload(w http.ResponseWriter, r *http.Request) {
+func (db_wr dbWrapper) handleImageUpload(w http.ResponseWriter, r *http.Request) {
 
-	/**Only POST methods allowed**/
-	if r.Method != "POST" {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
 	/**Take image from the request body**/
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 
@@ -80,4 +80,8 @@ func handleImageUpload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "Upload was successful")
+}
+
+func handleImageRetrieve(w http.ResponseWriter, r *http.Request) {
+
 }

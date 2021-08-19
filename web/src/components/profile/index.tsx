@@ -2,8 +2,8 @@
 import React from "react";
 import { useState } from "react";
 import { render } from "react-dom";
+import { fileURLToPath } from "url";
 import { useStyles } from "./profileStyle";
-
 
 function Profile() {
     const style = useStyles();
@@ -37,15 +37,15 @@ function Profile() {
 
 async function postImage(imgFile: any) {
     const formData = new FormData();
-        const file = imgFile
-        formData.append('file', file);
-        fetch('/api/image-upload/', {
+    const file = imgFile;
+    formData.append('file', file);
+    fetch('/api/image-upload/', {
         method: 'POST',
         body: formData
-    }).then((value) => {
-        console.log(value);
+        }).then((value) => {
+            console.log(value);
         // expected output: "Success!"
-      });
+    });
 }
 
 export default Profile;
