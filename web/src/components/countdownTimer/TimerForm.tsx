@@ -30,6 +30,7 @@ const TimerForm = (props: TimerFormInterface) => {
 			id: uuidv4(),
 			timerHours: Number(hoursFormState),
 			timerMinutes: Number(minutesFormState),
+			timerSeconds: 0,
 			isPaused: false,
 		}
 

@@ -3,6 +3,7 @@ export interface TimerInterface {
 	id: string
 	timerHours: number
 	timerMinutes: number
+	timerSeconds: number
 	isPaused: boolean
 }
 
@@ -13,7 +14,7 @@ export interface TimerFormInterface {
 
 // Timer Item Interface
 export interface TimerItemInterface {
-	handleTimerPause: (id: string) => void
-	handleTimerReset: (id: string) => void
 	timer: TimerInterface
+	handleTimerPause: (timer: TimerInterface) => void
+	handleTimerReset: (timer: TimerInterface) => void
 }
