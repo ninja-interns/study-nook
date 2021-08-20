@@ -27,6 +27,21 @@ export const useStyles = makeStyles((theme) => ({
 
         },
 
+        profileSettings: {
+            width: '50px',
+            height: '50px',
+        },
+
+        /**CSS Style for the modal view of the user profile setting/menu**/
+        modal: {
+            position: 'absolute',
+            width: 400,
+            backgroundColor: theme.palette.background.paper,
+            border: '2px solid #000',
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+        },
+
         
     }));
 

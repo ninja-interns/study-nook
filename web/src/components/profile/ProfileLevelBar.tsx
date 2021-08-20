@@ -1,10 +1,12 @@
 
 import React from "react";
-import {IProps, IPercentage} from "./ProfileInterface";
+import {IProps, IProgressPercentage} from "./ProfileInterface";
 const Filler = (prop: any) => {
     return (<div className="filler" />);
 }
 
+
+/**Level bar doesn't work properly**/
 const LevelBar = (props: any) => {
     return (
     <div className="progress-bar">
@@ -13,7 +15,7 @@ const LevelBar = (props: any) => {
     )
 }
 
-export class PlayerProgressBar extends React.Component<IProps, IPercentage> {
+export class PlayerProgressBar extends React.Component<IProps, IProgressPercentage> {
     constructor(props: IProps) {
         super(props)
         this.state = {

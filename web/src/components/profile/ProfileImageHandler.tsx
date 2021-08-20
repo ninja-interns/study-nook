@@ -29,7 +29,8 @@ export function ChangeProfileImage() {
     );
 }
 
-const formData = new FormData();
+async function postImage(imgFile: any) {
+    const formData = new FormData();
     const file = imgFile;
     formData.append('file', file);
     fetch('/api/image-upload/', {

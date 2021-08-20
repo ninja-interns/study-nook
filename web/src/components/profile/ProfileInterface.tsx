@@ -2,6 +2,6 @@
 export interface IProps {
 }
 
-export interface IPercentage {
+export interface IProgressPercentage {
     percentage?: number;
 }
