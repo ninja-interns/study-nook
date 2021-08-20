@@ -13,7 +13,7 @@ import { TimerInterface } from "./interfaces"
 // TimerApp Component
 export const TimerApp = () => {
 	// Add comment here
-	const [timer, setState] = React.useState<TimerInterface>({ id: uuidv4(), timerNum: 0, isPaused: false })
+	const [timer, setState] = React.useState<TimerInterface>({ id: uuidv4(), timerHours: 0, timerMinutes: 0, isPaused: false })
 
 	// Creating new Timer
 	function handleTimerCreate(timer: TimerInterface) {

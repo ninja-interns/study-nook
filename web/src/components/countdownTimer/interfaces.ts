@@ -1,8 +1,9 @@
 //Timer Interface
 export interface TimerInterface {
 	id: string
-	timerNum: number
-	isPaused: boolean 
+	timerHours: number
+	timerMinutes: number
+	isPaused: boolean
 }
 
 // Timer Form Interface
