@@ -1,5 +1,7 @@
 import { makeStyles, Modal } from "@material-ui/core";
+import { render } from "@testing-library/react";
 import React from "react";
+import { IProgressPercentage, IProps } from "./ProfileInterface";
 import { useStyles } from "./profileStyle";
 
 /**Player settings/menu**/
@@ -59,3 +61,30 @@ function getModalStyle() {
     };
 }
 
+
+const modalComponentStyle = makeStyles({
+    root: {
+        
+    }
+});
+
+/**Contains all the modal UI structure for settings/menu interface**/
+class ModalComponents extends React.Component<IProps> {
+    constructor(props: IProps) {
+        super(props);
+    }
+
+
+    render() {
+        return (
+            <div>
+                <div>Settings</div>
+                <div>Achiements</div>
+                <div>Past Sessions</div>
+                <div>Study History</div>
+                <div>Support</div>
+            </div>
+        );
+    }
+
+}

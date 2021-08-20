@@ -1,4 +1,4 @@
-
+/**This file stores the interface functions for react components **/
 export interface IProps {
 }
 
