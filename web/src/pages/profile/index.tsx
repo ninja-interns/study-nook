@@ -1,10 +1,13 @@
 import React from 'react';
-import { Profile } from '../../components';
+import { ProgressBar, ProfileChange } from '../../components';
+import { useStyles } from './profileStyle';
+
 
 export function ProfilePage() {
+    const cssStyle = useStyles();
     return (
-        <div>
-            <Profile />
+        <div className={cssStyle.container}>
+            <ProfileChange />
         </div>
     );
 }

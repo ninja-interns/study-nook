@@ -27,7 +27,7 @@ type FileData struct {
 //Source https://freshman.tech/file-upload-golang/
 //
 /**Function handler for images**/
-func (db_wr dbWrapper) handleImageUpload(w http.ResponseWriter, r *http.Request) {
+func (db_wr *dbWrapper) handleImageUpload(w http.ResponseWriter, r *http.Request) {
 
 	/**Take image from the request body**/
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)

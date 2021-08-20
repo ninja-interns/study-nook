@@ -17,4 +17,16 @@ export const useStyles = makeStyles((theme) => ({
         profileIconButton: {
 
         },
+
+
+        profileBackground: {
+
+        },
+
+        levelBar: {
+
+        },
+
+        
     }));
+
