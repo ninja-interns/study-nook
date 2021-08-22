@@ -1,9 +1,11 @@
 // Import dependencies
 import * as React from "react"
 import { v4 as uuidv4 } from "uuid"
+import Button from "@material-ui/core/Button"
 
 // Import interfaces
 import { TimerInterface, TimerFormInterface } from "./interfaces"
+import { TextField } from "@material-ui/core"
 
 const TimerForm = (props: TimerFormInterface) => {
 	// Create reference for form input
@@ -46,12 +48,28 @@ const TimerForm = (props: TimerFormInterface) => {
 
 	// This is also where the error is occuring
 	return (
-		<div className="timer-form">
-			<input ref={inputHoursRef} type="text" placeholder="hours" onChange={(event) => handleHoursInputChange(event)} />
-			<input ref={inputMinutesRef} type="text" placeholder="minutes" onChange={(event) => handleMinutesInputChange(event)} />
+		<form>
+			<div>
+				<TextField
+					ref={inputHoursRef}
+					type="text"
+					id="hours-input"
+					placeholder="Hours"
+					onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleHoursInputChange(event)}
+				/>
+				<TextField
+					ref={inputMinutesRef}
+					type="text"
+					id="hours-input"
+					placeholder="Minutes"
+					onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleMinutesInputChange(event)}
+				/>
+			</div>
 
-			<button onClick={handleSubmit}>Submit</button>
-		</div>
+			<Button onClick={handleSubmit} variant="contained">
+				Submit
+			</Button>
+		</form>
 	)
 }
 

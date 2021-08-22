@@ -1,5 +1,7 @@
 // Import Dependencies
 import * as React from "react"
+import ButtonGroup from "@material-ui/core/ButtonGroup"
+import Button from "@material-ui/core/Button"
 
 // Import Interfaces
 import { TimerInterface, TimerItemInterface } from "./interfaces"
@@ -68,12 +70,12 @@ const Timer = (props: TimerItemInterface) => {
 				</p>
 			</div>
 
-			<div className="buttons">
-				<button className="pause-button">Pause</button>
-				<button className="reset-button" onClick={() => props.handleTimerReset}>
+			<ButtonGroup variant="contained">
+				<Button className="pause-button">Pause</Button>
+				<Button className="reset-button" onClick={() => props.handleTimerReset}>
 					Reset
-				</button>
-			</div>
+				</Button>
+			</ButtonGroup>
 		</div>
 	)
 }
