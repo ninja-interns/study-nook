@@ -1,9 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-
+import { useAuth } from "../../contexts/AuthProvider";
 export function Logout() {
 	const history = useHistory();
+	const { setIsLoggedIn } = useAuth();
 
 	async function handleLogout() {
 		//hitting the backend route of /logoutUser with the body of necessary values
@@ -15,6 +16,7 @@ export function Logout() {
 			const data = await response.json();
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 			if (data.isValid) {
+				setIsLoggedIn(false);
 				history.push("/login");
 			}
 		} catch (err) {

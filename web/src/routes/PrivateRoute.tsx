@@ -11,7 +11,7 @@ export function PrivateRoute({ component: Component, path }: PrivateRouteI) {
 	const { isLoggedIn } = useAuth();
 	return (
 		<Route
-			render={(props) => {
+			render={() => {
 				return isLoggedIn ? <Route path={path} component={Component} /> : <Redirect to="/login" />;
 			}}
 		></Route>
