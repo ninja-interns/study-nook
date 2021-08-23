@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { useStyles } from "./registerPageCss";
 import { TextField, Card, Button, Typography } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 export function RegisterPage() {
 	const css = useStyles();
@@ -69,6 +69,9 @@ export function RegisterPage() {
 				<TextField required label="Password" type="password" inputRef={passwordRef} />
 				<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
 				<Button type="submit">Register</Button>
+				<Typography variant="body1">
+					Already have an account? <Link to="/login">Log in here</Link>
+				</Typography>
 			</form>
 		</Card>
 	);

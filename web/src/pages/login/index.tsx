@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useStyles } from "./loginPageCss";
 import { TextField, Card, Button, Typography } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { useAuth, CurrentUserI } from "./../../contexts/AuthProvider";
 
 interface DataI {
@@ -51,6 +51,9 @@ export function LoginPage() {
 				<TextField required label="Email or Username" type="text" inputRef={userRef} />
 				<TextField required label="Password" type="password" inputRef={passwordRef} />
 				<Button type="submit">Login</Button>
+				<Typography variant="body1">
+					Don't have an account? <Link to="/registration">Register here</Link>
+				</Typography>
 			</form>
 		</Card>
 	);
