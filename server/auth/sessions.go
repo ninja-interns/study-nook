@@ -15,4 +15,5 @@ func SessionsConfig() {
 	SessionManager.Store = postgresstore.New(initializeDB.Db)
 	SessionManager.Lifetime = 1000000 * time.Hour
 	SessionManager.Cookie.Persist = true
+	SessionManager.Cookie.HttpOnly = false
 }
