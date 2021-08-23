@@ -2,11 +2,12 @@ import React, { useRef, useState } from "react";
 import { useStyles } from "./loginPageCss";
 import { TextField, Card, Button, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import { useAuth } from "./../../contexts/AuthProvider";
+import { useAuth, CurrentUserI } from "./../../contexts/AuthProvider";
 
 interface DataI {
 	isValid: boolean;
 	message: string;
+	currentUser: CurrentUserI;
 }
 
 export function LoginPage() {
@@ -15,7 +16,7 @@ export function LoginPage() {
 	const passwordRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
 	const history = useHistory();
-	const { setIsLoggedIn } = useAuth();
+	const { setIsLoggedIn, setCurrentUser } = useAuth();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -32,7 +33,9 @@ export function LoginPage() {
 			const data: DataI = await response.json();
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 			if (data.isValid) {
+				console.log(data);
 				setIsLoggedIn(true);
+				setCurrentUser(data.currentUser);
 				history.push("/dashboard");
 			} else {
 				setError(data.message);
