@@ -22,7 +22,7 @@ export function Logout() {
 		}
 	}
 	return (
-		<Button variant="contained" onClick={handleLogout}>
+		<Button variant="contained" color="secondary" onClick={handleLogout}>
 			Logout
 		</Button>
 	);
