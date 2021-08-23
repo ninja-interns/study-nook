@@ -9,13 +9,25 @@ import (
 	initializeDB "main.go/initializedb"
 )
 
+type currentUser struct {
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
+type jsonLoginResponse struct {
+	Message     string      `json:"message"`
+	IsValid     bool        `json:"isValid"`
+	CurrentUser currentUser `json:"currentUser"`
+}
+
 //will hit when the API from main.go is invoked
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	//creating an instance of User struct (defined in createUser.go) to be used to decode our request info into
 	u := &User{}
-
+	currentU := &currentUser{}
 	//initializing variables w/o any value to scan in from our database
 	var id int
 	var email string
@@ -41,6 +53,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
+	currentU.Name = name
+	currentU.Email = email
+	currentU.Username = username
+
 	//comparing the password from the DB and from the users input. If theres an error, it writes a response body to send to the front end.
 	err = bcrypt.CompareHashAndPassword([]byte(password_hash), []byte(u.Password))
 	if err != nil {
@@ -59,9 +75,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	SessionManager.Put(r.Context(), "name", name)
 	SessionManager.Put(r.Context(), "username", username)
 	SessionManager.Put(r.Context(), "email", email)
-	login := JsonResponse{
-		Message: "Success!",
-		IsValid: true,
+	login := jsonLoginResponse{
+		Message:     "Success!",
+		IsValid:     true,
+		CurrentUser: *currentU,
 	}
 	json.NewEncoder(w).Encode(login)
 	fmt.Println(email, password_hash)
