@@ -15,8 +15,8 @@ type Email struct {
 }
 
 const (
-	fromAddress       = "guiminhaaus@gmail.com"
-	fromEmailPassword = "zxbrieqvrmpesyur"
+	fromAddress       = "studynookapp@gmail.com"
+	fromEmailPassword = "nytnatsvdffkrprm"
 	smtpServer        = "smtp.gmail.com"
 	smptPort          = "587"
 )

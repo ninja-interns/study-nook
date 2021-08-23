@@ -22,15 +22,27 @@ export function ChangePassword() {
             return;
         }
 
+        //not letting user continue to send to DB if the password or email ref if there are just spaces filled out.
+        if (passwordRef?.current?.value.trim() === "") {
+            setError("Please fill out with characters fields");
+            return;
+        }
+
         var token = location.pathname
 
         //hitting the backend route of /loginUser with the body of necessary values
         try {
-            const response = await fetch("http://localhost:8080/api/changePassword", {
+            const response = await fetch("/api/changePassword", {
                 method: "POST",
                 headers: { "content-type": "application/json" },
-                body: JSON.stringify({ passwordRef, token }),
+                body: JSON.stringify({ password: passwordRef?.current?.value, token }),
             });
+            const data = await response.json();
+            if (data.isValid) {
+                history.push("/login");
+            } else {
+                setError(data.message);
+            }
         }
         catch {
 

@@ -4,6 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
+
+	"golang.org/x/crypto/bcrypt"
+	initializeDB "main.go/initializedb"
 )
 
 type Password struct {
@@ -11,9 +15,42 @@ type Password struct {
 	Token    string `json: string`
 }
 
+func CheckToken(token string) string {
+	//Querying our database where our email column = the email the user input on the frontend
+	sqlStatement := `SELECT email FROM email_token WHERE token = $1`
+
+	row := ""
+
+	//scanning the id, email and password from the DB into the created variables above
+	err := initializeDB.Db.QueryRow(sqlStatement, token).Scan(&row)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("This is email: " + row)
+
+	if row == "" {
+		return ""
+	} else {
+		return row
+	}
+
+}
+
+func DeleteTokenRow(token string) {
+
+	//creating an update query in our database
+	sqlStatement := `DELETE FROM email_token WHERE token = $1;`
+
+	_, err := initializeDB.Db.Exec(sqlStatement, token)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 func ChangePassword(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("You are changin passwords!")
+	fmt.Println("You are changing passwords!")
 	P := &Password{}
 	err := json.NewDecoder(r.Body).Decode(P)
 	if err != nil {
@@ -22,26 +59,30 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	str := strings.Split(P.Token, "/")
+	P.Token = str[2]
+
 	fmt.Println("This is password: " + P.Password)
-	fmt.Println("This is token: " + P.Token)
+	fmt.Println("This is token: " + str[2])
+
+	email := CheckToken(P.Token)
 
 	//one way hashing to create password
-	/*hashedPassword, err := bcrypt.GenerateFromPassword([]byte(P.Password), 8)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(P.Password), 8)
 	if err != nil {
 		fmt.Println(err)
 		return
-	}*/
+	}
 
-	/*//creating an update query in our database
-	sqlStatement := `
-	UPDATE email_token SET password_hash = $1 WHERE email = $2`
+	//creating an update query in our database
+	sqlStatement := `UPDATE users SET password_hash = $1 WHERE email = $2`
 
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
-	_, err = initializeDB.Db.Exec(sqlStatement, hashedPassword)
+	_, err = initializeDB.Db.Exec(sqlStatement, hashedPassword, email)
 	if err != nil {
-		fmt.Println("create user", err)
+		fmt.Println("Change password ", err)
 		response := JsonResponse{
-			Message: "Your username or email has already been used!",
+			Message: "There was an error on the process. Please, try again or request a new password change.",
 			IsValid: false,
 		}
 		json.NewEncoder(w).Encode(response)
@@ -53,6 +94,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		Message: "Success!",
 		IsValid: true,
 	}
-	json.NewEncoder(w).Encode(response)*/
+	DeleteTokenRow(P.Token)
+	json.NewEncoder(w).Encode(response)
 
 }
