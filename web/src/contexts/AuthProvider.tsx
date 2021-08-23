@@ -14,14 +14,11 @@ export interface CurrentUserI {
 }
 
 interface AuthContextI {
-	isLoggedIn: boolean;
-	setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 	currentUser: CurrentUserI;
 	setCurrentUser: React.Dispatch<React.SetStateAction<CurrentUserI>>;
 }
 
 export default function AuthProvider({ children }: AuthProviderI) {
-	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(document.cookie.includes("session"));
 	const [currentUser, setCurrentUser] = useState<CurrentUserI>({
 		name: null,
 		username: null,
@@ -29,8 +26,6 @@ export default function AuthProvider({ children }: AuthProviderI) {
 	});
 
 	const value = {
-		isLoggedIn,
-		setIsLoggedIn,
 		currentUser,
 		setCurrentUser,
 	};

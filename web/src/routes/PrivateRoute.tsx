@@ -1,6 +1,5 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { useAuth } from "../contexts/AuthProvider";
 
 interface PrivateRouteI {
 	component: React.FC;
@@ -8,7 +7,7 @@ interface PrivateRouteI {
 }
 
 export function PrivateRoute({ component: Component, path }: PrivateRouteI) {
-	const { isLoggedIn } = useAuth();
+	const isLoggedIn = document.cookie.includes("session");
 	return (
 		<Route
 			render={() => {
