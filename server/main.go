@@ -22,6 +22,7 @@ func main() {
 	r.HandleFunc("/api/createUser", auth.CreateUser)
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
 	r.HandleFunc("/api/checkEmail", auth.CheckEmail)
+	r.HandleFunc("/api/changePassword", auth.ChangePassword)
 
 	http.ListenAndServe(":8080", r)
 }

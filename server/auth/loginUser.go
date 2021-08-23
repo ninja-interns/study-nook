@@ -11,6 +11,7 @@ import (
 
 //will hit when the API from main.go is invoked
 func LoginUser(w http.ResponseWriter, r *http.Request) {
+
 	w.Header().Set("Content-Type", "application/json")
 
 	//creating an instance of User struct (defined in createUser.go) to be used to decode our request info into

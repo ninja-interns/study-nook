@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/smtp"
 
+	"github.com/gofrs/uuid"
 	initializeDB "main.go/initializedb"
 )
 
@@ -20,12 +21,16 @@ const (
 	smptPort          = "587"
 )
 
-func SendEmail(toAddress []string) {
+func SendEmail(toAddress []string, token uuid.UUID) {
 
-	message := "Hey, you are trying to receover your password? Here, I will give you a hand"
+	subject := "Subject: Recover password\n"
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	body := "<html><p>Hey user. Wanting to recover password, here is the link.</p><a href='http://localhost:3000/changePassword/" + token.String() + "'> Link.</a></html>"
+
+	message := []byte(subject + mime + body)
 
 	auth := smtp.PlainAuth("", fromAddress, fromEmailPassword, smtpServer)
-	err := smtp.SendMail(smtpServer+":"+smptPort, auth, fromAddress, toAddress, []byte(message))
+	err := smtp.SendMail(smtpServer+":"+smptPort, auth, fromAddress, toAddress, message)
 
 	if err != nil {
 		fmt.Println(err)
@@ -33,6 +38,39 @@ func SendEmail(toAddress []string) {
 
 	fmt.Println("Email sent!")
 
+}
+
+func CreateVerificationToken(email string) uuid.UUID {
+
+	token, err := uuid.NewV4()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	//Querying our database where our email column = the email the user input on the frontend
+	sqlStatement := `SELECT email FROM email_token WHERE email = $1`
+
+	row := ""
+
+	//scanning the id, email and password from the DB into the created variables above
+	err = initializeDB.Db.QueryRow(sqlStatement, email).Scan(&row)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if row == "" {
+		fmt.Println("Inserting to database right now!")
+
+		query := `INSERT INTO email_token (email, token) VALUES ($1, $2);`
+
+		initializeDB.Db.QueryRow(query, email, token)
+
+	} else {
+		query := `UPDATE email_token SET token = $1 WHERE email = $2;`
+
+		initializeDB.Db.QueryRow(query, token, email)
+	}
+	return token
 }
 
 func CheckEmail(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +107,8 @@ func CheckEmail(w http.ResponseWriter, r *http.Request) {
 	if row == "" {
 		return
 	} else {
-		SendEmail(to)
+		token := CreateVerificationToken(email.Email)
+		SendEmail(to, token)
 	}
 
 }
