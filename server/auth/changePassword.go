@@ -10,25 +10,29 @@ import (
 	initializeDB "main.go/initializedb"
 )
 
+// Struct to store data in json format fetched from front-end
 type Password struct {
 	Password string `json: string`
 	Token    string `json: string`
 }
 
+// Function to check if token exists in "email_token" table
 func CheckToken(token string) string {
-	//Querying our database where our email column = the email the user input on the frontend
-	sqlStatement := `SELECT email FROM email_token WHERE token = $1`
+
+	// Creating query to database to check if token is within table
+	sqlStatement := `SELECT email FROM email_token WHERE token = $1;`
 
 	row := ""
 
-	//scanning the id, email and password from the DB into the created variables above
+	// Making query to database and scanning any results to empty variable
 	err := initializeDB.Db.QueryRow(sqlStatement, token).Scan(&row)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println("This is email: " + row)
-
+	// Conditinal statement to check if token actually exists
+	// If it doesn't, it will just return an empty string.
+	// Else, if it does, it will return its value.
 	if row == "" {
 		return ""
 	} else {
@@ -39,9 +43,10 @@ func CheckToken(token string) string {
 
 func DeleteTokenRow(token string) {
 
-	//creating an update query in our database
+	// Creating query to delete row after all the process is done.
 	sqlStatement := `DELETE FROM email_token WHERE token = $1;`
 
+	// Querying database
 	_, err := initializeDB.Db.Exec(sqlStatement, token)
 	if err != nil {
 		fmt.Println(err)
@@ -50,8 +55,10 @@ func DeleteTokenRow(token string) {
 
 func ChangePassword(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("You are changing passwords!")
+	// Creating instance of password struct
 	P := &Password{}
+
+	// Decogin JSON data into instance of password
 	err := json.NewDecoder(r.Body).Decode(P)
 	if err != nil {
 		fmt.Println(err)
@@ -59,25 +66,28 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Spliting Token string because front-end is sending whole pathname
+	// "changepassword/dAke21ma-dDma..." instead of just the token.
+	// Therefore, a split is nesecessary in order to retrieve only token
+	// from URL.
 	str := strings.Split(P.Token, "/")
 	P.Token = str[2]
 
-	fmt.Println("This is password: " + P.Password)
-	fmt.Println("This is token: " + str[2])
-
+	// Cheking if token exists.
 	email := CheckToken(P.Token)
 
-	//one way hashing to create password
+	// Hashing password to bytea
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(P.Password), 8)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	//creating an update query in our database
+	// Creating an update query in database
 	sqlStatement := `UPDATE users SET password_hash = $1 WHERE email = $2`
 
-	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
+	// Querying database and sending response back to front-end
+	// if anything goes wrong
 	_, err = initializeDB.Db.Exec(sqlStatement, hashedPassword, email)
 	if err != nil {
 		fmt.Println("Change password ", err)
@@ -89,12 +99,16 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if it reaches here, everything is okay, sends back a success to the front end via a response
+	// If it reaches here, everything is okay, sends back a success to the front end via a response
 	response := JsonResponse{
 		Message: "Success!",
 		IsValid: true,
 	}
+
+	// Delete token since process is done.
 	DeleteTokenRow(P.Token)
+
+	// Send response back with sucessful validation.
 	json.NewEncoder(w).Encode(response)
 
 }
