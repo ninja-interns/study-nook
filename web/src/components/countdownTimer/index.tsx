@@ -5,15 +5,14 @@ import { v4 as uuidv4 } from "uuid"
 
 // Import Components
 import TimerForm from "./TimerForm"
-import Timer from "./TimerItem"
 
 // Import Interfaces
 import { TimerInterface } from "./interfaces"
 
 // TimerApp Component
 export const TimerApp = () => {
-	// Add comment here
-	const [timer, setState] = React.useState<TimerInterface>({ id: uuidv4(), timerHours: 0, timerMinutes: 0, timerSeconds: 0, isPaused: false })
+	// This state represents a Timer object
+	const [timer, setState] = React.useState<TimerInterface>({ id: uuidv4(), timerHours: 0, timerMinutes: 0, timerSeconds: 0 })
 
 	// Creating new Timer
 	function handleTimerCreate(timer: TimerInterface) {
@@ -24,25 +23,10 @@ export const TimerApp = () => {
 		setState(newTimerState)
 	}
 
-	// Pause the timer
-	function handleTimerPause() {}
-
-	// Reset the timer
-	function handleTimerReset() {
-		setState({
-			id: uuidv4(),
-			timerHours: 0,
-			timerMinutes: 0,
-			timerSeconds: 0,
-			isPaused: false,
-		})
-	}
-
 	return (
 		<div className="timer-app">
 			<h1>Timer</h1>
-			<TimerForm handleTimerCreate={handleTimerCreate} />
-			<Timer timer={timer} handleTimerPause={handleTimerPause} handleTimerReset={handleTimerReset} />
+			<TimerForm timer={timer} handleTimerCreate={handleTimerCreate} />
 		</div>
 	)
 }

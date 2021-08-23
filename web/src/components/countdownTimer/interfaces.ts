@@ -1,20 +1,21 @@
+import * as React from "react"
+
 //Timer Interface
 export interface TimerInterface {
 	id: string
 	timerHours: number
 	timerMinutes: number
 	timerSeconds: number
-	isPaused: boolean
 }
 
 // Timer Form Interface
 export interface TimerFormInterface {
+	timer: TimerInterface
 	handleTimerCreate: (timer: TimerInterface) => void
+	//handleSubmit: (timer: TimerInterface) => void
 }
 
-// Timer Item Interface
 export interface TimerItemInterface {
 	timer: TimerInterface
-	handleTimerPause: (timer: TimerInterface) => void
-	handleTimerReset: (timer: TimerInterface) => void
+	handleTimerCreate: (timer: TimerInterface) => void
 }

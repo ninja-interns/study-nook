@@ -3,7 +3,6 @@ import * as React from "react"
 import { v4 as uuidv4 } from "uuid"
 
 import { TextField } from "@material-ui/core"
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles"
 
 // Import interfaces
 import { TodoInterface, TodoFormInterface } from "./interfaces"
@@ -26,7 +25,7 @@ const TodoForm = (props: TodoFormInterface) => {
 
 	// Handle 'Enter' in todo input
 	function handleInputEnter(event: React.KeyboardEvent) {
-		// Check for 'Enter' ke
+		// Check for 'Enter' key
 		if (event.key === "Enter") {
 			// Prevent the page refreshing
 			event.preventDefault()
@@ -52,12 +51,15 @@ const TodoForm = (props: TodoFormInterface) => {
 	return (
 		<form>
 			<TextField
+				// Material UI Styling
+				label="Enter new todo"
+				id="outlined-basic"
+				variant="outlined"
+				// --
 				inputRef={inputRef}
 				type="text"
-				placeholder="Enter new todo"
 				onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event)}
 				onKeyPress={(event: React.KeyboardEvent) => handleInputEnter(event)}
-				variant="outlined"
 			/>
 		</form>
 	)

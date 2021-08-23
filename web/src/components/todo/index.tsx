@@ -59,15 +59,6 @@ export const TodoListApp = () => {
 		setTodos(newTodosState)
 	}
 
-	// Check if todo item has title
-	function handleTodoBlur(event: React.ChangeEvent<HTMLInputElement>) {
-		if (event.target.value.length === 0) {
-			event.target.classList.add("todo-input-error")
-		} else {
-			event.target.classList.remove("todo-input-error")
-		}
-	}
-
 	return (
 		<div className="todo-list-app">
 			<h1>Todo List</h1>
@@ -76,16 +67,19 @@ export const TodoListApp = () => {
 			<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
 
 			{/* Todo list component */}
-			<TodoList
-				todos={todos}
-				handleTodoUpdate={handleTodoUpdate}
-				handleTodoRemove={handleTodoRemove}
-				handleTodoComplete={handleTodoComplete}
-				handleTodoBlur={handleTodoBlur}
-			/>
+			<TodoList todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} handleTodoComplete={handleTodoComplete} />
 		</div>
 	)
 }
 
 const rootElement = document.getElementById("root")
 render(<TodoListApp />, rootElement)
+
+/* Check if todo item has title
+	function handleTodoBlur(event: React.ChangeEvent<HTMLInputElement>) {
+		if (event.target.value.length === 0) {
+			event.target.classList.add("todo-input-error")
+		} else {
+			event.target.classList.remove("todo-input-error")
+		}
+	} */
