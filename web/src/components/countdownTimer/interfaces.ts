@@ -17,5 +17,4 @@ export interface TimerFormInterface {
 
 export interface TimerItemInterface {
 	timer: TimerInterface
-	handleTimerCreate: (timer: TimerInterface) => void
 }

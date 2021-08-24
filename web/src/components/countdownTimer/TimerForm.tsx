@@ -8,7 +8,6 @@ import ButtonGroup from "@material-ui/core/ButtonGroup"
 // Import interfaces
 import { TimerInterface, TimerFormInterface } from "./interfaces"
 import { TextField } from "@material-ui/core"
-import { Timer } from "@material-ui/icons"
 
 const TimerForm = (props: TimerFormInterface) => {
 	// Create reference for form input
@@ -44,21 +43,15 @@ const TimerForm = (props: TimerFormInterface) => {
 		if (inputHoursRef && inputHoursRef.current) {
 			inputHoursRef.current.value = ""
 		}
-
-		reset() // otherwise the new time doesnt load
-		pause()
 	}
 
+	//function createTimer(initTime: number, interval: number) {
 	const { time, start, pause, reset, status } = useTimer({
-		initialTime: props.timer.timerHours,
+		initialTime: 100,
 		timerType: "DECREMENTAL",
+		interval: 1000,
 		endTime: 0,
 	})
-
-	function handleReset() {
-		reset()
-		pause()
-	}
 
 	return (
 		<div>
@@ -86,13 +79,17 @@ const TimerForm = (props: TimerFormInterface) => {
 					<Button className="pause-button" onClick={pause}>
 						Pause
 					</Button>
-					<Button className="reset-button" onClick={handleReset}>
+					<Button className="reset-button" onClick={reset}>
 						Reset
 					</Button>
 				</ButtonGroup>
+				<p></p>
 			</div>
 		</div>
 	)
 }
 
 export default TimerForm
+
+// add 30 minutes to the current time then countdown to that time?
+// save the timer on a cookie?
