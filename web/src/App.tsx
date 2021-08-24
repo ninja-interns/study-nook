@@ -1,15 +1,11 @@
 import React from "react"
-import { ExamplePage } from "./pages"
-import { TodoListApp } from "./components/todo"
-import { TimerApp } from "./components/countdownTimer"
+import Routes from "./routes/Routes"
 
 function App() {
 	return (
-		<div className="App">
-			<TodoListApp />
-			<TimerApp />
+		<div>
+			<Routes />
 		</div>
 	)
 }
-
 export default App
