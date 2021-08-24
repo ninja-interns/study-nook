@@ -2,12 +2,12 @@ import React, { useRef, useState } from "react";
 import { useStyles } from "./loginPageCss";
 import { TextField, Card, Button, Typography } from "@material-ui/core";
 import { useHistory, Link } from "react-router-dom";
-import { useAuth, CurrentUserI } from "./../../contexts/AuthProvider";
+import { useAuth, AuthCurrentUserI } from "./../../contexts/AuthProvider";
 
 interface DataI {
 	isValid: boolean;
 	message: string;
-	currentUser: CurrentUserI;
+	currentUser: AuthCurrentUserI;
 }
 
 export function LoginPage() {

@@ -7,6 +7,7 @@ interface PrivateRouteI {
 	path: string;
 }
 
+//A component that will check if the user is logged in (see AuthProvider), and if true, route them to the desired path and component or redirect them to the login page
 export function PrivateRoute({ component: Component, path }: PrivateRouteI) {
 	const { isLoggedIn } = useAuth();
 	return (
