@@ -9,16 +9,16 @@ import (
 	initializeDB "main.go/initializedb"
 )
 
-type CurrentUser struct {
+type CurrentLoginUser struct {
 	Name     string `json:"name"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
 }
 
 type jsonLoginResponse struct {
-	Message     string      `json:"message"`
-	IsValid     bool        `json:"isValid"`
-	CurrentUser CurrentUser `json:"currentUser"`
+	Message     string           `json:"message"`
+	IsValid     bool             `json:"isValid"`
+	CurrentUser CurrentLoginUser `json:"currentUser"`
 }
 
 //will hit when the API from main.go is invoked
@@ -27,7 +27,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	//creating an instance of User struct (defined in createUser.go) to be used to decode our request info into
 	u := &User{}
-	currentU := &CurrentUser{}
+	currentU := &CurrentLoginUser{}
 	//initializing variables w/o any value to scan in from our database
 	var id int
 	var email string
