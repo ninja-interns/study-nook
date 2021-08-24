@@ -1,40 +1,23 @@
 package initializeDB
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
 
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-var Db *sql.DB
-
-//here are our db configs to connect to the database
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "dev"
-	password = "dev"
-	dbname   = "studynook"
-)
+var Conn *pgxpool.Pool
 
 //initializing my database
 func InitDB() {
 	var err error
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
+	connection_string := "postgres://dev:dev@localhost:5432/studynook?sslmode=disable"
 	//ran into ALOT of errors here because I was writing: db, err := sql.... which was assigning db to a local variable, not assigning it to the global variable which it is doing now.
-	Db, err = sql.Open("postgres", psqlInfo)
+	Conn, err = pgxpool.Connect(context.Background(), connection_string)
 	if err != nil {
 		panic(err)
 	}
-	if err != nil {
-		panic(err)
-	}
-
-	err = Db.Ping()
 	if err != nil {
 		panic(err)
 	}

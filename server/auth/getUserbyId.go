@@ -1,16 +1,17 @@
 package auth
 
 import (
+	"context"
 	"fmt"
 
 	initializeDB "main.go/initializedb"
 )
 
 func GetUserById(id int) (*User, error) {
-	fmt.Println("Find user by id:", id)
-	sqlStatement := `SELECT * FROM users WHERE id = $1`
+	fmt.Println("GetUserById:", id)
+	sqlStatement := `SELECT email, name, username FROM users WHERE id = $1`
 	result := &User{}
-	err := initializeDB.Db.QueryRow(sqlStatement, id).Scan(&result.Id, &result.Email, &result.Password, &result.Name, &result.Username)
+	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&result.Email, &result.Name, &result.Username)
 	if err != nil {
 		return nil, err
 	}

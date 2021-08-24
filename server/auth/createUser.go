@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -47,7 +48,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	VALUES ($1, $2, $3, $4)`
 
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
-	_, err = initializeDB.Db.Exec(sqlStatement, u.Email, hashedPassword, u.Name, u.Username)
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.Email, hashedPassword, u.Name, u.Username)
 	if err != nil {
 		fmt.Println("create user", err)
 		response := JsonResponse{

@@ -14,6 +14,7 @@ export function useGetState() {
 					headers: { "content-type": "application/json" },
 				});
 				const data: AuthCurrentUserI = await response.json();
+				console.log(data);
 				setCurrentUser(data);
 			} catch (err) {
 				console.log(err);
