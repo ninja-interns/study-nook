@@ -8,9 +8,16 @@ import (
 	"main.go/auth"
 )
 
+//creating a new struct for a more extensible currentUser. Here we can add tasks and other states
+type currentUserState struct {
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
 //will hit when the API from main.go is invoked- can be called from multiple components on frontend using useGetState() from utils folder, custom hook. Backend solution to persisting data through a refresh
 func CurrentUserState(w http.ResponseWriter, r *http.Request, u *auth.User) {
-	currentUser := &auth.CurrentLoginUser{}
+	currentUser := &currentUserState{}
 
 	currentUser.Email = u.Email
 	currentUser.Name = u.Name
