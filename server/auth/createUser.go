@@ -35,6 +35,12 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	passwordLength := len(u.Password)
+	if passwordLength < 6 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	//one way hashing to create password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 	if err != nil {

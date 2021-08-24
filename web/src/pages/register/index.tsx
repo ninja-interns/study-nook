@@ -66,7 +66,7 @@ export function RegisterPage() {
 				<TextField required label="Name" type="text" inputRef={nameRef} />
 				<TextField required label="Username" type="text" inputRef={usernameRef} />
 				<TextField required label="Email" type="email" inputRef={emailRef} />
-				<TextField required label="Password" type="password" inputRef={passwordRef} />
+				<TextField required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
 				<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
 				<Button type="submit">Register</Button>
 				<Typography variant="body1">

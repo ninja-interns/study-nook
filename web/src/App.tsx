@@ -1,12 +1,12 @@
 import React from "react";
-import AuthProvider from "./contexts/AuthProvider";
+import { useAuthContainer } from "./containers/AuthContainer";
 import Routes from "./routes/Routes";
 
 function App() {
 	return (
-		<AuthProvider>
+		<useAuthContainer.Provider>
 			<Routes />
-		</AuthProvider>
+		</useAuthContainer.Provider>
 	);
 }
 export default App;
