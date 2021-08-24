@@ -19,10 +19,10 @@ func main() {
 
 	r := chi.NewRouter()
 
-	r.HandleFunc("/api/createUser", auth.CreateUser)
-	r.HandleFunc("/api/loginUser", auth.LoginUser)
-	r.HandleFunc("/api/checkEmail", auth.CheckEmail)
-	r.HandleFunc("/api/changePassword", auth.ChangePassword)
+	r.Post("/api/createUser", auth.CreateUser)
+	r.Post("/api/loginUser", auth.LoginUser)
+	r.Post("/api/checkEmail", auth.CheckEmail)
+	r.Post("/api/changePassword", auth.ChangePassword)
 
 	http.ListenAndServe(":8080", r)
 }

@@ -4,3 +4,4 @@ export * from "./login";
 export * from "./dashboard";
 export * from "./forgetpassword";
 export * from "./changepassword";
+export * from "./menu";
