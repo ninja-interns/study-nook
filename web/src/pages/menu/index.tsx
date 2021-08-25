@@ -1,5 +1,3 @@
-//ts-ignore is ignoring error "possibly undefined"
-
 import React, { useRef, useState } from "react";
 import { useStyles } from "./menuCss";
 import { TextField, Card, Button, Typography } from "@material-ui/core";
@@ -18,7 +16,7 @@ export function MenuPage() {
             <Typography className={css.options} variant="h4">Achievements</Typography>
             <Typography className={css.options} variant="h4">Sessions History</Typography>
             <Typography className={css.options} variant="h4">Study History</Typography>
-            <Typography className={css.options} variant="h4">Support</Typography>
+            <Typography className={css.options} variant="h4" onClick={() => history.push("./support")}>Support</Typography>
 
         </div >
     );

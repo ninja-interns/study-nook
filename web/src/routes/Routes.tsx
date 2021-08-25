@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
-import { HomePage, RegisterPage, LoginPage, DashboardPage, ForgetPasswordPage, ChangePasswordPage, MenuPage } from "../pages";
+import { HomePage, RegisterPage, LoginPage, DashboardPage, ForgetPasswordPage, ChangePasswordPage, MenuPage, SupportPage } from "../pages";
 
 const Routes = () => {
 	return (
@@ -12,6 +12,7 @@ const Routes = () => {
 				<Route path="/forgetpassword" component={ForgetPasswordPage} />
 				<Route path="/changepassword/*" component={ChangePasswordPage} />
 				<Route path="/menu" component={MenuPage} />
+				<Route path="/support" component={SupportPage} />
 				<Route path="/" component={HomePage} />
 			</Switch>
 		</Router>

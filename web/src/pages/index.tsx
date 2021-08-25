@@ -5,3 +5,4 @@ export * from "./dashboard";
 export * from "./forgetpassword";
 export * from "./changepassword";
 export * from "./menu";
+export * from "./support";
