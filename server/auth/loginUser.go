@@ -66,5 +66,5 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		IsValid: true,
 	}
 	json.NewEncoder(w).Encode(login)
-	fmt.Println(email, password_hash)
+	fmt.Println("FINISHED", email, password_hash)
 }
