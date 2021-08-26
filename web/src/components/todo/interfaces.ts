@@ -1,8 +1,7 @@
 // Todo Interface
 export interface TodoInterface {
 	id: string
-	text: string
-	isUrgent: boolean
+	title: string
 	isCompleted: boolean
 }
 

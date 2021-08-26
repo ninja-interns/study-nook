@@ -1,12 +1,10 @@
-import React from "react";
-import { useStyles } from "./homeCss";
-import Button from "@material-ui/core/Button";
-import Link from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { useStyles } from "./homeCss"
+import Button from "@material-ui/core/Button"
+import { useHistory } from "react-router-dom"
 
 export function Home() {
-	const css = useStyles();
-	const history = useHistory();
+	const css = useStyles()
+	const history = useHistory()
 
 	return (
 		<div className={css.container}>
@@ -18,7 +16,7 @@ export function Home() {
 				<div className={css.left}>
 					<Button
 						onClick={() => {
-							history.push("/registration");
+							history.push("/registration")
 						}}
 						variant="contained"
 						color="primary"
@@ -32,7 +30,7 @@ export function Home() {
 						variant="contained"
 						color="primary"
 						onClick={() => {
-							history.push("/login");
+							history.push("/login")
 						}}
 					>
 						Login
@@ -40,5 +38,5 @@ export function Home() {
 				</div>
 			</div>
 		</div>
-	);
+	)
 }

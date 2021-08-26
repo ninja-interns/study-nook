@@ -16,6 +16,7 @@ type User struct {
 	Password string `json:"password"`
 }
 
+
 //creating a struct for the JSON response message
 type JsonResponse struct {
 	Message string `json:"message"`

@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"main.go/auth"
+	"main.go/todo"
 	initializeDB "main.go/initializedb"
 )
 
@@ -19,8 +20,15 @@ func main() {
 
 	r := chi.NewRouter()
 
+	// Auth
 	r.HandleFunc("/api/createUser", auth.CreateUser)
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
+
+	// Task Management
+	r.HandleFunc("/api/getTasks", todo.getAllTasksHandler)
+	r.HandleFunc("/api/createTask", todo.createTaskHandler)
+	r.HandleFunc("/api/taskComplete", todo.taskCompleteHandler)
+	r.HandleFunc("/api/deleteTask", todo.deleteTaskHandler)
 
 	http.ListenAndServe(":8080", r)
 }

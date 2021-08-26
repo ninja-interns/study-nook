@@ -4,8 +4,8 @@ import { render } from "react-dom"
 import { v4 as uuidv4 } from "uuid"
 
 // Import Components
-import TimerForm from "./TimerForm"
-
+import { TimerForm } from "./Form"
+import { Timer } from "./Timer"
 // Import Interfaces
 import { TimerInterface } from "./interfaces"
 
@@ -27,6 +27,7 @@ export const TimerApp = () => {
 		<div className="timer-app">
 			<h1>Timer</h1>
 			<TimerForm timer={timer} handleTimerCreate={handleTimerCreate} />
+			<Timer />
 		</div>
 	)
 }
