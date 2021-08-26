@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createContainer } from "unstated-next";
 
 //can call any of these exports outside of the React Functional Component directly from this file
-export interface AuthCurrentUserI {
+export interface IAuthCurrentUser {
 	name: string | null;
 	username: string | null;
 	email: string | null;
@@ -10,7 +10,7 @@ export interface AuthCurrentUserI {
 
 function AuthDataContainer() {
 	const isLoggedIn = document.cookie.includes("session");
-	const [currentUser, setCurrentUser] = useState<AuthCurrentUserI>({
+	const [currentUser, setCurrentUser] = useState<IAuthCurrentUser>({
 		name: null,
 		username: null,
 		email: null,
@@ -23,4 +23,4 @@ function AuthDataContainer() {
 	};
 }
 
-export const useAuthContainer = createContainer(AuthDataContainer);
+export const AuthContainer = createContainer(AuthDataContainer);

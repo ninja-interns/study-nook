@@ -17,11 +17,9 @@ type currentUserState struct {
 
 //will hit when the API from main.go is invoked- can be called from multiple components on frontend using useGetState() from utils folder, custom hook. Backend solution to persisting data through a refresh
 func CurrentUserState(w http.ResponseWriter, r *http.Request, u *auth.User) {
-	currentUser := &currentUserState{}
-
-	currentUser.Email = u.Email
-	currentUser.Name = u.Name
-	currentUser.Username = u.Username
+	currentUser := &currentUserState{Email: u.Email,
+		Name:     u.Name,
+		Username: u.Username}
 
 	err := json.NewEncoder(w).Encode(currentUser)
 	if err != nil {
@@ -29,5 +27,4 @@ func CurrentUserState(w http.ResponseWriter, r *http.Request, u *auth.User) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(currentUser)
 }

@@ -30,7 +30,6 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	fmt.Println(u.Email, u.Username, u.Password)
 	//Querying our database where our email column = the email the user input on the frontend
 	sqlStatement := `
 	SELECT * FROM users WHERE email = $1 OR username = $2`
@@ -38,7 +37,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	//scanning the id, email and password from the DB into the created variables above
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username)
 	if err != nil {
-		fmt.Println("DB ERROR", err)
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 
 	//comparing the password from the DB and from the users input. If theres an error, it writes a response body to send to the front end.

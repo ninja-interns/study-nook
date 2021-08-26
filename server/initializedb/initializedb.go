@@ -12,12 +12,9 @@ var Conn *pgxpool.Pool
 //initializing my database
 func InitDB() {
 	var err error
-	connection_string := "postgres://dev:dev@localhost:5432/studynook?sslmode=disable"
+	connectionString := "postgres://dev:dev@localhost:5432/studynook?sslmode=disable"
 	//ran into ALOT of errors here because I was writing: db, err := sql.... which was assigning db to a local variable, not assigning it to the global variable which it is doing now.
-	Conn, err = pgxpool.Connect(context.Background(), connection_string)
-	if err != nil {
-		panic(err)
-	}
+	Conn, err = pgxpool.Connect(context.Background(), connectionString)
 	if err != nil {
 		panic(err)
 	}

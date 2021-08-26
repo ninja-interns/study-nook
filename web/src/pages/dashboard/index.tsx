@@ -2,12 +2,12 @@ import { Button, Typography } from "@material-ui/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { Logout } from "../../components";
-import { useAuthContainer } from "../../containers/AuthContainer";
+import { AuthContainer } from "../../containers/AuthContainer";
 import { useGetState } from "./../../utils/getState";
 
 export function Dashboard() {
 	useGetState();
-	const { currentUser } = useAuthContainer.useContainer();
+	const { currentUser } = AuthContainer.useContainer();
 	const history = useHistory();
 
 	return (

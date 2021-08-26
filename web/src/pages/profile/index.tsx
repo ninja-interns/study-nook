@@ -1,10 +1,10 @@
 import React from "react";
-import { useAuthContainer } from "../../containers/AuthContainer";
+import { AuthContainer } from "../../containers/AuthContainer";
 import { useGetState } from "../../utils/getState";
 
 export function Profile() {
 	useGetState();
-	const { currentUser } = useAuthContainer.useContainer();
+	const { currentUser } = AuthContainer.useContainer();
 	return (
 		<div>
 			Profile

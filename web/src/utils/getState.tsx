@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { AuthCurrentUserI, useAuthContainer } from "../containers/AuthContainer";
+import { IAuthCurrentUser, AuthContainer } from "../containers/AuthContainer";
 
 //this is a custom hook designed to be called at the beginning of each page to allow current User state and info to be persisted across refreshes.
 export function useGetState() {
-	const { setCurrentUser } = useAuthContainer.useContainer();
+	const { setCurrentUser } = AuthContainer.useContainer();
 
 	// this useEffect will run on every reload of the page component only
 	useEffect(() => {
@@ -13,7 +13,7 @@ export function useGetState() {
 					method: "GET",
 					headers: { "content-type": "application/json" },
 				});
-				const data: AuthCurrentUserI = await response.json();
+				const data: IAuthCurrentUser = await response.json();
 				console.log(data);
 				setCurrentUser(data);
 			} catch (err) {

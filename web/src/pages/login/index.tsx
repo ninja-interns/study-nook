@@ -3,7 +3,7 @@ import { useStyles } from "./loginPageCss";
 import { TextField, Card, Button, Typography } from "@material-ui/core";
 import { useHistory, Link } from "react-router-dom";
 
-interface DataI {
+interface IData {
 	isValid: boolean;
 	message: string;
 }
@@ -27,7 +27,7 @@ export function LoginPage() {
 				body: JSON.stringify({ email: userRef?.current?.value, username: userRef?.current?.value, password: passwordRef?.current?.value }),
 			});
 			//awaiting the response to comeback and turn it into readable json data
-			const data: DataI = await response.json();
+			const data: IData = await response.json();
 			console.log(data);
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 

@@ -11,7 +11,7 @@ import (
 )
 
 type User struct {
-	Id       int    `json:"id"`
+	ID       int    `json:"id"`
 	Email    string `json:"email"`
 	Name     string `json:"name"`
 	Username string `json:"username"`
@@ -26,7 +26,6 @@ type JsonResponse struct {
 
 //will hit when the API from main.go is invoked
 func CreateUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("HIT")
 	u := &User{}
 	err := json.NewDecoder(r.Body).Decode(u)
 	if err != nil {
@@ -56,7 +55,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.Email, hashedPassword, u.Name, u.Username)
 	if err != nil {
-		fmt.Println("create user", err)
 		response := JsonResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,

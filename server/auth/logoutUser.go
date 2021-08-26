@@ -2,14 +2,14 @@ package auth
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
 func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	err := SessionManager.Destroy(r.Context())
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	logout := JsonResponse{

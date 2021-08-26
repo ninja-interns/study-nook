@@ -15,7 +15,7 @@ export function RegisterPage() {
 	const [error, setError] = useState<string>("");
 	const history = useHistory();
 
-	interface DataI {
+	interface IData {
 		isValid: boolean;
 		message: string;
 	}
@@ -47,7 +47,7 @@ export function RegisterPage() {
 					name: nameRef?.current?.value,
 				}),
 			});
-			const data: DataI = await response.json();
+			const data: IData = await response.json();
 			if (data.isValid) {
 				history.push("/login");
 			} else {

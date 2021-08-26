@@ -1,15 +1,15 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { useAuthContainer } from "../containers/AuthContainer";
+import { AuthContainer } from "../containers/AuthContainer";
 
-interface PrivateRouteI {
+interface IPrivateRouteProps {
 	component: React.FC;
 	path: string;
 }
 
 //A component that will check if the user is logged in (see AuthProvider), and if true, route them to the desired path and component or redirect them to the login page
-export function PrivateRoute({ component: Component, path }: PrivateRouteI) {
-	const { isLoggedIn } = useAuthContainer.useContainer();
+export function PrivateRoute({ component: Component, path }: IPrivateRouteProps) {
+	const { isLoggedIn } = AuthContainer.useContainer();
 	return (
 		<Route
 			render={() => {
