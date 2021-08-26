@@ -17,11 +17,11 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	u := &User{}
 
 	//initializing variables w/o any value to scan in from our database
-	var id int
 	var email string
 	var name string
 	var username string
 	var password_hash string
+	var isVerfied bool
 
 	//decoding the request body into the instanced User(u)
 	err := json.NewDecoder(r.Body).Decode(u)
@@ -33,12 +33,21 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	//Querying our database where our email column = the email the user input on the frontend
 	sqlStatement := `
-	SELECT * FROM users WHERE email = $1 OR username = $2`
+	SELECT email, password_hash, name, username, isVerified FROM users WHERE email = $1 OR username = $2`
 
 	//scanning the id, email and password from the DB into the created variables above
-	err = initializeDB.Db.QueryRow(sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username)
+	err = initializeDB.Db.QueryRow(sqlStatement, u.Email, u.Username).Scan(&email, &password_hash, &name, &username, &isVerfied)
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	if !isVerfied {
+		response := JsonResponse{
+			Message: "Please verify your email first.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
 	}
 
 	//comparing the password from the DB and from the users input. If theres an error, it writes a response body to send to the front end.

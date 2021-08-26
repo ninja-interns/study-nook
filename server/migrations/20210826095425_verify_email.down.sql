@@ -1,0 +1,4 @@
+ALTER TABLE users 
+    DROP COLUMN IF EXISTS is_Verified,
+    DROP COLUMN IF EXISTS token;
+
