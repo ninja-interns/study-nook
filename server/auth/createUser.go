@@ -21,8 +21,9 @@ type User struct {
 
 //creating a struct for the JSON response message
 type JsonResponse struct {
-	Message string `json:"message"`
-	IsValid bool   `json:"isValid"`
+	Message    string `json:"message"`
+	IsValid    bool   `json:"isValid"`
+	IsVerified bool   `json:"isVerified"`
 }
 
 //will hit when the API from main.go is invoked
