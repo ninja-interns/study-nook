@@ -2,10 +2,12 @@ import React, { useRef, useState } from "react";
 import { useStyles } from "./loginPageCss";
 import { TextField, Card, Button, Typography } from "@material-ui/core";
 import { useHistory, Link } from "react-router-dom";
+import { AuthContainer } from "../../containers/AuthContainer";
 
 interface IData {
 	isValid: boolean;
 	message: string;
+	isVerified: boolean;
 }
 
 export function LoginPage() {
@@ -14,6 +16,7 @@ export function LoginPage() {
 	const passwordRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
 	const history = useHistory();
+	const { isLoggedIn } = AuthContainer.useContainer();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -28,10 +31,9 @@ export function LoginPage() {
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: IData = await response.json();
-			console.log(data);
+			console.log(data, "isLoggedIn", isLoggedIn);
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
-
-			if (data.isValid) {
+			if (data.isValid && data.isVerified) {
 				history.push("/dashboard");
 			} else {
 				setError(data.message);
