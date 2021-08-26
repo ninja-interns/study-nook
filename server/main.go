@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"main.go/auth"
 	initializeDB "main.go/initializedb"
+	"main.go/reports"
 )
 
 func main() {
@@ -23,6 +24,7 @@ func main() {
 	r.Post("/api/loginUser", auth.LoginUser)
 	r.Post("/api/checkEmail", auth.CheckEmail)
 	r.Post("/api/changePassword", auth.ChangePassword)
+	r.Post("/api/reportSubmission", reports.SubmitReports)
 
 	http.ListenAndServe(":8080", r)
 }
