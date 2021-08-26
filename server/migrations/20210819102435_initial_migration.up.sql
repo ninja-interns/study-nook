@@ -4,4 +4,4 @@ CREATE TABLE IF NOT EXISTS users(
     password_hash BYTEA NOT NULL,
     name TEXT NOT NULL,
     username TEXT UNIQUE NOT NULL
-)
+);

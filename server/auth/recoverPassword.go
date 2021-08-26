@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 
 // Struct to store data in json format fetched from front-end
 type Email struct {
-	Email string `json: string`
+	Email string `json:"email"`
 }
 
 // Variables needed to make a SMTP request
@@ -62,7 +63,7 @@ func CreateVerificationToken(email string) uuid.UUID {
 	row := ""
 
 	// Querying database and storing any resultant rows in variable
-	err = initializeDB.Db.QueryRow(sqlStatement, email).Scan(&row)
+	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, email).Scan(&row)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -74,10 +75,10 @@ func CreateVerificationToken(email string) uuid.UUID {
 	// token invalid.
 	if row == "" {
 		query := `INSERT INTO email_token (email, token) VALUES ($1, $2);`
-		initializeDB.Db.QueryRow(query, email, token)
+		initializeDB.Conn.QueryRow(context.Background(), query, email, token)
 	} else {
 		query := `UPDATE email_token SET token = $1 WHERE email = $2;`
-		initializeDB.Db.QueryRow(query, token, email)
+		initializeDB.Conn.QueryRow(context.Background(), query, token, email)
 	}
 
 	return token
@@ -103,7 +104,7 @@ func CheckEmail(w http.ResponseWriter, r *http.Request) {
 	row := ""
 
 	// Querying to database
-	err = initializeDB.Db.QueryRow(sqlStatement, email.Email).Scan(&row)
+	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, email.Email).Scan(&row)
 	if err != nil {
 		fmt.Println(err)
 	}

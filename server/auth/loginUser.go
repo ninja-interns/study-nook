@@ -38,7 +38,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	//scanning the id, email and password from the DB into the created variables above
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username)
 	if err != nil {
+		fmt.Println()
 		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	//comparing the password from the DB and from the users input. If theres an error, it writes a response body to send to the front end.
@@ -60,6 +62,8 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	SessionManager.Put(r.Context(), "name", name)
 	SessionManager.Put(r.Context(), "username", username)
 	SessionManager.Put(r.Context(), "email", email)
+
+	w.WriteHeader(http.StatusAccepted)
 
 	login := JsonResponse{
 		Message: "Success!",

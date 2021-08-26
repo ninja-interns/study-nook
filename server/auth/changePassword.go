@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,8 +13,8 @@ import (
 
 // Struct to store data in json format fetched from front-end
 type Password struct {
-	Password string `json: string`
-	Token    string `json: string`
+	Password string `json:"password"`
+	Token    string `json:"token"`
 }
 
 // Function to check if token exists in "email_token" table
@@ -25,7 +26,7 @@ func CheckToken(token string) string {
 	row := ""
 
 	// Making query to database and scanning any results to empty variable
-	err := initializeDB.Db.QueryRow(sqlStatement, token).Scan(&row)
+	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, token).Scan(&row)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -47,7 +48,7 @@ func DeleteTokenRow(token string) {
 	sqlStatement := `DELETE FROM email_token WHERE token = $1;`
 
 	// Querying database
-	_, err := initializeDB.Db.Exec(sqlStatement, token)
+	_, err := initializeDB.Conn.Exec(context.Background(), sqlStatement, token)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -88,9 +89,8 @@ func ChangePassword(w http.ResponseWriter, r *http.Request) {
 
 	// Querying database and sending response back to front-end
 	// if anything goes wrong
-	_, err = initializeDB.Db.Exec(sqlStatement, hashedPassword, email)
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, hashedPassword, email)
 	if err != nil {
-		fmt.Println("Change password ", err)
 		response := JsonResponse{
 			Message: "There was an error on the process. Please, try again or request a new password change.",
 			IsValid: false,

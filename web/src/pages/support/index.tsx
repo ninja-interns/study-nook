@@ -55,7 +55,6 @@ export function SupportPage() {
         setMessage(e.target.value);
     };
 
-
     const body = (
         <div className={css.popUpBody}>
             <Typography variant="h5" className={css.popUpTitle}>Confirmation</Typography>

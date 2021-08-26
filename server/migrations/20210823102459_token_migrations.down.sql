@@ -1,1 +1,1 @@
-DROP TABLE email_token;
+DROP TABLE IF EXISTS email_token;
