@@ -10,10 +10,6 @@ export const Timer = () => {
 	const inputRef = React.useRef<HTMLInputElement>(null)
 	const history = useHistory()
 
-	fetch("api/timer", {
-		method: "POST",
-	})
-
 	function handleClick(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault()
 		console.log("I was clicked", event)

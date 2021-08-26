@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { useStyles } from "./registerPageCss";
 import { TextField, Card, Button, Typography } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 export function RegisterPage() {
 	const css = useStyles();
@@ -14,6 +14,11 @@ export function RegisterPage() {
 	const passwordConfirmRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
 	const history = useHistory();
+
+	interface IData {
+		isValid: boolean;
+		message: string;
+	}
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -42,7 +47,7 @@ export function RegisterPage() {
 					name: nameRef?.current?.value,
 				}),
 			});
-			const data = await response.json();
+			const data: IData = await response.json();
 			if (data.isValid) {
 				history.push("/login");
 			} else {
@@ -61,9 +66,12 @@ export function RegisterPage() {
 				<TextField required label="Name" type="text" inputRef={nameRef} />
 				<TextField required label="Username" type="text" inputRef={usernameRef} />
 				<TextField required label="Email" type="email" inputRef={emailRef} />
-				<TextField required label="Password" type="password" inputRef={passwordRef} />
+				<TextField required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
 				<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
 				<Button type="submit">Register</Button>
+				<Typography variant="body1">
+					Already have an account? <Link to="/login">Log in here</Link>
+				</Typography>
 			</form>
 		</Card>
 	);

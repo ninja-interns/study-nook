@@ -1,3 +1,4 @@
 export * from "./todo"
 export * from "./home"
-export * from "./registration"
+export * from "./home"
+export * from "./logout"
