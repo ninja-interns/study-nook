@@ -21,7 +21,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	var email string
 	var name string
 	var username string
-	var password_hash string
+	var password_hash []byte
 	var isVerfied bool
 
 	//decoding the request body into the instanced User(u)
@@ -33,12 +33,14 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 	//Querying our database where our email column = the email the user input on the frontend
 	sqlStatement := `
-	SELECT id, email, password_hash, name, username, isVerified FROM users WHERE email = $1 OR username = $2`
+	SELECT id, email, password_hash, name, username, is_verified FROM users WHERE email = $1 OR username = $2`
 
 	//scanning the id, email and password from the DB into the created variables above
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerfied)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
+		return
 	}
 
 	if !isVerfied {

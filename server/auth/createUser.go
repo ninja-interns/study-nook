@@ -16,6 +16,7 @@ type User struct {
 	Username  string `json:"username"`
 	Password  string `json:"password"`
 	IsVerfied string `json:"isVerified"`
+	Token     string `json:"token"`
 }
 
 //creating a struct for the JSON response message
@@ -47,24 +48,27 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token := CreateToken()
+
 	//creating an insert in our database
 	sqlStatement := `
-	INSERT INTO users (email, password_hash, name, username, isVerfied)
-	VALUES ($1, $2, $3, $4, $5)`
+	INSERT INTO users (email, password_hash, name, username, is_verified, token)
+	VALUES ($1, $2, $3, $4, $5, $6)`
 
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.Email, hashedPassword, u.Name, u.Username)
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.Email, hashedPassword, u.Name, u.Username, false, token)
 	if err != nil {
 		response := JsonResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
 		}
+		fmt.Println(err)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	//if it reaches here, everything is okay, sends back a success to the front end via a response
-	SendEmail(u.Email, "Verify your email with StudyNook")
+	SendEmail(u.Email, "Verify your email with StudyNook", "emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
 	response := JsonResponse{
 		Message: "Success, Please check your email to verify your account!",
 		IsValid: true,

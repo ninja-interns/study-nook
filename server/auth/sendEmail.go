@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"html/template"
 	"net/smtp"
+
+	"github.com/gofrs/uuid"
 )
 
 // Variables needed to make a SMTP request
@@ -15,21 +17,15 @@ const (
 	smtpPort          = "587"
 )
 
-type templateVariables struct {
-	Email string `json: "email"`
-	Name  string `json: "name"`
-	Token string `json: "token"`
-}
-
 //Send Email- make it reusable so that both recover password and verify email can use it.
 
-func SendEmail(emailStr string, subjectStr string, bodyStr string) {
+func SendEmail(emailStr string, subjectStr string, file string, data interface{}) {
+	parsedFile := ParseTemplate(file, data)
+	body := parsedFile
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	toEmail := emailStr
 	address := smtpServer + ":" + smtpPort
-	to := []string{toEmail}
+	to := []string{emailStr}
 	subject := "Subject:" + subjectStr + "\n"
-	body := bodyStr
 	message := []byte(subject + mime + body)
 	auth := smtp.PlainAuth("", fromAddress, fromEmailPassword, smtpServer)
 
@@ -41,16 +37,27 @@ func SendEmail(emailStr string, subjectStr string, bodyStr string) {
 
 //I also need to parse my HTML file here so that it can be sent via email
 
-func ParseTemplate(file string) {
-
+func ParseTemplate(file string, data interface{}) string {
 	t, err := template.ParseFiles(file)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	buff := new(bytes.Buffer)
+	err = t.Execute(buff, data)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	t.Execute(buff)
+	return buff.String()
 }
 
 //Create token that can be added to users table, both recover password and verify email will use it.
+
+func CreateToken() string {
+	token, err := uuid.NewV4()
+	if err != nil {
+		fmt.Println(err)
+	}
+	return token.String()
+}

@@ -25,7 +25,7 @@ func main() {
 
 	r.HandleFunc("/api/createUser", auth.CreateUser)
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
-	r.HandleFunc("/api/verifyEmail", auth.VerifyEmail)
+	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
 	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
 
