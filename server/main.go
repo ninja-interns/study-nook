@@ -11,17 +11,23 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"main.go/auth"
+	"main.go/currentUser"
 	initializeDB "main.go/initializedb"
+	"main.go/middleware"
 )
 
 func main() {
 	initializeDB.InitDB()
+
+	auth.SessionsConfig()
 
 	r := chi.NewRouter()
 
 	r.HandleFunc("/api/createUser", auth.CreateUser)
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
 	r.HandleFunc("/api/verifyEmail", auth.VerifyEmail)
+	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
+	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
 
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }

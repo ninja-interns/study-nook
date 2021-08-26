@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -15,8 +16,8 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	//creating an instance of User struct (defined in createUser.go) to be used to decode our request info into
 	u := &User{}
-
 	//initializing variables w/o any value to scan in from our database
+	var id int
 	var email string
 	var name string
 	var username string
@@ -30,15 +31,14 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
 	//Querying our database where our email column = the email the user input on the frontend
 	sqlStatement := `
-	SELECT email, password_hash, name, username, isVerified FROM users WHERE email = $1 OR username = $2`
+	SELECT id, email, password_hash, name, username, isVerified FROM users WHERE email = $1 OR username = $2`
 
 	//scanning the id, email and password from the DB into the created variables above
-	err = initializeDB.Db.QueryRow(sqlStatement, u.Email, u.Username).Scan(&email, &password_hash, &name, &username, &isVerfied)
+	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerfied)
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 
 	if !isVerfied {
@@ -63,11 +63,17 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if it reaches this point, the login is suuccessful and writes back a response body to the front end
+	//if it reaches this point, the login is successful and writes back a response body to the front end
+	//creating variables in my session
+	SessionManager.Put(r.Context(), "id", id)
+	SessionManager.Put(r.Context(), "name", name)
+	SessionManager.Put(r.Context(), "username", username)
+	SessionManager.Put(r.Context(), "email", email)
+
 	login := JsonResponse{
 		Message: "Success!",
 		IsValid: true,
 	}
 	json.NewEncoder(w).Encode(login)
-	fmt.Println(email, password_hash)
+	fmt.Println("FINISHED", email, password_hash)
 }
