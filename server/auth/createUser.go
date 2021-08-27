@@ -36,6 +36,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//checking password length at the backend as well as the frontend
 	passwordLength := len(u.Password)
 	if passwordLength < 6 {
 		w.WriteHeader(http.StatusBadRequest)
@@ -49,6 +50,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//creating a token to send to the database- in sendEmail.go. This is the token that will be compared to the user's entered code to verify their email
 	token := CreateToken()
 
 	//creating an insert in our database

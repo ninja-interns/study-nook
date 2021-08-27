@@ -25,6 +25,7 @@ export function EmailVerificationPage() {
 			});
 			const data: IData = await response.json();
 			setMessage(data.message);
+
 			if (data.isValid) {
 				history.push("/login");
 			}

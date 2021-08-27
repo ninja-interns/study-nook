@@ -48,11 +48,12 @@ export function RegisterPage() {
 					name: nameRef?.current?.value,
 				}),
 			});
+
+			//pushing to the page where they can verify their email
 			const data: IData = await response.json();
 			if (data.isValid) {
 				history.push("/verifyEmail");
 				setMessage(data.message);
-				console.log(message);
 			} else {
 				setMessage(data.message);
 			}
