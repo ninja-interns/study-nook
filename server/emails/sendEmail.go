@@ -1,12 +1,10 @@
-package auth
+package emails
 
 import (
 	"bytes"
 	"fmt"
 	"html/template"
 	"net/smtp"
-
-	"github.com/gofrs/uuid"
 )
 
 // Variables needed to make a SMTP request
@@ -16,15 +14,6 @@ const (
 	smtpServer        = "smtp.gmail.com"
 	smtpPort          = "587"
 )
-
-//Create token that can be added to users table, both recover password and verify email will use it.
-func CreateToken() string {
-	token, err := uuid.NewV4()
-	if err != nil {
-		fmt.Println(err)
-	}
-	return token.String()
-}
 
 //Function to parse the html template so it can be sent via the email body- it also will enter the variable data into the file
 func ParseTemplate(file string, data interface{}) string {

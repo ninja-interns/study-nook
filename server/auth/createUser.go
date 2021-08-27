@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
+	"main.go/emails"
 	initializeDB "main.go/initializedb"
 )
 
@@ -71,7 +72,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//if it reaches here, everything is okay, sends back a success to the front end via a response
-	SendEmail(u.Email, "Verify your email with StudyNook", "emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
+	emails.SendEmail(u.Email, "Verify your email with StudyNook", "emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
 	response := JsonResponse{
 		Message: "Success, Please check your email to verify your account!",
 		IsValid: true,
