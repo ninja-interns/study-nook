@@ -8,6 +8,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"main.go/auth"
@@ -17,6 +18,7 @@ import (
 )
 
 func main() {
+	os.Setenv("test", "test")
 	initializeDB.InitDB()
 
 	auth.SessionsConfig()
