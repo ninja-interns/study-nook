@@ -38,19 +38,14 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	//scanning the id, email and password from the DB into the created variables above
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerified)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(isVerified)
-
-	if !isVerified {
 		response := JsonResponse{
-			Message:    "Please verify your email first.",
+			Message:    "Your username or password is incorrect.",
 			IsValid:    false,
 			IsVerified: isVerified,
 		}
 		json.NewEncoder(w).Encode(response)
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
 		return
 	}
 
@@ -59,11 +54,21 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		response := JsonResponse{
-			Message:    "Your password is incorrect.",
+			Message:    "Your username or password is incorrect.",
 			IsValid:    false,
 			IsVerified: isVerified,
 		}
 		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	if !isVerified {
+		response := JsonResponse{
+			Message:    "Please verify your email first.",
+			IsValid:    false,
+			IsVerified: isVerified,
+		}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
