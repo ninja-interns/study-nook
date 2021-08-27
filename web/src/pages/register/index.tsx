@@ -3,7 +3,7 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, Redirect, Route } from "react-router-dom";
 import { Snackbars } from "./../../components/snackbar/index";
 import { useStyles } from "./registerPageCss";
 
@@ -16,8 +16,8 @@ export function RegisterPage(): JSX.Element {
 	const passwordConfirmRef = useRef<HTMLInputElement>();
 	const [message, setMessage] = useState<string>("");
 	const [severity, setSeverity] = useState<Color | undefined>(undefined);
+	const [redirect, setRedirect] = useState<string | null>(null);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const history = useHistory();
 
 	interface IData {
 		isValid: boolean;
@@ -62,7 +62,7 @@ export function RegisterPage(): JSX.Element {
 			//pushing to the page where they can verify their email
 			const data: IData = await response.json();
 			if (data.isValid) {
-				history.push("/verifyEmail");
+				setRedirect("/verifyEmail");
 				setMessage(data.message);
 				setSeverity("success");
 				setIsOpen(true);
@@ -85,20 +85,23 @@ export function RegisterPage(): JSX.Element {
 	};
 
 	return (
-		<Card className={css.container}>
-			<Typography variant="h2">Register</Typography>
-			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required label="Name" type="text" inputRef={nameRef} />
-				<TextField required label="Username" type="text" inputRef={usernameRef} />
-				<TextField required label="Email" type="email" inputRef={emailRef} />
-				<TextField required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
-				<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
-				<Button type="submit">Register</Button>
-				<Typography variant="body1">
-					Already have an account? <Link to="/login">Log in here</Link>
-				</Typography>
-			</form>
-		</Card>
+		<>
+			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Card className={css.container}>
+				<Typography variant="h2">Register</Typography>
+				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+				<form className={css.form} onSubmit={handleLogin}>
+					<TextField required label="Name" type="text" inputRef={nameRef} />
+					<TextField required label="Username" type="text" inputRef={usernameRef} />
+					<TextField required label="Email" type="email" inputRef={emailRef} />
+					<TextField required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
+					<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
+					<Button type="submit">Register</Button>
+					<Typography variant="body1">
+						Already have an account? <Link to="/login">Log in here</Link>
+					</Typography>
+				</form>
+			</Card>
+		</>
 	);
 }

@@ -15,7 +15,7 @@ export function useGetState() {
 				});
 				const data: IAuthCurrentUser = await response.json();
 				console.log(data);
-				setIsLoggedIn(document.cookie.includes("session"));
+				setIsLoggedIn(data.name !== null);
 				setCurrentUser(data);
 			} catch (err) {
 				console.error(err);

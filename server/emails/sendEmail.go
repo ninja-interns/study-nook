@@ -56,3 +56,19 @@ func SendEmail(emailStr string, subjectStr string, file string, data interface{}
 		return
 	}
 }
+
+//FOR USE IN DEVELOPMENT ONLY- set our mail to this instead to just print
+func DEVSendEmail(emailStr string, subjectStr string, file string, data interface{}) {
+	body := ParseTemplate(file, data)
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	address := smtpServer + ":" + smtpPort
+	auth := smtp.PlainAuth("", fromAddress, fromEmailPassword, smtpServer)
+
+	to := []string{emailStr}
+	subject := "Subject:" + subjectStr + "\n"
+	message := []byte(subject + mime + body)
+
+	//printing
+	fmt.Println("address: ", address, "\n auth: ", auth, "\n to: ", to, "\n subject: ", subjectStr, "\n message: ", message)
+
+}

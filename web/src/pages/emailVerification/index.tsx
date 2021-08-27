@@ -1,9 +1,9 @@
 import { Button, TextField, Typography } from "@material-ui/core";
-import React, { useRef, useState } from "react";
-import { useStyles } from "./emailVerificationCss";
-import { useHistory } from "react-router-dom";
 import { Color } from "@material-ui/lab/Alert";
+import React, { useRef, useState } from "react";
+import { Redirect, Route } from "react-router-dom";
 import { Snackbars } from "../../components";
+import { useStyles } from "./emailVerificationCss";
 
 interface IData {
 	isValid: boolean;
@@ -16,7 +16,7 @@ export function EmailVerificationPage() {
 	const [message, setMessage] = useState<string>("");
 	const [severity, setSeverity] = useState<Color | undefined>(undefined);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const history = useHistory();
+	const [redirect, setRedirect] = useState<string | null>(null);
 
 	async function handleVerification(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -32,7 +32,7 @@ export function EmailVerificationPage() {
 			const data: IData = await response.json();
 
 			if (data.isValid) {
-				history.push("/login");
+				setRedirect("/login");
 				return;
 			}
 
@@ -54,6 +54,7 @@ export function EmailVerificationPage() {
 
 	return (
 		<div className={css.container}>
+			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
 			<Typography variant="h2">Email Verification</Typography>
 			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<Typography variant="subtitle1">Please enter the code you were sent.</Typography>

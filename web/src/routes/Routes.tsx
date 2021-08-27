@@ -12,7 +12,7 @@ const Routes = () => {
 				<Route path="/verifyEmail" component={EmailVerificationPage} />
 				<PrivateRoute path="/dashboard" component={Dashboard} />
 				<PrivateRoute path="/profile" component={Profile} />
-				<Route path="/" component={HomePage} />
+				<Route exact path="/" component={HomePage} />
 			</Switch>
 		</Router>
 	);
