@@ -16,7 +16,7 @@ export function LoginPage() {
 	const passwordRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
 	const history = useHistory();
-	const { isLoggedIn } = AuthContainer.useContainer();
+	const { isLoggedIn, setIsLoggedIn } = AuthContainer.useContainer();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -34,6 +34,7 @@ export function LoginPage() {
 			console.log(data, "isLoggedIn", isLoggedIn);
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 			if (data.isValid && data.isVerified) {
+				setIsLoggedIn(true);
 				history.push("/dashboard");
 			} else {
 				setError(data.message);
