@@ -1,24 +1,65 @@
 // import dependencies
 import { Button } from "@material-ui/core"
 import * as React from "react"
-import { useEffect } from "react"
 import { TextField } from "@material-ui/core"
-import { useHistory } from "react-router-dom"
+// import { useHistory } from "react-router-dom"
 
-export const Timer = () => {
-	const [formState, setFormState] = React.useState("")
-	const inputRef = React.useRef<HTMLInputElement>(null)
-	const history = useHistory()
+export function Timer() {
+	const timerDurationRef = React.useRef<HTMLInputElement>()
 
-	function handleClick(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault()
-		console.log("I was clicked", event)
+	//const history = useHistory()
+
+	async function handleCreateTimer(error: React.FormEvent<HTMLFormElement>) {
+		// Prevent the page from reloading
+		error.preventDefault()
+
+		// Do not send the data to DB if the number is not a number?
+
+		// Adding to DB
+		const response = await fetch("/api/createTimer", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				timerDuration: timerDurationRef?.current?.value,
+			}),
+		})
+
+		if (response.ok) {
+			return await response.json()
+		} else {
+			const errorMessage = await response.text()
+			return Promise.reject(new Error(errorMessage))
+		}
+	}
+
+	// HAVE NOT FINISHED THIS YET
+	async function fetchTimeRemaining(error: React.FormEvent<HTMLFormElement>) {
+		// Prevent the page from reloading
+		error.preventDefault()
+
+		// Do not send the data to DB if the number is not a number?
+
+		// Adding to DB
+		const response = await fetch("/api/createTimer", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify({
+				timerDuration: timerDurationRef?.current?.value,
+			}),
+		})
+
+		if (response.ok) {
+			return await response.json()
+		} else {
+			const errorMessage = await response.text()
+			return Promise.reject(new Error(errorMessage))
+		}
 	}
 
 	return (
 		<div>
-			<form onSubmit={handleClick}>
-				<TextField inputRef={inputRef} type="text">
+			<form onSubmit={handleCreateTimer}>
+				<TextField inputRef={timerDurationRef} type="text">
 					Put Number Here
 				</TextField>
 				<Button type="submit">Click Me</Button>

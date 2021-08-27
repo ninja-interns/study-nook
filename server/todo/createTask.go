@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-type task struct {
+type Task struct {
 	OwnerId 	string 
 	Title		string
 	isCompleted bool
@@ -17,7 +17,7 @@ type JsonResponse struct {
 }
 
 // Create task handler creates a new task item
-func createTask(w http.ResponseWriter, r *http.Request) {
+func CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	
 }

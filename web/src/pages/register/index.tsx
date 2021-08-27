@@ -1,39 +1,39 @@
 //ts-ignore is ignoring error "possibly undefined"
 
-import React, { useRef, useState } from "react";
-import { useStyles } from "./registerPageCss";
-import { TextField, Card, Button, Typography } from "@material-ui/core";
-import { useHistory, Link } from "react-router-dom";
+import React, { useRef, useState } from "react"
+import { useStyles } from "./registerPageCss"
+import { TextField, Card, Button, Typography } from "@material-ui/core"
+import { useHistory, Link } from "react-router-dom"
 
 export function RegisterPage() {
-	const css = useStyles();
-	const emailRef = useRef<HTMLInputElement>();
-	const nameRef = useRef<HTMLInputElement>();
-	const usernameRef = useRef<HTMLInputElement>();
-	const passwordRef = useRef<HTMLInputElement>();
-	const passwordConfirmRef = useRef<HTMLInputElement>();
-	const [error, setError] = useState<string>("");
-	const history = useHistory();
+	const css = useStyles()
+	const emailRef = useRef<HTMLInputElement>()
+	const nameRef = useRef<HTMLInputElement>()
+	const usernameRef = useRef<HTMLInputElement>()
+	const passwordRef = useRef<HTMLInputElement>()
+	const passwordConfirmRef = useRef<HTMLInputElement>()
+	const [error, setError] = useState<string>("")
+	const history = useHistory()
 
 	interface IData {
-		isValid: boolean;
-		message: string;
+		isValid: boolean
+		message: string
 	}
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setError("");
+		e.preventDefault()
+		setError("")
 
 		//not letting user continue to send to DB if the passwords do not match
 		if (passwordRef?.current?.value.trim() !== passwordConfirmRef?.current?.value) {
-			setError("Passwords do not match.");
-			return;
+			setError("Passwords do not match.")
+			return
 		}
 
 		//not letting user continue to send to DB if the password or email ref if there are just spaces filled out.
 		if (emailRef?.current?.value.trim() === "" || passwordRef?.current?.value.trim() === "") {
-			setError("Please fill out all fields");
-			return;
+			setError("Please fill out all fields")
+			return
 		}
 
 		try {
@@ -46,15 +46,15 @@ export function RegisterPage() {
 					username: usernameRef?.current?.value,
 					name: nameRef?.current?.value,
 				}),
-			});
-			const data: IData = await response.json();
+			})
+			const data: IData = await response.json()
 			if (data.isValid) {
-				history.push("/login");
+				history.push("/login")
 			} else {
-				setError(data.message);
+				setError(data.message)
 			}
 		} catch (err) {
-			console.log(err);
+			console.log(err)
 		}
 	}
 
@@ -74,5 +74,5 @@ export function RegisterPage() {
 				</Typography>
 			</form>
 		</Card>
-	);
+	)
 }

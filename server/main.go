@@ -14,7 +14,10 @@ import (
 	"main.go/currentUser"
 	initializeDB "main.go/initializedb"
 	"main.go/middleware"
+	"main.go/timer"
+	"main.go/todo"
 )
+
 
 func main() {
 	initializeDB.InitDB()
@@ -29,12 +32,15 @@ func main() {
 	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
 
+	// Timer
+	r.HandleFunc("/api/createTimer", timer.CreateTimer)
+	r.HandleFunc("/api/getTimeLeft", timer.GetTimeLeft)
 
-	// Task Management
-	r.HandleFunc("/api/getTasks", todo.getAllTasksHandler)
-	r.HandleFunc("/api/createTask", todo.createTaskHandler)
-	r.HandleFunc("/api/taskComplete", todo.taskCompleteHandler)
-	r.HandleFunc("/api/deleteTask", todo.deleteTaskHandler)
+	// Todo List
+	r.HandleFunc("/api/getTasks", todo.GetAllTasks)
+	r.HandleFunc("/api/createTask", todo.CreateTask)
+	r.HandleFunc("/api/taskComplete", todo.TaskComplete)
+	r.HandleFunc("/api/deleteTask", todo.DeleteTask)
 
 	http.ListenAndServe(":8080", r)
 }

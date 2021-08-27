@@ -2,6 +2,6 @@ package todo
 
 import "net/http"
 
-func taskCompleteHandler(w http.ResponseWriter, r *http.Request) {
+func TaskComplete(w http.ResponseWriter, r *http.Request) {
 
 }
