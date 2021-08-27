@@ -20,12 +20,14 @@ func ParseTemplate(file string, data interface{}) string {
 	t, err := template.ParseFiles(file)
 	if err != nil {
 		fmt.Println(err)
+		return ""
 	}
 
 	buff := new(bytes.Buffer)
 	err = t.Execute(buff, data)
 	if err != nil {
 		fmt.Println(err)
+		return ""
 	}
 
 	return buff.String()
@@ -51,5 +53,6 @@ func SendEmail(emailStr string, subjectStr string, file string, data interface{}
 	err := smtp.SendMail(address, auth, fromAddress, to, message)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 }

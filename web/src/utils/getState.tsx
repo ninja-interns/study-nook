@@ -18,7 +18,7 @@ export function useGetState() {
 				setIsLoggedIn(document.cookie.includes("session"));
 				setCurrentUser(data);
 			} catch (err) {
-				console.log(err);
+				console.error(err);
 			}
 		})();
 	}, [setCurrentUser, setIsLoggedIn]);

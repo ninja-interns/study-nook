@@ -39,6 +39,14 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, qCode)
 	if err != nil {
 		fmt.Println(err)
+		response := JsonResponse{
+			Message: "Oops, something went wrong. Please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+
+		return
 	}
 
 	//if it's all successful, this response will be written back.

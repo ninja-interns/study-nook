@@ -72,7 +72,7 @@ export function RegisterPage(): JSX.Element {
 				setIsOpen(true);
 			}
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 

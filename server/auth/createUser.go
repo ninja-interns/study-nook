@@ -52,7 +52,11 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//creating a token to send to the database- in sendEmail.go. This is the token that will be compared to the user's entered code to verify their email
-	token := CreateToken()
+	token, err := CreateToken()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	//creating an insert in our database
 	sqlStatement := `

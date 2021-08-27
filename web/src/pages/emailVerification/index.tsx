@@ -40,7 +40,7 @@ export function EmailVerificationPage() {
 			setIsOpen(true);
 			setSeverity("error");
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 
