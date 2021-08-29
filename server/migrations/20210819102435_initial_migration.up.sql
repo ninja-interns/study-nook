@@ -5,3 +5,11 @@ CREATE TABLE IF NOT EXISTS users(
     name TEXT NOT NULL,
     username TEXT UNIQUE NOT NULL
 )
+
+
+CREATE TABLE userimages (
+    id INT UNIQUE NOT NULL,
+    image_file_path TEXT NOT NULL
+);
+
+
