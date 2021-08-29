@@ -1,6 +1,5 @@
 import { isAbsolute } from "path";
 
-
 export function NookInterface() {
     const boxStyle = {
         width: 375,

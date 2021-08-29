@@ -15,10 +15,33 @@ import (
 	"github.com/h2non/filetype"
 )
 
+const MAX_UPLOAD_SIZE = 1024 * 1024
+
 type FileData struct {
 	file_name    string `json: "file_name"`
 	fileExt      string `json: "extension"`
 	encoded_data string `json: "b64Encoding"`
+}
+
+func (db_wr *dbWrapper) handleImageSend(w http.ResponseWriter, r *http.Request) {
+	conn := db_wr.conn
+	userInfo := UserData{}
+	err := json.NewDecoder(r.Body).Decode(&userInfo)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+	ctx := context.Background()
+	query := `SELECT image FROM UserImages WHERE id=$1`
+	imgData := ' '
+	err = conn.QueryRow(ctx, query, userInfo.userId).Scan(&imgData)
+	if err != nil && imgData == ' ' {
+		http.Error(w, err.Error(), http.StatusBadGateway)
+	}
+	sendImageFile(imgData)
+}
+
+func sendImageFile(imgData string) {
+
 }
 
 //Image size initially set to 1MB Max

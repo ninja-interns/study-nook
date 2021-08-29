@@ -19,7 +19,10 @@ import (
 	initializeDB "main.go/initializedb"
 )
 
-const MAX_UPLOAD_SIZE = 1024 * 1024
+type UserData struct {
+	userId     string
+	userCookie string
+}
 
 type dbWrapper struct {
 	conn *pgx.Conn
@@ -28,10 +31,13 @@ type dbWrapper struct {
 func main() {
 	initializeDB.InitDB()
 
+	auth.SessionsConfig()
+
 	r := chi.NewRouter()
 
 	r.HandleFunc("/api/createUser", auth.CreateUser)
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
+	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
 
 	fmt.Println("Welcome to study nook! :)")
 	conn, err := connectDb()

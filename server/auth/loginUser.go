@@ -54,7 +54,11 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if it reaches this point, the login is suuccessful and writes back a response body to the front end
+	//if it reaches this point, the login is successful and writes back a response body to the front end
+	SessionManager.Put(r.Context(), "id", id)
+	SessionManager.Put(r.Context(), "name", name)
+	SessionManager.Put(r.Context(), "username", username)
+	SessionManager.Put(r.Context(), "email", email)
 	login := JsonResponse{
 		Message: "Success!",
 		IsValid: true,
