@@ -16,7 +16,9 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/jackc/pgx/v4"
 	"main.go/auth"
+	"main.go/currentUser"
 	initializeDB "main.go/initializedb"
+	"main.go/middleware"
 )
 
 type UserData struct {
@@ -38,6 +40,7 @@ func main() {
 	r.HandleFunc("/api/createUser", auth.CreateUser)
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
 	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
+<<<<<<< HEAD
 
 	fmt.Println("Welcome to study nook! :)")
 	conn, err := connectDb()
@@ -65,4 +68,9 @@ func connectDb() (*pgx.Conn, error) {
 	}
 
 	return conn, nil
+=======
+	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
+
+	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
+>>>>>>> e16be99060d970b3d3f909b223482a19b6250048
 }

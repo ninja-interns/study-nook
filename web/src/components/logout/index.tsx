@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import React from "react";
 import { Button } from "@material-ui/core";
+=======
+import { Button } from "@material-ui/core";
+import React from "react";
+>>>>>>> e16be99060d970b3d3f909b223482a19b6250048
 import { useHistory } from "react-router-dom";
 
 export function Logout() {
@@ -22,7 +27,11 @@ export function Logout() {
 		}
 	}
 	return (
+<<<<<<< HEAD
 		<Button variant="contained" onClick={handleLogout}>
+=======
+		<Button variant="contained" color="secondary" onClick={handleLogout}>
+>>>>>>> e16be99060d970b3d3f909b223482a19b6250048
 			Logout
 		</Button>
 	);
