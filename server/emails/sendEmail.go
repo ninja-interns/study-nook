@@ -5,12 +5,20 @@ import (
 	"fmt"
 	"html/template"
 	"net/smtp"
+	"os"
 )
 
+type Emailer struct {
+	FromAddress       string
+	FromEmailPassword string
+	SmtpServer        string
+	SmtpPort          string
+}
+
 // Variables needed to make a SMTP request
-const (
-	fromAddress       = "studynookapp@gmail.com"
-	fromEmailPassword = "nytnatsvdffkrprm"
+var (
+	fromAddress       = os.Getenv("SMTP_USERNAME")
+	fromEmailPassword = os.Getenv("SMTP_PASSWORD")
 	smtpServer        = "smtp.gmail.com"
 	smtpPort          = "587"
 )
@@ -43,7 +51,7 @@ func SendEmail(emailStr string, subjectStr string, file string, data interface{}
 	//necessary to be able to send the email
 	address := smtpServer + ":" + smtpPort
 	auth := smtp.PlainAuth("", fromAddress, fromEmailPassword, smtpServer)
-
+	fmt.Println(fromEmailPassword)
 	//Filling our email with variable content
 	to := []string{emailStr}
 	subject := "Subject:" + subjectStr + "\n"

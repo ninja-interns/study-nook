@@ -7,7 +7,9 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
+	"os"
 
 	"studynook.go/auth"
 	"studynook.go/currentUser"
@@ -15,12 +17,19 @@ import (
 	"studynook.go/middleware"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	initializeDB.InitDB()
 
 	auth.SessionsConfig()
+
+	err := godotenv.Load(".env.local")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(os.Getenv("SMTP_USERNAME"))
 
 	r := chi.NewRouter()
 

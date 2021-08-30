@@ -87,7 +87,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	// json.NewEncoder(w).Encode(response)
 
 	//DEVELOPMENT PRINT EMAIL
-	emails.DEVSendEmail(u.Email, "Verify your email with StudyNook", "emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
+	emails.SendEmail(u.Email, "Verify your email with StudyNook", "emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
 	response := JsonResponse{
 		Message: "Success, Please check your email to verify your account!",
 		IsValid: true,
