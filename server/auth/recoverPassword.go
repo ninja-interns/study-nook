@@ -16,16 +16,29 @@ type Email struct {
 	Email string `json:"email"`
 }
 
-// Variables needed to make a SMTP request
-const (
-	fromAddress       = "studynookapp@gmail.com"
-	fromEmailPassword = "nytnatsvdffkrprm"
-	smtpServer        = "smtp.gmail.com"
-	smptPort          = "587"
-)
+type Emailer struct {
+	FromAddress       string
+	FromEmailPassword string
+	SmtpServer        string
+	SmtpPort          string
+}
 
-// Funcion where email sent from address to user
+func NewEmailer(fromAddress, fromEmailPassword, smtpServer, smtpPort string) *Emailer {
+
+	e := &Emailer{
+		FromAddress:       fromAddress,
+		FromEmailPassword: fromEmailPassword,
+		SmtpServer:        smtpServer,
+		SmtpPort:          smtpPort,
+	}
+
+	return e
+}
+
+// Funcion where email is sent from address to user
 func SendEmail(toAddress []string, token uuid.UUID) {
+
+	e := NewEmailer("studynookapp@gmail.com", "nytnatsvdffkrprm", "smtp.gmail.com", "587")
 
 	// Subject, mime and body are components of a SMTP message
 	subject := "Subject: Recover password\n"
@@ -35,8 +48,8 @@ func SendEmail(toAddress []string, token uuid.UUID) {
 	message := []byte(subject + mime + body)
 
 	// Sending email to user
-	auth := smtp.PlainAuth("", fromAddress, fromEmailPassword, smtpServer)
-	err := smtp.SendMail(smtpServer+":"+smptPort, auth, fromAddress, toAddress, message)
+	auth := smtp.PlainAuth("", e.FromAddress, e.FromEmailPassword, e.SmtpServer)
+	err := smtp.SendMail(e.SmtpServer+":"+e.SmtpPort, auth, e.FromAddress, toAddress, message)
 
 	// Checking if email was sent
 	if err != nil {
