@@ -7,7 +7,7 @@ import { ProfilePage } from "./pages";
 function App() {
 	return (
 		<div>
-			<ProfilePage />
+			<Routes />
 		</div>
 	);
 }

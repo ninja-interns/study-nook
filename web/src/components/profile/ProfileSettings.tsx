@@ -1,7 +1,7 @@
 import { makeStyles, Modal } from "@material-ui/core";
 import { render } from "@testing-library/react";
 import React from "react";
-import { IProgressPercentage, IProps } from "./ProfileInterface";
+import { IProgressPercentage, IProps } from "./IProfile";
 import { useStyles } from "./profileStyle";
 
 /**Player settings/menu**/

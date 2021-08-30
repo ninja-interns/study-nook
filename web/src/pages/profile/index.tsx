@@ -1,6 +1,6 @@
-import React from 'react';
-import { ProgressBar, ProfileChange, ProfileSettings, ProfileAvatar } from '../../components';
+import { ProfileSettings, ProfileAvatar } from '../../components';
 import { NookInterface } from '../../components/profile/NookInterface';
+import { ChangeProfileImage } from '../../components/profile/ProfileImageHandler';
 import { useStyles } from './profileStyle';
 
 

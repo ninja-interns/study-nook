@@ -8,6 +8,11 @@ import (
 	initializeDB "main.go/initializedb"
 )
 
+/**        <Typography variant="body1">
+            Don't have an account? "<Link to="./register">Register here</Link>
+        </Typography>
+**/
+
 var SessionManager *scs.SessionManager
 
 func SessionsConfig() {

@@ -1,6 +1,6 @@
 
 import React from "react";
-import {IProps, IProgressPercentage} from "./ProfileInterface";
+import {IProps, IProgressPercentage} from "./IProfile";
 const Filler = (prop: any) => {
     return (<div className="filler" />);
 }

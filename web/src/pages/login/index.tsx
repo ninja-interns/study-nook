@@ -19,9 +19,7 @@ export function LoginPage() {
 				<TextField id="standard-basic" label="Username" inputRef={usernameRef} />
 				<TextField id="standard-basic" label="Email" inputRef={passwordRef} />
 				<Button type="submit">Login</Button>
-				<Typography variant="body1">
-					Don't have an account? <Link to="./register">Register here</Link>
-				</Typography>
+
 			</form>
 		</Card>
 	);

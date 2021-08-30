@@ -17,10 +17,35 @@ import (
 
 const MAX_UPLOAD_SIZE = 1024 * 1024
 
-type FileData struct {
-	file_name    string `json: "file_name"`
-	fileExt      string `json: "extension"`
-	encoded_data string `json: "b64Encoding"`
+type ImageData struct {
+	UserId string `json: "id"`
+	Image  string `json: "image"`
+}
+
+func (wrapper dbWrapper) imageHandler() {
+	conn := wrapper.conn
+	if conn == nil {
+
+	}
+}
+
+func (wrapper *dbWrapper) handleImageOnReceive(w http.ResponseWriter, r *http.Request) {
+	img := ImageData{}
+	err := json.NewDecoder(r.Body).Decode(&img)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	data := []byte(img.Image)
+
+	conn := wrapper.conn
+	if conn == nil {
+		http.Error(w, "Database down", http.StatusInternalServerError)
+	}
+
+	query := `UPDATE userimages SET imagedata = $1 WHERE id = $2;`
+
 }
 
 func (db_wr *dbWrapper) handleImageSend(w http.ResponseWriter, r *http.Request) {

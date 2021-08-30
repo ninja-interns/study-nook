@@ -1,9 +1,8 @@
 import { NookInterface } from "./NookInterface";
-import { ProfileAvatarViewer } from "./ProfileAvatar";
 import { ChangeProfileImage } from "./ProfileImageHandler";
 import { PlayerProgressBar } from "./ProfileLevelBar";
 import { PlayerProfileSettings } from "./ProfileSettings";
-
+import defaultImage from '../../assets/default-profile.png'
 export function Interface() {
     return (
         <NookInterface/>
@@ -11,9 +10,7 @@ export function Interface() {
 }
 
 export function ProfileAvatar() {
-    return (
-        <ProfileAvatarViewer />
-    );
+    return <ChangeProfileImage initial={defaultImage}/>
 }
 
 export function ProfileSettings() {
@@ -25,11 +22,6 @@ export function ProgressBar() {
         <PlayerProgressBar />
     );
 }
-
-export function ProfileChange() {
-    return ChangeProfileImage();
-}
-
 
 
 

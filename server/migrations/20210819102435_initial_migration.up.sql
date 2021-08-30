@@ -4,12 +4,17 @@ CREATE TABLE IF NOT EXISTS users(
     password_hash BYTEA NOT NULL,
     name TEXT NOT NULL,
     username TEXT UNIQUE NOT NULL
-)
+);
 
 
-CREATE TABLE userimages (
+CREATE TABLE IF NOT EXISTS userimages (
     id INT UNIQUE NOT NULL,
-    image_file_path TEXT NOT NULL
+    imagedata BYTEA,
+    PRIMARY KEY(id),
+    CONSTRAINT fk_user
+        FOREIGN KEY(id)
+            REFERENCES users(id)
+            ON DELETE CASCADE
 );
 
 

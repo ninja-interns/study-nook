@@ -15,9 +15,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/jackc/pgx/v4"
-	"main.go/ImageUploads"
 	"main.go/auth"
-	"main.go/currentUser"
 	initializeDB "main.go/initializedb"
 	"main.go/middleware"
 )
@@ -43,18 +41,16 @@ func main() {
 	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
 
 	fmt.Println("Welcome to study nook! :)")
+
 	conn, err := connectDb()
-	db_wr := dbWrapper{conn}
 	if err != nil {
 		return
 	}
+	defer conn.Close(context.Background())
 
 	r = chi.NewMux()
 
 	r.Use(middleware.Logger)
-	//receives images and handles the data to be stored in the uploads directory
-	r.Post("/api/image-upload", db_wr.handleImageUpload)
-	r.Get("api/image-get", db_wr.handleImageRetrieve)
 	http.ListenAndServe(":3000", r)
 }
 

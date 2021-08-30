@@ -1,7 +1,6 @@
 {
-  "proxy": "http://localhost:3000",
-  "name": "study-nook",
   "proxy": "http://localhost:8080",
+  "name": "study-nook",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
