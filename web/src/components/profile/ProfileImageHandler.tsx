@@ -9,8 +9,10 @@ export const ChangeProfileImage:FunctionComponent<{ initial?: string}> = ({initi
     const [imageFile,setImage] = useState(initial);
     return (
         <div>
-            <input accept="image/*"  id="icon-button-file" type="file" style={{display: 'none'}} 
-            onChange={(e) => {setImage(e.target.value)}}
+            <input accept="image/png"  id="icon-button-file" type="file" style={{display: 'none'}} 
+            onChange={async (e) =>  {
+                console.log(e.target.value);
+                setImage(e.target.value)}}
             />
         <label htmlFor="icon-button-file">
             <IconButton color="primary" aria-label="upload picture" component="span" >
