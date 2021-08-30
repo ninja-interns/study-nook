@@ -1,8 +1,6 @@
 package auth
 
 import (
-	"fmt"
-
 	"github.com/gofrs/uuid"
 )
 
@@ -10,7 +8,6 @@ import (
 func CreateToken() (string, error) {
 	token, err := uuid.NewV4()
 	if err != nil {
-		fmt.Println(err)
 		return "", err
 	}
 	return token.String(), nil

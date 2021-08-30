@@ -16,27 +16,27 @@ const (
 )
 
 //Function to parse the html template so it can be sent via the email body- it also will enter the variable data into the file
-func ParseTemplate(file string, data interface{}) string {
+func ParseTemplate(file string, data interface{}) (string, error) {
 	t, err := template.ParseFiles(file)
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return "", err
 	}
 
 	buff := new(bytes.Buffer)
 	err = t.Execute(buff, data)
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		return "", err
 	}
 
-	return buff.String()
+	return buff.String(), nil
 }
 
 //Send Email- made it reusable so that both recover password and verify email can use it.
 func SendEmail(emailStr string, subjectStr string, file string, data interface{}) {
 	//calling the parsing function to parse a specific file
-	body := ParseTemplate(file, data)
+	body, err := ParseTemplate(file, data)
 	//necessary when sending HTML in an email
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 
@@ -50,7 +50,7 @@ func SendEmail(emailStr string, subjectStr string, file string, data interface{}
 	message := []byte(subject + mime + body)
 
 	//sending the email
-	err := smtp.SendMail(address, auth, fromAddress, to, message)
+	err = smtp.SendMail(address, auth, fromAddress, to, message)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -59,7 +59,12 @@ func SendEmail(emailStr string, subjectStr string, file string, data interface{}
 
 //FOR USE IN DEVELOPMENT ONLY- set our mail to this instead to just print
 func DEVSendEmail(emailStr string, subjectStr string, file string, data interface{}) {
-	body := ParseTemplate(file, data)
+	body, err := ParseTemplate(file, data)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	address := smtpServer + ":" + smtpPort
 	auth := smtp.PlainAuth("", fromAddress, fromEmailPassword, smtpServer)

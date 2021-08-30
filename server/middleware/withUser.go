@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"main.go/auth"
+	"studynook.go/auth"
 )
 
 //defining middleware that checks that a user is logged in

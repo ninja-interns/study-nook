@@ -8,17 +8,16 @@ package main
 
 import (
 	"net/http"
-	"os"
+
+	"studynook.go/auth"
+	"studynook.go/currentUser"
+	initializeDB "studynook.go/initializedb"
+	"studynook.go/middleware"
 
 	"github.com/go-chi/chi/v5"
-	"main.go/auth"
-	"main.go/currentUser"
-	initializeDB "main.go/initializedb"
-	"main.go/middleware"
 )
 
 func main() {
-	os.Setenv("test", "test")
 	initializeDB.InitDB()
 
 	auth.SessionsConfig()

@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
+	initializeDB "studynook.go/initializedb"
+
 	"github.com/go-chi/chi/v5"
-	initializeDB "main.go/initializedb"
 )
 
 func VerifyEmail(w http.ResponseWriter, r *http.Request) {

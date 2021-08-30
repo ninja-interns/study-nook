@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
+	initializeDB "studynook.go/initializedb"
+
 	"golang.org/x/crypto/bcrypt"
-	initializeDB "main.go/initializedb"
 )
 
 //will hit when the API from main.go is invoked

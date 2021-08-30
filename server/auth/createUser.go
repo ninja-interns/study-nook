@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"net/http"
 
+	initializeDB "studynook.go/initializedb"
+
 	"golang.org/x/crypto/bcrypt"
-	"main.go/emails"
-	initializeDB "main.go/initializedb"
+	"studynook.go/emails"
 )
 
 type User struct {
