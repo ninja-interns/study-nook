@@ -1,6 +1,6 @@
-import { Card, Typography, TextField, Button } from "@material-ui/core";
+import { Button, Card, TextField, Typography } from "@material-ui/core";
 import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { AuthContainer } from "../../containers/AuthContainer";
 import { useStyles } from "./updateUserCss";
 
 interface IData {
@@ -12,7 +12,9 @@ export function UpdateUser() {
 	const css = useStyles();
 	const usernameRef = useRef<HTMLInputElement>();
 	const emailRef = useRef<HTMLInputElement>();
+	const passwordRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
+	const { currentUser } = AuthContainer.useContainer();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -23,7 +25,7 @@ export function UpdateUser() {
 			const response = await fetch("/api/updateUser", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ email: emailRef?.current?.value, username: usernameRef?.current?.value }),
+				body: JSON.stringify({ email: emailRef?.current?.value, username: usernameRef?.current?.value, password: passwordRef?.current?.value }),
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: IData = await response.json();
@@ -45,12 +47,10 @@ export function UpdateUser() {
 			<Typography variant="h2">Update Username or Email</Typography>
 			<Typography variant="body1">{error}</Typography>
 			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required label="Email or Username" type="text" inputRef={usernameRef} />
-				<TextField required label="Password" type="password" inputRef={emailRef} />
-				<Button type="submit">Login</Button>
-				<Typography variant="body1">
-					Don't have an account? <Link to="/registration">Register here</Link>
-				</Typography>
+				<TextField required label="Email" type="text" defaultValue={currentUser.email} inputRef={usernameRef} />
+				<TextField required label="Username" type="text" defaultValue={currentUser.username} inputRef={emailRef} />
+				<TextField required label="Password" type="password" inputRef={passwordRef} />
+				<Button type="submit">Update</Button>
 			</form>
 		</Card>
 	);

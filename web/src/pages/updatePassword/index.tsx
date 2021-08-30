@@ -1,12 +1,17 @@
-import { Card, Typography, TextField, Button } from "@material-ui/core";
+import { Button, Card, TextField, Typography } from "@material-ui/core";
 import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { useStyles } from "../register/registerPageCss";
+
+interface IData {
+	isValid: boolean;
+	message: string;
+}
 
 export function UpdatePassword() {
 	const css = useStyles();
-	const usernameRef = useRef<HTMLInputElement>();
-	const emailRef = useRef<HTMLInputElement>();
+	const currentPasswordRef = useRef<HTMLInputElement>();
+	const newPasswordRef = useRef<HTMLInputElement>();
+	const confirmationRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
@@ -15,10 +20,14 @@ export function UpdatePassword() {
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("/api/updateUser", {
+			const response = await fetch("/api/updatePassword", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ email: emailRef?.current?.value, username: usernameRef?.current?.value }),
+				body: JSON.stringify({
+					currentPassword: currentPasswordRef?.current?.value,
+					newPassword: newPasswordRef?.current?.value,
+					confirmation: confirmationRef?.current?.value,
+				}),
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: IData = await response.json();
@@ -37,15 +46,13 @@ export function UpdatePassword() {
 
 	return (
 		<Card className={css.container}>
-			<Typography variant="h2">Update Username or Email</Typography>
+			<Typography variant="h2">Change Password</Typography>
 			<Typography variant="body1">{error}</Typography>
 			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required label="Email or Username" type="text" inputRef={usernameRef} />
-				<TextField required label="Password" type="password" inputRef={emailRef} />
-				<Button type="submit">Login</Button>
-				<Typography variant="body1">
-					Don't have an account? <Link to="/registration">Register here</Link>
-				</Typography>
+				<TextField required label="Current Password" type="password" inputRef={currentPasswordRef} />
+				<TextField required label="New Password" type="password" inputRef={newPasswordRef} />
+				<TextField required label="Confirm New Password" type="password" inputRef={confirmationRef} />
+				<Button type="submit">Update</Button>
 			</form>
 		</Card>
 	);
