@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"html/template"
 	"net/smtp"
-	"os"
 )
 
+//Emailer struct that will hold the SMTP configs
 type Emailer struct {
 	FromAddress       string
 	FromEmailPassword string
@@ -15,13 +15,20 @@ type Emailer struct {
 	SmtpPort          string
 }
 
-// Variables needed to make a SMTP request
-var (
-	fromAddress       = os.Getenv("SMTP_USERNAME")
-	fromEmailPassword = os.Getenv("SMTP_PASSWORD")
-	smtpServer        = "smtp.gmail.com"
-	smtpPort          = "587"
-)
+//declaring the variable that will hold the new constructed Emailer- will be used in main.go to hold the environmental variables
+var EmailConfigs *Emailer
+
+//function that will return the Emailer struct with the parameters passed to it
+func NewEmailer(fromParam, passwordParam, serverParam, portParam string) (*Emailer, error) {
+	var err error
+
+	return &Emailer{
+		FromAddress:       fromParam,
+		FromEmailPassword: passwordParam,
+		SmtpServer:        serverParam,
+		SmtpPort:          portParam,
+	}, err
+}
 
 //Function to parse the html template so it can be sent via the email body- it also will enter the variable data into the file
 func ParseTemplate(file string, data interface{}) (string, error) {
@@ -45,20 +52,23 @@ func ParseTemplate(file string, data interface{}) (string, error) {
 func SendEmail(emailStr string, subjectStr string, file string, data interface{}) {
 	//calling the parsing function to parse a specific file
 	body, err := ParseTemplate(file, data)
+	if err != nil {
+		return
+	}
+
 	//necessary when sending HTML in an email
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 
 	//necessary to be able to send the email
-	address := smtpServer + ":" + smtpPort
-	auth := smtp.PlainAuth("", fromAddress, fromEmailPassword, smtpServer)
-	fmt.Println(fromEmailPassword)
+	address := EmailConfigs.SmtpServer + ":" + EmailConfigs.SmtpPort
+	auth := smtp.PlainAuth("", EmailConfigs.FromAddress, EmailConfigs.FromEmailPassword, EmailConfigs.SmtpServer)
 	//Filling our email with variable content
 	to := []string{emailStr}
 	subject := "Subject:" + subjectStr + "\n"
 	message := []byte(subject + mime + body)
 
 	//sending the email
-	err = smtp.SendMail(address, auth, fromAddress, to, message)
+	err = smtp.SendMail(address, auth, EmailConfigs.FromAddress, to, message)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -74,8 +84,8 @@ func DEVSendEmail(emailStr string, subjectStr string, file string, data interfac
 	}
 
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	address := smtpServer + ":" + smtpPort
-	auth := smtp.PlainAuth("", fromAddress, fromEmailPassword, smtpServer)
+	address := EmailConfigs.SmtpServer + ":" + EmailConfigs.SmtpPort
+	auth := smtp.PlainAuth("", EmailConfigs.FromAddress, EmailConfigs.FromEmailPassword, EmailConfigs.SmtpServer)
 
 	to := []string{emailStr}
 	subject := "Subject:" + subjectStr + "\n"
