@@ -6,4 +6,3 @@ export * from "./profile";
 export * from "./forgetpassword";
 export * from "./changepassword";
 export * from "./menu";
-export * from "./support";

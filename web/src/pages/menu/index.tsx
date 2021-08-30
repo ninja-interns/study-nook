@@ -16,7 +16,7 @@ export function MenuPage() {
             <Typography className={css.options} variant="h4">Achievements</Typography>
             <Typography className={css.options} variant="h4">Sessions History</Typography>
             <Typography className={css.options} variant="h4">Study History</Typography>
-            <Typography className={css.options} variant="h4" onClick={() => history.push("./support")}>Support</Typography>
+            <Typography className={css.options} variant="h4">Support</Typography>
 
         </div >
     );
