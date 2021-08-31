@@ -14,7 +14,7 @@ export function UpdatePassword() {
 	const confirmationRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
 
-	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+	async function handleUpdatePassword(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setError("");
 
@@ -48,7 +48,7 @@ export function UpdatePassword() {
 		<Card className={css.container}>
 			<Typography variant="h2">Change Password</Typography>
 			<Typography variant="body1">{error}</Typography>
-			<form className={css.form} onSubmit={handleLogin}>
+			<form className={css.form} onSubmit={handleUpdatePassword}>
 				<TextField required label="Current Password" type="password" inputRef={currentPasswordRef} />
 				<TextField required label="New Password" type="password" inputRef={newPasswordRef} />
 				<TextField required label="Confirm New Password" type="password" inputRef={confirmationRef} />

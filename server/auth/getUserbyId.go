@@ -13,5 +13,7 @@ func GetUserById(id int) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
+	result.ID = id
+
 	return result, nil
 }
