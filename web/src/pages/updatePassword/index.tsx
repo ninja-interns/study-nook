@@ -1,5 +1,6 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
 import React, { useRef, useState } from "react";
+import { useGetState } from "../../utils/getState";
 import { useStyles } from "../register/registerPageCss";
 
 interface IData {
@@ -8,6 +9,7 @@ interface IData {
 }
 
 export function UpdatePassword() {
+	useGetState();
 	const css = useStyles();
 	const currentPasswordRef = useRef<HTMLInputElement>();
 	const newPasswordRef = useRef<HTMLInputElement>();
@@ -31,7 +33,6 @@ export function UpdatePassword() {
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: IData = await response.json();
-			console.log(data);
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 
 			if (data.isValid) {
@@ -49,9 +50,9 @@ export function UpdatePassword() {
 			<Typography variant="h2">Change Password</Typography>
 			<Typography variant="body1">{error}</Typography>
 			<form className={css.form} onSubmit={handleUpdatePassword}>
-				<TextField required label="Current Password" type="password" inputRef={currentPasswordRef} />
-				<TextField required label="New Password" type="password" inputRef={newPasswordRef} />
-				<TextField required label="Confirm New Password" type="password" inputRef={confirmationRef} />
+				<TextField required label="Current Password" type="password" inputProps={{ minLength: 6 }} inputRef={currentPasswordRef} />
+				<TextField required label="New Password" type="password" inputProps={{ minLength: 6 }} inputRef={newPasswordRef} />
+				<TextField required label="Confirm New Password" type="password" inputProps={{ minLength: 6 }} inputRef={confirmationRef} />
 				<Button type="submit">Update</Button>
 			</form>
 		</Card>

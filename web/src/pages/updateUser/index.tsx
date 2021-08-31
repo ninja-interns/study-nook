@@ -2,6 +2,7 @@ import { Button, Card, TextField, Typography } from "@material-ui/core";
 import React, { useRef, useState } from "react";
 import { AuthContainer } from "../../containers/AuthContainer";
 import { useStyles } from "./updateUserCss";
+import { useGetState } from "./../../utils/getState";
 
 interface IData {
 	isValid: boolean;
@@ -9,8 +10,10 @@ interface IData {
 }
 
 export function UpdateUser() {
+	useGetState();
 	const css = useStyles();
 	const usernameRef = useRef<HTMLInputElement>();
+	const nameRef = useRef<HTMLInputElement>();
 	const emailRef = useRef<HTMLInputElement>();
 	const passwordRef = useRef<HTMLInputElement>();
 	const [error, setError] = useState<string>("");
@@ -25,7 +28,12 @@ export function UpdateUser() {
 			const response = await fetch("/api/updateUser", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ email: emailRef?.current?.value, username: usernameRef?.current?.value, password: passwordRef?.current?.value }),
+				body: JSON.stringify({
+					username: usernameRef?.current?.value,
+					name: nameRef?.current?.value,
+					email: emailRef?.current?.value,
+					password: passwordRef?.current?.value,
+				}),
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: IData = await response.json();
@@ -44,11 +52,13 @@ export function UpdateUser() {
 
 	return (
 		<Card className={css.container}>
-			<Typography variant="h2">Update Username or Email</Typography>
+			<Typography variant="h2">Update Credentials</Typography>
 			<Typography variant="body1">{error}</Typography>
 			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required label="Email" type="text" defaultValue={currentUser.email} inputRef={usernameRef} />
-				<TextField required label="Username" type="text" defaultValue={currentUser.username} inputRef={emailRef} />
+				<TextField required disabled label="Email" type="text" defaultValue={currentUser.email} inputRef={emailRef} />
+				<TextField required label="Username" type="text" defaultValue={currentUser.username} inputRef={usernameRef} />
+				<TextField required label="Name" type="text" defaultValue={currentUser.name} inputRef={nameRef} />
+				<Typography variant="body1">Please enter your password to confirm these changes</Typography>
 				<TextField required label="Password" type="password" inputRef={passwordRef} />
 				<Button type="submit">Update</Button>
 			</form>
