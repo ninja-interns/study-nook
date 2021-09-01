@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	initializeDB "main.go/initializedb"
+	initializeDB "studynook.go/initializedb"
 )
 
 func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
