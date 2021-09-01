@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"main.go/auth"
+	"studynook.go/auth"
 )
 
 //creating a new struct for a more extensible currentUser. Here we can add tasks and other states

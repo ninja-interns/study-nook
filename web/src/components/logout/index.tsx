@@ -1,9 +1,11 @@
 import { Button } from "@material-ui/core";
-import React from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState } from "react";
+import { Redirect, Route } from "react-router-dom";
+import { AuthContainer } from "../../containers/AuthContainer";
 
 export function Logout() {
-	const history = useHistory();
+	const { setIsLoggedIn } = AuthContainer.useContainer();
+	const [redirect, setRedirect] = useState<string | null>(null);
 
 	async function handleLogout() {
 		//hitting the backend route of /logoutUser with the body of necessary values
@@ -15,15 +17,19 @@ export function Logout() {
 			const data = await response.json();
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 			if (data.isValid) {
-				history.push("/login");
+				setIsLoggedIn(false);
+				setRedirect("/login");
 			}
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 	return (
-		<Button variant="contained" color="secondary" onClick={handleLogout}>
-			Logout
-		</Button>
+		<>
+			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Button variant="contained" color="secondary" onClick={handleLogout}>
+				Logout
+			</Button>
+		</>
 	);
 }
