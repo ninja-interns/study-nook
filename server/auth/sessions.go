@@ -3,9 +3,10 @@ package auth
 import (
 	"time"
 
+	initializeDB "studynook.go/initializedb"
+
 	"github.com/alexedwards/scs/pgxstore"
 	"github.com/alexedwards/scs/v2"
-	initializeDB "main.go/initializedb"
 )
 
 var SessionManager *scs.SessionManager

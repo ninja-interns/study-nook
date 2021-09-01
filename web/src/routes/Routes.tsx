@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
-import { HomePage, RegisterPage, LoginPage, Dashboard, Profile, UpdateUser } from "../pages";
+import { HomePage, RegisterPage, LoginPage, Dashboard, Profile, EmailVerificationPage, UpdateUser } from "../pages";
 import { PrivateRoute } from "./PrivateRoute";
 import { UpdatePassword } from "./../pages/updatePassword/index";
 
@@ -10,6 +10,7 @@ const Routes = () => {
 			<Switch>
 				<Route path="/registration" component={RegisterPage} />
 				<Route path="/login" component={LoginPage} />
+				<Route path="/verifyEmail" component={EmailVerificationPage} />
 				<PrivateRoute path="/dashboard" component={Dashboard} />
 				<PrivateRoute path="/profile" component={Profile} />
 				<PrivateRoute path="/updateUser" component={UpdateUser} />

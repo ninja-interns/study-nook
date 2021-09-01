@@ -7,22 +7,27 @@ import (
 	"net/http"
 
 	"github.com/gofrs/uuid"
+	initializeDB "studynook.go/initializedb"
+
 	"golang.org/x/crypto/bcrypt"
-	initializeDB "main.go/initializedb"
+	"studynook.go/emails"
 )
 
 type User struct {
-	ID       string `json:"id"`
-	Email    string `json:"email"`
-	Name     string `json:"name"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	ID        string `json:"id"`
+	Email     string `json:"email"`
+	Name      string `json:"name"`
+	Username  string `json:"username"`
+	Password  string `json:"password"`
+	IsVerfied string `json:"isVerified"`
+	Token     string `json:"token"`
 }
 
 //creating a struct for the JSON response message
 type JsonResponse struct {
-	Message string `json:"message"`
-	IsValid bool   `json:"isValid"`
+	Message    string `json:"message"`
+	IsValid    bool   `json:"isValid"`
+	IsVerified bool   `json:"isVerified"`
 }
 
 //will hit when the API from main.go is invoked
@@ -42,6 +47,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//checking password length at the backend as well as the frontend
 	passwordLength := len(u.Password)
 	if passwordLength < 6 {
 		w.WriteHeader(http.StatusBadRequest)
@@ -55,28 +61,45 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//creating a token to send to the database- in sendEmail.go. This is the token that will be compared to the user's entered code to verify their email
+	token, err := CreateToken()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 	//creating an insert in our database
 	sqlStatement := `
-	INSERT INTO users (id, email, password_hash, name, username)
-	VALUES ($1, $2, $3, $4, $5)`
+	INSERT INTO users (id, email, password_hash, name, username, is_verified, token)
+	VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username)
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username, false, token)
 	if err != nil {
 		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
 		}
+		fmt.Println(err)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	//if it reaches here, everything is okay, sends back a success to the front end via a response
 
-	fmt.Println("FINISHED", u.ID)
+	//PRODUCTION CODE
+	// emails.SendEmail(u.Email, "Verify your email with StudyNook", "emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
+	// response := JsonResponse{
+	// 	Message: "Success, Please check your email to verify your account!",
+	// 	IsValid: true,
+	// }
+	// json.NewEncoder(w).Encode(response)
+
+	//DEVELOPMENT PRINT EMAIL
+	emails.SendEmail(u.Email, "Verify your email with StudyNook", "emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
 	response := JsonResponse{
-		Message: "Success!",
+		Message: "Success, Please check your email to verify your account!",
 		IsValid: true,
 	}
 	json.NewEncoder(w).Encode(response)

@@ -1,23 +1,32 @@
+import { Button, Card, TextField, Typography } from "@material-ui/core";
+import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
+import { Link, Redirect, Route } from "react-router-dom";
+import { Snackbars } from "../../components";
+import { AuthContainer } from "../../containers/AuthContainer";
+import { useGetState } from "../../utils/getState";
 import { useStyles } from "./loginPageCss";
-import { TextField, Card, Button, Typography } from "@material-ui/core";
-import { useHistory, Link } from "react-router-dom";
 
 interface IData {
 	isValid: boolean;
 	message: string;
+	isVerified: boolean;
 }
 
 export function LoginPage() {
+	useGetState();
 	const css = useStyles();
 	const userRef = useRef<HTMLInputElement>();
 	const passwordRef = useRef<HTMLInputElement>();
-	const [error, setError] = useState<string>("");
-	const history = useHistory();
+	const [message, setMessage] = useState<string>("");
+	const [severity, setSeverity] = useState<Color | undefined>(undefined);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [redirect, setRedirect] = useState<string | null>(null);
+	const { isLoggedIn, setIsLoggedIn } = AuthContainer.useContainer();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		setError("");
+		setMessage("");
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
@@ -28,31 +37,45 @@ export function LoginPage() {
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: IData = await response.json();
-			console.log(data);
+			console.log(data, "isLoggedIn", isLoggedIn);
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
-
-			if (data.isValid) {
-				history.push("/dashboard");
+			if (data.isValid && data.isVerified) {
+				setIsLoggedIn(true);
+				setRedirect("/dashboard");
+				console.log(redirect);
 			} else {
-				setError(data.message);
+				setMessage(data.message);
+				setIsOpen(true);
+				setSeverity("error");
 			}
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 		}
 	}
 
+	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setIsOpen(false);
+	};
+
 	return (
-		<Card className={css.container}>
-			<Typography variant="h2">Login</Typography>
-			<Typography variant="body1">{error}</Typography>
-			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required label="Email or Username" type="text" inputRef={userRef} />
-				<TextField required label="Password" type="password" inputRef={passwordRef} />
-				<Button type="submit">Login</Button>
-				<Typography variant="body1">
-					Don't have an account? <Link to="/registration">Register here</Link>
-				</Typography>
-			</form>
-		</Card>
+		<>
+			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Card className={css.container}>
+				<Typography variant="h2">Login</Typography>
+				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+				<form className={css.form} onSubmit={handleLogin}>
+					<TextField required label="Email or Username" type="text" inputRef={userRef} />
+					<TextField required label="Password" type="password" inputRef={passwordRef} />
+					<Button type="submit">Login</Button>
+					<Typography variant="body1">
+						Don't have an account? <Link to="/registration">Register here</Link>
+					</Typography>
+				</form>
+			</Card>
+		</>
 	);
 }

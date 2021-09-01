@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
+	initializeDB "studynook.go/initializedb"
+
 	"golang.org/x/crypto/bcrypt"
-	initializeDB "main.go/initializedb"
 )
 
 //will hit when the API from main.go is invoked
@@ -22,6 +23,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	var name string
 	var username string
 	var password_hash []byte
+	var isVerified bool
 
 	//decoding the request body into the instanced User(u)
 	err := json.NewDecoder(r.Body).Decode(u)
@@ -32,11 +34,17 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	}
 	//Querying our database where our email column = the email the user input on the frontend
 	sqlStatement := `
-	SELECT * FROM users WHERE email = $1 OR username = $2`
+	SELECT id, email, password_hash, name, username, is_verified FROM users WHERE email = $1 OR username = $2`
 
 	//scanning the id, email and password from the DB into the created variables above
-	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username)
+	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerified)
 	if err != nil {
+		response := JsonResponse{
+			Message:    "Your username or password is incorrect.",
+			IsValid:    false,
+			IsVerified: isVerified,
+		}
+		json.NewEncoder(w).Encode(response)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -46,10 +54,21 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 		response := JsonResponse{
-			Message: "Your password is incorrect.",
-			IsValid: false,
+			Message:    "Your username or password is incorrect.",
+			IsValid:    false,
+			IsVerified: isVerified,
 		}
 		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	if !isVerified {
+		response := JsonResponse{
+			Message:    "Please verify your email first.",
+			IsValid:    false,
+			IsVerified: isVerified,
+		}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -62,8 +81,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	SessionManager.Put(r.Context(), "email", email)
 
 	login := JsonResponse{
-		Message: "Success!",
-		IsValid: true,
+		Message:    "Success!",
+		IsValid:    true,
+		IsVerified: isVerified,
 	}
 	json.NewEncoder(w).Encode(login)
 	fmt.Println("FINISHED", email, password_hash)
