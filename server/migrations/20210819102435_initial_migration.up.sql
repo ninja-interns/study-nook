@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users(
     password_hash BYTEA NOT NULL,
     name TEXT NOT NULL,
     username TEXT UNIQUE NOT NULL,
-    is_Verified BOOLEAN NOT NULL,
+    is_verified BOOLEAN NOT NULL,
     token TEXT
 );
 
