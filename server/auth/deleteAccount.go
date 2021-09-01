@@ -10,7 +10,7 @@ import (
 )
 
 func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
-	id := SessionManager.GetInt(r.Context(), "id")
+	id := SessionManager.GetString(r.Context(), "id")
 
 	sqlStatement := `DELETE FROM users WHERE id = $1`
 	_, err := initializeDB.Conn.Exec(context.Background(), sqlStatement, id)

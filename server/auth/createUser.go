@@ -6,12 +6,13 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gofrs/uuid"
 	"golang.org/x/crypto/bcrypt"
 	initializeDB "main.go/initializedb"
 )
 
 type User struct {
-	ID       int    `json:"id"`
+	ID       string `json:"id"`
 	Email    string `json:"email"`
 	Name     string `json:"name"`
 	Username string `json:"username"`
@@ -27,7 +28,14 @@ type JsonResponse struct {
 //will hit when the API from main.go is invoked
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	u := &User{}
-	err := json.NewDecoder(r.Body).Decode(u)
+	id, err := uuid.NewV4()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	u.ID = id.String()
+
+	err = json.NewDecoder(r.Body).Decode(u)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -49,12 +57,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	//creating an insert in our database
 	sqlStatement := `
-	INSERT INTO users (email, password_hash, name, username)
-	VALUES ($1, $2, $3, $4)`
+	INSERT INTO users (id, email, password_hash, name, username)
+	VALUES ($1, $2, $3, $4, $5)`
 
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.Email, hashedPassword, u.Name, u.Username)
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username)
 	if err != nil {
+		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
@@ -64,6 +73,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//if it reaches here, everything is okay, sends back a success to the front end via a response
+
+	fmt.Println("FINISHED", u.ID)
 	response := JsonResponse{
 		Message: "Success!",
 		IsValid: true,

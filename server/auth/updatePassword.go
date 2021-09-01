@@ -11,7 +11,7 @@ import (
 )
 
 //this function will be used in update password and recover password. recover password will need a token check but that will be checked before this function runs
-func generalUpdatePassword(id int, currentPassword, newPass, newPassConfirmation string) (response JsonResponse, err error) {
+func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation string) (response JsonResponse, err error) {
 	//declaring where our hashed password from the database will be scanned into
 	var dbPassword []byte
 	passwordLength := len(newPass)

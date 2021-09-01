@@ -13,8 +13,8 @@ type SecureHandler func(w http.ResponseWriter, r *http.Request, u *auth.User)
 func WithUser(next SecureHandler) http.HandlerFunc {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		//getting id from the Session
-		id := auth.SessionManager.GetInt(r.Context(), "id")
-		if id == 0 {
+		id := auth.SessionManager.GetString(r.Context(), "id")
+		if id == "" {
 			http.Error(w, "You are not logged in", http.StatusForbidden)
 			return
 		}
