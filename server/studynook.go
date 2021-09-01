@@ -46,6 +46,9 @@ func main() {
 	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
 	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
+	r.HandleFunc("/api/deleteAccount", middleware.WithUser(auth.DeleteAccount))
+	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))
+	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }

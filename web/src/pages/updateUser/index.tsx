@@ -3,6 +3,8 @@ import React, { useRef, useState } from "react";
 import { AuthContainer } from "../../containers/AuthContainer";
 import { useStyles } from "./updateUserCss";
 import { useGetState } from "./../../utils/getState";
+import { Snackbars } from "./../../components/snackbar/index";
+import { Color } from "@material-ui/lab/Alert";
 
 interface IData {
 	isValid: boolean;
@@ -16,12 +18,14 @@ export function UpdateUser() {
 	const nameRef = useRef<HTMLInputElement>();
 	const emailRef = useRef<HTMLInputElement>();
 	const passwordRef = useRef<HTMLInputElement>();
-	const [error, setError] = useState<string>("");
+	const [message, setMessage] = useState<string>("");
+	const [severity, setSeverity] = useState<Color | undefined>(undefined);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const { currentUser } = AuthContainer.useContainer();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		setError("");
+		setMessage("");
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
@@ -41,19 +45,31 @@ export function UpdateUser() {
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 
 			if (data.isValid) {
-				console.log("success! I'll fix this later:)");
+				setMessage(data.message);
+				setIsOpen(true);
+				setSeverity("success");
 			} else {
-				setError(data.message);
+				setMessage(data.message);
+				setIsOpen(true);
+				setSeverity("error");
 			}
 		} catch (err) {
 			console.log(err);
 		}
 	}
 
+	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setIsOpen(false);
+	};
+
 	return (
 		<Card className={css.container}>
 			<Typography variant="h2">Update Credentials</Typography>
-			<Typography variant="body1">{error}</Typography>
+			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<form className={css.form} onSubmit={handleLogin}>
 				<TextField required disabled label="Email" type="text" defaultValue={currentUser.email} inputRef={emailRef} />
 				<TextField required label="Username" type="text" defaultValue={currentUser.username} inputRef={usernameRef} />

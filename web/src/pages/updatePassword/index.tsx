@@ -1,7 +1,9 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
+import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
 import { useGetState } from "../../utils/getState";
 import { useStyles } from "../register/registerPageCss";
+import { Snackbars } from "./../../components/snackbar/index";
 
 interface IData {
 	isValid: boolean;
@@ -14,11 +16,13 @@ export function UpdatePassword() {
 	const currentPasswordRef = useRef<HTMLInputElement>();
 	const newPasswordRef = useRef<HTMLInputElement>();
 	const confirmationRef = useRef<HTMLInputElement>();
-	const [error, setError] = useState<string>("");
+	const [message, setMessage] = useState<string>("");
+	const [severity, setSeverity] = useState<Color | undefined>(undefined);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	async function handleUpdatePassword(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		setError("");
+		setMessage("");
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
@@ -35,19 +39,30 @@ export function UpdatePassword() {
 			const data: IData = await response.json();
 
 			if (data.isValid) {
-				console.log("success! I'll fix this later:)");
+				setMessage(data.message);
+				setIsOpen(true);
+				setSeverity("success");
 			} else {
-				setError(data.message);
+				setMessage(data.message);
+				setIsOpen(true);
+				setSeverity("error");
 			}
 		} catch (err) {
 			console.log(err);
 		}
 	}
 
+	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setIsOpen(false);
+	};
 	return (
 		<Card className={css.container}>
 			<Typography variant="h2">Change Password</Typography>
-			<Typography variant="body1">{error}</Typography>
+			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<form className={css.form} onSubmit={handleUpdatePassword}>
 				<TextField required label="Current Password" type="password" inputProps={{ minLength: 6 }} inputRef={currentPasswordRef} />
 				<TextField required label="New Password" type="password" inputProps={{ minLength: 6 }} inputRef={newPasswordRef} />

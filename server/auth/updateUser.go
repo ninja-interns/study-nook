@@ -12,11 +12,22 @@ import (
 
 func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	p := &User{}
+	j := &JsonResponse{}
 	var dbPassword []byte
 	err := json.NewDecoder(r.Body).Decode(p)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
+		j.IsValid = false
+		j.Message = "Something went wrong, please try again"
+		json.NewEncoder(w).Encode(j)
+		return
+	}
+
+	if p.Email == u.Email && p.Name == u.Name && p.Username == u.Username {
+		j.IsValid = false
+		j.Message = "Oops, you haven't changed anything!"
+		json.NewEncoder(w).Encode(j)
 		return
 	}
 
@@ -27,6 +38,9 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
+		j.IsValid = false
+		j.Message = "Something went wrong, please try again"
+		json.NewEncoder(w).Encode(j)
 		return
 	}
 
@@ -34,7 +48,9 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	err = bcrypt.CompareHashAndPassword(dbPassword, []byte(p.Password))
 	if err != nil {
 		fmt.Println("HASHPASSWORD ERROR", err)
-		w.WriteHeader(http.StatusBadRequest)
+		j.IsValid = false
+		j.Message = "Your password does not match our records."
+		json.NewEncoder(w).Encode(j)
 		return
 	}
 
@@ -45,6 +61,9 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	if err != nil {
 		fmt.Println("Update Error", err)
 		w.WriteHeader(http.StatusBadRequest)
+		j.IsValid = false
+		j.Message = "Something went wrong, please try again"
+		json.NewEncoder(w).Encode(j)
 		return
 	}
 

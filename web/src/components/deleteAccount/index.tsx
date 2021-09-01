@@ -17,7 +17,7 @@ export function DeleteAccount() {
 			const data: IData = await response.json();
 
 			if (data.isValid) {
-				setRedirect("/login");
+				setRedirect("/deletedAccount");
 			}
 		} catch (err) {
 			console.log(err);

@@ -4,7 +4,6 @@ import React, { useRef, useState } from "react";
 import { Link, Redirect, Route } from "react-router-dom";
 import { Snackbars } from "../../components";
 import { AuthContainer } from "../../containers/AuthContainer";
-import { useGetState } from "../../utils/getState";
 import { useStyles } from "./loginPageCss";
 
 interface IData {
@@ -14,7 +13,6 @@ interface IData {
 }
 
 export function LoginPage() {
-	useGetState();
 	const css = useStyles();
 	const userRef = useRef<HTMLInputElement>();
 	const passwordRef = useRef<HTMLInputElement>();
