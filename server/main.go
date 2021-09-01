@@ -29,6 +29,7 @@ func main() {
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
 	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))
 	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
+	r.HandleFunc("/api/deleteAccount", middleware.WithUser(auth.DeleteAccount))
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }
