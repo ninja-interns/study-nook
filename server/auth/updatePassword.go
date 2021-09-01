@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
-	initializeDB "main.go/initializedb"
+	initializeDB "studynook.go/initializedb"
 )
 
 //this function will be used in update password and recover password. recover password will need a token check but that will be checked before this function runs

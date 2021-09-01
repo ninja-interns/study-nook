@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
-	initializeDB "main.go/initializedb"
+	initializeDB "studynook.go/initializedb"
 )
 
 func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
