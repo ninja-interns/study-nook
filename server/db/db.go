@@ -19,4 +19,3 @@ func Initialize() {
 	}
 	fmt.Println("CONNECTED TO DB")
 }
-
