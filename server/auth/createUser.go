@@ -19,7 +19,7 @@ type User struct {
 	Name      string `json:"name"`
 	Username  string `json:"username"`
 	Password  string `json:"password"`
-	IsVerfied string `json:"isVerified"`
+	IsVerfied bool   `json:"isVerified"`
 	Token     string `json:"token"`
 }
 
