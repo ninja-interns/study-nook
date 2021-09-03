@@ -88,25 +88,30 @@ export function RegisterPage(): JSX.Element {
 	};
 
 	return (
-		<>
+		<div className={css.container}>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-			<Card className={css.container}>
+			<div className={css.content}>
+				<Typography>StudyNookLogo📚</Typography>
 				<Typography variant="h2">Register</Typography>
 				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 				<form className={css.form} onSubmit={handleLogin}>
-					<TextField required label="Name" type="text" inputRef={nameRef} />
-					<TextField required label="Username" type="text" inputRef={usernameRef} />
-					<TextField required label="Email" type="email" inputRef={emailRef} />
-					<TextField required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
-					<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
-					<Button disabled={loading} type="submit">
+					<TextField fullWidth required label="Username" type="text" inputRef={usernameRef} />
+					<TextField fullWidth required label="Username" type="text" inputRef={usernameRef} />
+					<TextField fullWidth required label="Name" type="text" inputRef={nameRef} />
+					<TextField fullWidth required label="Email" type="email" inputRef={emailRef} />
+					<TextField fullWidth required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
+					<TextField fullWidth required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
+					<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
 						Register
 					</Button>
 					<Typography variant="body1">
-						Already have an account? <Button disabled={loading}>Log in here</Button>
+						Already have an account?{" "}
+						<Button onClick={() => setRedirect("/login")} disabled={loading}>
+							Log in
+						</Button>
 					</Typography>
 				</form>
-			</Card>
-		</>
+			</div>
+		</div>
 	);
 }

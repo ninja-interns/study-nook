@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
 import { Redirect, Route } from "react-router-dom";
-import { AuthContainer } from "../../containers/AuthContainer";
+import { AuthContainer } from "../../contexts/AuthContainer";
 
 export function Logout() {
 	const { setIsLoggedIn } = AuthContainer.useContainer();

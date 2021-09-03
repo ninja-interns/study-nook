@@ -9,7 +9,7 @@ export const useStyles = makeStyles({
 		textAlign: "center",
 		position: "absolute",
 		width: "250px",
-		height: "200px",
+		height: "275px",
 		padding: "1rem",
 		backgroundColor: "rgba(255,255,255,0.95)",
 		border: "2px solid #000",

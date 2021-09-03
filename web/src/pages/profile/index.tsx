@@ -1,5 +1,5 @@
 import React from "react";
-import { AuthContainer } from "../../containers/AuthContainer";
+import { AuthContainer } from "../../contexts/AuthContainer";
 import { useGetState } from "../../utils/getState";
 
 export function Profile() {

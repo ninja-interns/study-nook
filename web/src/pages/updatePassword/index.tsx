@@ -1,10 +1,10 @@
-import { Button, Card, TextField, Typography } from "@material-ui/core";
+import { Button, TextField, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { useGetState } from "../../utils/getState";
-import { useStyles } from "../register/registerPageCss";
 import { Snackbars } from "./../../components/snackbar/index";
+import { useStyles } from "./updatePasswordCss";
 
 interface IData {
 	isValid: boolean;
@@ -65,20 +65,24 @@ export function UpdatePassword() {
 		setIsOpen(false);
 	};
 	return (
-		<Card className={css.container}>
-			<Button disabled={loading} onClick={() => history.goBack()}>
-				Back
-			</Button>
-			<Typography variant="h2">Change Password</Typography>
-			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-			<form className={css.form} onSubmit={handleUpdatePassword}>
-				<TextField required label="Current Password" type="password" inputProps={{ minLength: 6 }} inputRef={currentPasswordRef} />
-				<TextField required label="New Password" type="password" inputProps={{ minLength: 6 }} inputRef={newPasswordRef} />
-				<TextField required label="Confirm New Password" type="password" inputProps={{ minLength: 6 }} inputRef={confirmationRef} />
-				<Button disabled={loading} type="submit">
-					Update
-				</Button>
-			</form>
-		</Card>
+		<div className={css.container}>
+			<div className={css.content}>
+				<Typography variant="h2">Change Password</Typography>
+				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+				<form className={css.form} onSubmit={handleUpdatePassword}>
+					<TextField fullWidth required label="Current Password" type="password" inputProps={{ minLength: 6 }} inputRef={currentPasswordRef} />
+					<TextField fullWidth required label="New Password" type="password" inputProps={{ minLength: 6 }} inputRef={newPasswordRef} />
+					<TextField fullWidth required label="Confirm New Password" type="password" inputProps={{ minLength: 6 }} inputRef={confirmationRef} />
+					<div className={css.buttonContainer}>
+						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
+							Update
+						</Button>
+						<Button className={css.button} disabled={loading} variant="outlined" color="primary" onClick={() => history.goBack()}>
+							Cancel
+						</Button>
+					</div>
+				</form>
+			</div>
+		</div>
 	);
 }

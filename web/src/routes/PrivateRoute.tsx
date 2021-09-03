@@ -1,6 +1,6 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { AuthContainer } from "../containers/AuthContainer";
+import { AuthContainer } from "../contexts/AuthContainer";
 
 interface IPrivateRouteProps {
 	component: React.FC;

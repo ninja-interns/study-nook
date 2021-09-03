@@ -3,7 +3,7 @@ import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { Snackbars } from "../../components";
-import { AuthContainer } from "../../containers/AuthContainer";
+import { AuthContainer } from "../../contexts/AuthContainer";
 import { useStyles } from "./loginPageCss";
 
 interface IData {
@@ -62,22 +62,26 @@ export function LoginPage() {
 	};
 
 	return (
-		<>
+		<div className={css.container}>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-			<Card className={css.container}>
+			<div className={css.content}>
+				<Typography>StudyNookLogo📚</Typography>
 				<Typography variant="h2">Login</Typography>
 				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 				<form className={css.form} onSubmit={handleLogin}>
-					<TextField required label="Email or Username" type="text" inputRef={userRef} />
-					<TextField required label="Password" type="password" inputRef={passwordRef} />
-					<Button disabled={loading} type="submit">
+					<TextField fullWidth required label="Email or Username" type="text" inputRef={userRef} />
+					<TextField fullWidth required label="Password" type="password" inputRef={passwordRef} />
+					<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
 						Login
 					</Button>
 					<Typography variant="body1">
-						Don't have an account? <Button disabled={loading}>Log in here</Button>
+						Don't have an account?{" "}
+						<Button onClick={() => setRedirect("/registration")} disabled={loading}>
+							Register
+						</Button>
 					</Typography>
 				</form>
-			</Card>
-		</>
+			</div>
+		</div>
 	);
 }

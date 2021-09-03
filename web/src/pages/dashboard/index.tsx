@@ -2,7 +2,7 @@ import { Button, Typography } from "@material-ui/core";
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import { DeleteAccount, Logout } from "../../components";
-import { AuthContainer } from "../../containers/AuthContainer";
+import { AuthContainer } from "../../contexts/AuthContainer";
 import { useGetState } from "./../../utils/getState";
 
 export function Dashboard() {

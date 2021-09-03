@@ -4,6 +4,7 @@ import { SimpleModal } from "./../modal";
 import { Redirect, Route } from "react-router";
 import { Snackbars } from "..";
 import { Color } from "@material-ui/lab/Alert";
+import { useStyles } from "./deleteAccountCss";
 
 interface IData {
 	isValid: boolean;
@@ -11,6 +12,7 @@ interface IData {
 }
 
 export function DeleteAccount() {
+	const css = useStyles();
 	const [redirect, setRedirect] = useState<string | null>(null);
 	const currentPasswordRef = useRef<HTMLInputElement>();
 	const [loading, setLoading] = useState<boolean>(false);
@@ -58,19 +60,18 @@ export function DeleteAccount() {
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<SimpleModal buttonName="Delete Account" buttonVariant="outlined" buttonColor="secondary">
-				<>
+				<div className={css.container}>
 					<Typography>Are you sure you want to delete your account?</Typography>
 					<Typography>
 						<b>This action cannot be undone.</b>
 					</Typography>
 					<form onSubmit={handleDeleteAccount}>
-						<Typography>Please enter your password to continue.</Typography>
-						<TextField required label="Password" type="password" inputRef={currentPasswordRef} />
-						<Button disabled={loading} type="submit" variant="contained" color="secondary">
-							Delete My Account
+						<TextField fullWidth required label="Password" type="password" inputRef={currentPasswordRef} />
+						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
+							Delete
 						</Button>
 					</form>
-				</>
+				</div>
 			</SimpleModal>
 		</>
 	);

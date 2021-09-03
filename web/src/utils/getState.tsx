@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { IAuthCurrentUser, AuthContainer } from "../containers/AuthContainer";
+import { IAuthCurrentUser, AuthContainer } from "../contexts/AuthContainer";
 
 //this is a custom hook designed to be called at the beginning of each page to allow current User state and info to be persisted across refreshes.
 export function useGetState() {

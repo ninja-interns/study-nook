@@ -1,6 +1,6 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
 import React, { useRef, useState } from "react";
-import { AuthContainer } from "../../containers/AuthContainer";
+import { AuthContainer } from "../../contexts/AuthContainer";
 import { useStyles } from "./updateUserCss";
 import { useGetState } from "./../../utils/getState";
 import { Snackbars } from "./../../components/snackbar/index";
@@ -72,22 +72,26 @@ export function UpdateUser() {
 	};
 
 	return (
-		<Card className={css.container}>
-			<Button disabled={loading} onClick={() => history.goBack()}>
-				Back
-			</Button>
-			<Typography variant="h2">Update Credentials</Typography>
-			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required disabled label="Email" type="text" defaultValue={currentUser.email} inputRef={emailRef} />
-				<TextField required label="Username" type="text" defaultValue={currentUser.username} inputRef={usernameRef} />
-				<TextField required label="Name" type="text" defaultValue={currentUser.name} inputRef={nameRef} />
-				<Typography variant="body1">Please enter your password to confirm these changes</Typography>
-				<TextField required label="Password" type="password" inputRef={passwordRef} />
-				<Button disabled={loading} type="submit">
-					Update
-				</Button>
-			</form>
-		</Card>
+		<div className={css.container}>
+			<div className={css.content}>
+				<Typography variant="h2">Update Profile</Typography>
+				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+				<form className={css.form} onSubmit={handleLogin}>
+					<TextField fullWidth required disabled label="Email" type="text" defaultValue={currentUser.email} inputRef={emailRef} />
+					<TextField fullWidth required label="Username" type="text" defaultValue={currentUser.username} inputRef={usernameRef} />
+					<TextField fullWidth required label="Name" type="text" defaultValue={currentUser.name} inputRef={nameRef} />
+					<Typography variant="body1">Please enter your password to confirm these changes</Typography>
+					<TextField fullWidth required label="Password" type="password" inputRef={passwordRef} />
+					<div className={css.buttonContainer}>
+						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
+							Update
+						</Button>
+						<Button className={css.button} disabled={loading} variant="outlined" color="primary" onClick={() => history.goBack()}>
+							Cancel
+						</Button>
+					</div>
+				</form>
+			</div>
+		</div>
 	);
 }
