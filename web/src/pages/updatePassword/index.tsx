@@ -1,6 +1,7 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
+import { useHistory } from "react-router";
 import { useGetState } from "../../utils/getState";
 import { useStyles } from "../register/registerPageCss";
 import { Snackbars } from "./../../components/snackbar/index";
@@ -13,6 +14,7 @@ interface IData {
 export function UpdatePassword() {
 	useGetState();
 	const css = useStyles();
+	const history = useHistory();
 	const currentPasswordRef = useRef<HTMLInputElement>();
 	const newPasswordRef = useRef<HTMLInputElement>();
 	const confirmationRef = useRef<HTMLInputElement>();
@@ -61,6 +63,7 @@ export function UpdatePassword() {
 	};
 	return (
 		<Card className={css.container}>
+			<Button onClick={() => history.goBack()}>Back</Button>
 			<Typography variant="h2">Change Password</Typography>
 			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<form className={css.form} onSubmit={handleUpdatePassword}>

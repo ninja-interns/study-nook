@@ -13,7 +13,7 @@ export function PrivateRoute({ component: Component, path }: IPrivateRouteProps)
 	return (
 		<Route
 			render={() => {
-				return isLoggedIn ? <Route path={path} component={Component} /> : <Redirect to="/login" />;
+				return isLoggedIn ? <Route path={path} component={Component} /> : <Redirect push to="/login" />;
 			}}
 		></Route>
 	);

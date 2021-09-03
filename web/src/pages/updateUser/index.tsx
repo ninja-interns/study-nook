@@ -5,6 +5,7 @@ import { useStyles } from "./updateUserCss";
 import { useGetState } from "./../../utils/getState";
 import { Snackbars } from "./../../components/snackbar/index";
 import { Color } from "@material-ui/lab/Alert";
+import { useHistory } from "react-router-dom";
 
 interface IData {
 	isValid: boolean;
@@ -14,6 +15,7 @@ interface IData {
 export function UpdateUser() {
 	useGetState();
 	const css = useStyles();
+	const history = useHistory();
 	const usernameRef = useRef<HTMLInputElement>();
 	const nameRef = useRef<HTMLInputElement>();
 	const emailRef = useRef<HTMLInputElement>();
@@ -68,6 +70,7 @@ export function UpdateUser() {
 
 	return (
 		<Card className={css.container}>
+			<Button onClick={() => history.goBack()}>Back</Button>
 			<Typography variant="h2">Update Credentials</Typography>
 			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<form className={css.form} onSubmit={handleLogin}>

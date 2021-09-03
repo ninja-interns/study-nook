@@ -61,7 +61,7 @@ export function LoginPage() {
 
 	return (
 		<>
-			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Card className={css.container}>
 				<Typography variant="h2">Login</Typography>
 				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />

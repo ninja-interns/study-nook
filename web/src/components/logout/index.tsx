@@ -26,7 +26,7 @@ export function Logout() {
 	}
 	return (
 		<>
-			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Button variant="contained" color="secondary" onClick={handleLogout}>
 				Logout
 			</Button>

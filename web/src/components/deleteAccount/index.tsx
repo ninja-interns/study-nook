@@ -52,7 +52,7 @@ export function DeleteAccount() {
 
 	return (
 		<>
-			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<SimpleModal buttonName="Delete Account" buttonVariant="outlined" buttonColor="secondary">
 				<>

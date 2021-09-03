@@ -86,7 +86,7 @@ export function RegisterPage(): JSX.Element {
 
 	return (
 		<>
-			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Card className={css.container}>
 				<Typography variant="h2">Register</Typography>
 				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />

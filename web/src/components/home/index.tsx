@@ -9,7 +9,7 @@ export function Home() {
 
 	return (
 		<>
-			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<div className={css.container}>
 				<div className={css.verticalCenter}>
 					<h3 className={css.imageCss}>Cute Image Here</h3>

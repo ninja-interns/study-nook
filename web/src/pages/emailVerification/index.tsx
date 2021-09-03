@@ -54,7 +54,7 @@ export function EmailVerificationPage() {
 
 	return (
 		<div className={css.container}>
-			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Typography variant="h2">Email Verification</Typography>
 			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<Typography variant="subtitle1">Please enter the code you were sent.</Typography>
