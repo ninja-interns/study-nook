@@ -3,7 +3,7 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
-import { Link, Redirect, Route } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import { Snackbars } from "./../../components/snackbar/index";
 import { useStyles } from "./registerPageCss";
 
@@ -14,6 +14,7 @@ export function RegisterPage(): JSX.Element {
 	const usernameRef = useRef<HTMLInputElement>();
 	const passwordRef = useRef<HTMLInputElement>();
 	const passwordConfirmRef = useRef<HTMLInputElement>();
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 	const [severity, setSeverity] = useState<Color | undefined>(undefined);
 	const [redirect, setRedirect] = useState<string | null>(null);
@@ -27,6 +28,7 @@ export function RegisterPage(): JSX.Element {
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setMessage("");
+		setLoading(true);
 
 		//not letting user continue to send to DB if the passwords do not match
 		if (passwordRef?.current?.value.trim() !== passwordConfirmRef?.current?.value) {
@@ -74,6 +76,7 @@ export function RegisterPage(): JSX.Element {
 		} catch (err) {
 			console.error(err);
 		}
+		setLoading(false);
 	}
 
 	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -96,9 +99,11 @@ export function RegisterPage(): JSX.Element {
 					<TextField required label="Email" type="email" inputRef={emailRef} />
 					<TextField required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
 					<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
-					<Button type="submit">Register</Button>
+					<Button disabled={loading} type="submit">
+						Register
+					</Button>
 					<Typography variant="body1">
-						Already have an account? <Link to="/login">Log in here</Link>
+						Already have an account? <Button disabled={loading}>Log in here</Button>
 					</Typography>
 				</form>
 			</Card>

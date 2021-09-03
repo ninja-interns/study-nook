@@ -18,6 +18,7 @@ export function UpdatePassword() {
 	const currentPasswordRef = useRef<HTMLInputElement>();
 	const newPasswordRef = useRef<HTMLInputElement>();
 	const confirmationRef = useRef<HTMLInputElement>();
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 	const [severity, setSeverity] = useState<Color | undefined>(undefined);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -25,6 +26,7 @@ export function UpdatePassword() {
 	async function handleUpdatePassword(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setMessage("");
+		setLoading(true);
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
@@ -52,6 +54,7 @@ export function UpdatePassword() {
 		} catch (err) {
 			console.log(err);
 		}
+		setLoading(false);
 	}
 
 	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -63,14 +66,18 @@ export function UpdatePassword() {
 	};
 	return (
 		<Card className={css.container}>
-			<Button onClick={() => history.goBack()}>Back</Button>
+			<Button disabled={loading} onClick={() => history.goBack()}>
+				Back
+			</Button>
 			<Typography variant="h2">Change Password</Typography>
 			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<form className={css.form} onSubmit={handleUpdatePassword}>
 				<TextField required label="Current Password" type="password" inputProps={{ minLength: 6 }} inputRef={currentPasswordRef} />
 				<TextField required label="New Password" type="password" inputProps={{ minLength: 6 }} inputRef={newPasswordRef} />
 				<TextField required label="Confirm New Password" type="password" inputProps={{ minLength: 6 }} inputRef={confirmationRef} />
-				<Button type="submit">Update</Button>
+				<Button disabled={loading} type="submit">
+					Update
+				</Button>
 			</form>
 		</Card>
 	);

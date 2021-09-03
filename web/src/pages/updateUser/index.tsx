@@ -20,6 +20,7 @@ export function UpdateUser() {
 	const nameRef = useRef<HTMLInputElement>();
 	const emailRef = useRef<HTMLInputElement>();
 	const passwordRef = useRef<HTMLInputElement>();
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 	const [severity, setSeverity] = useState<Color | undefined>(undefined);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -28,6 +29,7 @@ export function UpdateUser() {
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setMessage("");
+		setLoading(true);
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
@@ -58,6 +60,7 @@ export function UpdateUser() {
 		} catch (err) {
 			console.log(err);
 		}
+		setLoading(false);
 	}
 
 	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -70,7 +73,9 @@ export function UpdateUser() {
 
 	return (
 		<Card className={css.container}>
-			<Button onClick={() => history.goBack()}>Back</Button>
+			<Button disabled={loading} onClick={() => history.goBack()}>
+				Back
+			</Button>
 			<Typography variant="h2">Update Credentials</Typography>
 			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 			<form className={css.form} onSubmit={handleLogin}>
@@ -79,7 +84,9 @@ export function UpdateUser() {
 				<TextField required label="Name" type="text" defaultValue={currentUser.name} inputRef={nameRef} />
 				<Typography variant="body1">Please enter your password to confirm these changes</Typography>
 				<TextField required label="Password" type="password" inputRef={passwordRef} />
-				<Button type="submit">Update</Button>
+				<Button disabled={loading} type="submit">
+					Update
+				</Button>
 			</form>
 		</Card>
 	);

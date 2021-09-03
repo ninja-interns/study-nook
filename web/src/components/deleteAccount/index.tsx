@@ -13,12 +13,14 @@ interface IData {
 export function DeleteAccount() {
 	const [redirect, setRedirect] = useState<string | null>(null);
 	const currentPasswordRef = useRef<HTMLInputElement>();
+	const [loading, setLoading] = useState<boolean>(false);
 	const [message, setMessage] = useState<string>("");
 	const [severity, setSeverity] = useState<Color | undefined>(undefined);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	async function handleDeleteAccount(e: React.FormEvent<HTMLFormElement>): Promise<void> {
 		e.preventDefault();
+		setLoading(true);
 		try {
 			const response = await fetch("/api/deleteAccount", {
 				method: "POST",
@@ -40,6 +42,7 @@ export function DeleteAccount() {
 		} catch (err) {
 			console.log(err);
 		}
+		setLoading(false);
 	}
 
 	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -63,7 +66,7 @@ export function DeleteAccount() {
 					<form onSubmit={handleDeleteAccount}>
 						<Typography>Please enter your password to continue.</Typography>
 						<TextField required label="Password" type="password" inputRef={currentPasswordRef} />
-						<Button type="submit" variant="contained" color="secondary">
+						<Button disabled={loading} type="submit" variant="contained" color="secondary">
 							Delete My Account
 						</Button>
 					</form>
