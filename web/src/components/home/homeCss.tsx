@@ -1,32 +1,27 @@
 import { makeStyles } from "@material-ui/styles";
+import pastelBookShelf from "../../assets/pastelBookShelf.jpg";
 
 export const useStyles = makeStyles({
-    container: {
-        marginLeft: "50px",
-        marginRight: "50px",
-        alignContent: 'center',
-        textAlign: 'center',
-    },
-    right: {
-        alignSelf: 'center',
-        marginLeft: "45px",
-    },
-    left: {
-        alignSelf: 'center',
-
-    },
-    verticalCenter: {
-        margin: '0',
-        position: 'absolute',
-        top: '50%'
-    },
-    buttonsClass: {
-        position: "fixed",
-        bottom: "70px",
-        display: "flex",
-        alignItems: 'center',
-    },
-    imageCss: {
-        textAlign: 'center',
-    }
+	container: {
+		display: "flex",
+		height: "100%",
+		width: "100%",
+		flexDirection: "column",
+		justifyContent: "space-between",
+		textAlign: "center",
+		padding: "1rem",
+		backgroundImage: `url(${pastelBookShelf})`,
+		backgroundRepeat: "no-repeat",
+		backgroundPosition: "center center",
+	},
+	buttonContainer: {
+		display: "flex",
+		position: "sticky",
+		width: "100%",
+		justifyContent: "space-between",
+	},
+	button: {
+		margin: "1rem",
+		width: "75%",
+	},
 });

@@ -1,4 +1,4 @@
-import Button from "@material-ui/core/Button";
+import { Typography, Button } from "@material-ui/core";
 import React, { useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { useStyles } from "./homeCss";
@@ -11,34 +11,30 @@ export function Home() {
 		<>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<div className={css.container}>
-				<div className={css.verticalCenter}>
-					<h3 className={css.imageCss}>Cute Image Here</h3>
-				</div>
+				<Typography variant="h3">StudyNookLogo📚</Typography>
 
-				<div className={css.buttonsClass}>
-					<div className={css.left}>
-						<Button
-							onClick={() => {
-								setRedirect("/registration");
-							}}
-							variant="contained"
-							color="primary"
-						>
-							Create Account
-						</Button>
-					</div>
+				<div className={css.buttonContainer}>
+					<Button
+						className={css.button}
+						onClick={() => {
+							setRedirect("/registration");
+						}}
+						variant="contained"
+						color="primary"
+					>
+						Register
+					</Button>
 
-					<div className={css.right}>
-						<Button
-							variant="contained"
-							color="primary"
-							onClick={() => {
-								setRedirect("/login");
-							}}
-						>
-							Login
-						</Button>
-					</div>
+					<Button
+						className={css.button}
+						variant="contained"
+						color="primary"
+						onClick={() => {
+							setRedirect("/login");
+						}}
+					>
+						Login
+					</Button>
 				</div>
 			</div>
 		</>
