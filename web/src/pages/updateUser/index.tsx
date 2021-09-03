@@ -1,6 +1,6 @@
 import { Button, Card, TextField, Typography } from "@material-ui/core";
 import React, { useRef, useState } from "react";
-import { AuthContainer } from "../../contexts/AuthContainer";
+import { ContextContainer } from "../../contexts/ContextContainer";
 import { useStyles } from "./updateUserCss";
 import { useGetState } from "./../../utils/getState";
 import { Snackbars } from "./../../components/snackbar/index";
@@ -24,7 +24,7 @@ export function UpdateUser() {
 	const [message, setMessage] = useState<string>("");
 	const [severity, setSeverity] = useState<Color | undefined>(undefined);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const { currentUser } = AuthContainer.useContainer();
+	const { currentUser } = ContextContainer.useContainer();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();

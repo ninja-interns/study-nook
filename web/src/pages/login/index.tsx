@@ -1,15 +1,44 @@
-import { Button, Card, TextField, Typography } from "@material-ui/core";
+import { Button, Fade, Slide, TextField, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import { Snackbars } from "../../components";
-import { AuthContainer } from "../../contexts/AuthContainer";
+import { ContextContainer } from "../../contexts/ContextContainer";
 import { useStyles } from "./loginPageCss";
+import { useLastLocation } from "react-router-last-location";
 
 interface IData {
 	isValid: boolean;
 	message: string;
 	isVerified: boolean;
+}
+
+interface ITransitionProps {
+	children: JSX.Element;
+}
+
+function Transition({ children }: ITransitionProps): JSX.Element {
+	const lastLocation: string | undefined = useLastLocation()?.pathname;
+	console.log("Login Transition", lastLocation);
+	if (lastLocation === "/") {
+		return (
+			<Slide direction={"left"} in={true} timeout={1000}>
+				{children}
+			</Slide>
+		);
+	} else if (lastLocation === "/registration") {
+		return (
+			<Slide direction={"right"} in={true} timeout={1000}>
+				{children}
+			</Slide>
+		);
+	} else {
+		return (
+			<Fade in={true} timeout={1000}>
+				{children}
+			</Fade>
+		);
+	}
 }
 
 export function LoginPage() {
@@ -21,7 +50,7 @@ export function LoginPage() {
 	const [severity, setSeverity] = useState<Color | undefined>(undefined);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [redirect, setRedirect] = useState<string | null>(null);
-	const { isLoggedIn, setIsLoggedIn } = AuthContainer.useContainer();
+	const { isLoggedIn, setIsLoggedIn } = ContextContainer.useContainer();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -62,26 +91,28 @@ export function LoginPage() {
 	};
 
 	return (
-		<div className={css.container}>
-			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-			<div className={css.content}>
-				<Typography>StudyNookLogo📚</Typography>
-				<Typography variant="h2">Login</Typography>
-				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-				<form className={css.form} onSubmit={handleLogin}>
-					<TextField fullWidth required label="Email or Username" type="text" inputRef={userRef} />
-					<TextField fullWidth required label="Password" type="password" inputRef={passwordRef} />
-					<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
-						Login
-					</Button>
-					<Typography variant="body1">
-						Don't have an account?{" "}
-						<Button onClick={() => setRedirect("/registration")} disabled={loading}>
-							Register
+		<Transition>
+			<div className={css.container}>
+				<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
+				<div className={css.content}>
+					<Typography>StudyNookLogo📚</Typography>
+					<Typography variant="h2">Login</Typography>
+					<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+					<form className={css.form} onSubmit={handleLogin}>
+						<TextField fullWidth required label="Email or Username" type="text" inputRef={userRef} />
+						<TextField fullWidth required label="Password" type="password" inputRef={passwordRef} />
+						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
+							Login
 						</Button>
-					</Typography>
-				</form>
+						<Typography variant="body1">
+							Don't have an account?{" "}
+							<Button onClick={() => setRedirect("/registration")} disabled={loading}>
+								Register
+							</Button>
+						</Typography>
+					</form>
+				</div>
 			</div>
-		</div>
+		</Transition>
 	);
 }
