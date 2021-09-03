@@ -16,17 +16,6 @@ export function Home() {
 				<div className={css.buttonContainer}>
 					<Button
 						className={css.button}
-						onClick={() => {
-							setRedirect("/registration");
-						}}
-						variant="contained"
-						color="primary"
-					>
-						Register
-					</Button>
-
-					<Button
-						className={css.button}
 						variant="contained"
 						color="primary"
 						onClick={() => {
@@ -34,6 +23,16 @@ export function Home() {
 						}}
 					>
 						Login
+					</Button>
+					<Button
+						className={css.button}
+						onClick={() => {
+							setRedirect("/registration");
+						}}
+						variant="contained"
+						color="primary"
+					>
+						Register
 					</Button>
 				</div>
 			</div>

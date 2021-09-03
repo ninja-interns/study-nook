@@ -1,6 +1,6 @@
 //ts-ignore is ignoring error "possibly undefined"
 
-import { Button, Card, Fade, Slide, TextField, Typography } from "@material-ui/core";
+import { Button, Fade, Slide, TextField, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
@@ -15,13 +15,7 @@ interface ITransitionProps {
 function Transition({ children }: ITransitionProps): JSX.Element {
 	const lastLocation: string | undefined = useLastLocation()?.pathname;
 	console.log("Register Transition", lastLocation);
-	if (lastLocation === "/") {
-		return (
-			<Slide direction={"right"} in={true} timeout={1000}>
-				{children}
-			</Slide>
-		);
-	} else if (lastLocation === "/login") {
+	if (lastLocation === "/login") {
 		return (
 			<Slide direction={"left"} in={true} timeout={1000}>
 				{children}

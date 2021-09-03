@@ -20,13 +20,7 @@ interface ITransitionProps {
 function Transition({ children }: ITransitionProps): JSX.Element {
 	const lastLocation: string | undefined = useLastLocation()?.pathname;
 	console.log("Login Transition", lastLocation);
-	if (lastLocation === "/") {
-		return (
-			<Slide direction={"left"} in={true} timeout={1000}>
-				{children}
-			</Slide>
-		);
-	} else if (lastLocation === "/registration") {
+	if (lastLocation === "/registration") {
 		return (
 			<Slide direction={"right"} in={true} timeout={1000}>
 				{children}
