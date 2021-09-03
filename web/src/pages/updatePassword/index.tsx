@@ -78,7 +78,7 @@ export function UpdatePassword() {
 							Update
 						</Button>
 						<Button className={css.button} disabled={loading} variant="outlined" color="primary" onClick={() => history.goBack()}>
-							Cancel
+							Back
 						</Button>
 					</div>
 				</form>
