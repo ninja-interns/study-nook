@@ -122,7 +122,6 @@ export function RegisterPage(): JSX.Element {
 					<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 					<form className={css.form} onSubmit={handleLogin}>
 						<TextField fullWidth required label="Username" type="text" inputRef={usernameRef} />
-						<TextField fullWidth required label="Username" type="text" inputRef={usernameRef} />
 						<TextField fullWidth required label="Name" type="text" inputRef={nameRef} />
 						<TextField fullWidth required label="Email" type="email" inputRef={emailRef} />
 						<TextField fullWidth required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
