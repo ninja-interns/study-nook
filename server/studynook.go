@@ -16,6 +16,7 @@ import (
 	"studynook.go/emails"
 	initializeDB "studynook.go/initializedb"
 	"studynook.go/middleware"
+	"studynook.go/report"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
@@ -45,6 +46,8 @@ func main() {
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
 	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
 	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
+
+	r.HandleFunc("/api/reportSubmission", middleware.WithUser(report.SubmitReports))
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))

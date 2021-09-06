@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
-import { HomePage, RegisterPage, LoginPage, Dashboard, Profile, EmailVerificationPage } from "../pages";
+import { HomePage, RegisterPage, LoginPage, Dashboard, Profile, EmailVerificationPage, MenuPage, SupportPage } from "../pages";
 import { PrivateRoute } from "./PrivateRoute";
 
 const Routes = () => {
@@ -12,7 +12,9 @@ const Routes = () => {
 				<Route path="/verifyEmail" component={EmailVerificationPage} />
 				<PrivateRoute path="/dashboard" component={Dashboard} />
 				<PrivateRoute path="/profile" component={Profile} />
-				<Route exact path="/" component={HomePage} />
+				<PrivateRoute path="/menu" component={MenuPage} />
+				<PrivateRoute path="/support" component={SupportPage} />
+				<Route path="/" component={HomePage} />
 			</Switch>
 		</Router>
 	);
