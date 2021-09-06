@@ -47,7 +47,6 @@ export function ResetPassword() {
 				}),
 			});
 			const data: IData = await response.json();
-			console.log(data);
 
 			if (data.isValid) {
 				setRedirect("/login");
@@ -82,7 +81,7 @@ export function ResetPassword() {
 				<form className={css.form} onSubmit={handleResetPassword}>
 					<TextField fullWidth label="Code" type="text" inputRef={tokenRef} />
 					<TextField fullWidth label="Email" type="email" inputRef={emailRef} />
-					<TextField fullWidth label="New Password" type="password" inputRef={passwordRef} />
+					<TextField fullWidth label="New Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
 					<TextField fullWidth label="Confirm Password" type="password" inputRef={confirmationRef} />
 					<Button variant="contained" color="primary" className={css.button} disabled={loading} type="submit">
 						Submit

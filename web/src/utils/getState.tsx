@@ -14,7 +14,6 @@ export function useGetState() {
 					headers: { "content-type": "application/json" },
 				});
 				const data: IAuthCurrentUser = await response.json();
-				console.log(data);
 				setIsLoggedIn(data.name !== null);
 				setCurrentUser(data);
 			} catch (err) {

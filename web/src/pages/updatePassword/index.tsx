@@ -72,7 +72,7 @@ export function UpdatePassword() {
 				<form className={css.form} onSubmit={handleUpdatePassword}>
 					<TextField fullWidth required label="Current Password" type="password" inputProps={{ minLength: 6 }} inputRef={currentPasswordRef} />
 					<TextField fullWidth required label="New Password" type="password" inputProps={{ minLength: 6 }} inputRef={newPasswordRef} />
-					<TextField fullWidth required label="Confirm New Password" type="password" inputProps={{ minLength: 6 }} inputRef={confirmationRef} />
+					<TextField fullWidth required label="Confirm New Password" type="password" inputRef={confirmationRef} />
 					<div className={css.buttonContainer}>
 						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
 							Update

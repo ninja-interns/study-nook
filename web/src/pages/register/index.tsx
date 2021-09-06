@@ -14,7 +14,6 @@ interface ITransitionProps {
 
 function Transition({ children }: ITransitionProps): JSX.Element {
 	const lastLocation: string | undefined = useLastLocation()?.pathname;
-	console.log("Register Transition", lastLocation);
 	if (lastLocation === "/login") {
 		return (
 			<Slide direction={"left"} in={true} timeout={1000}>

@@ -70,36 +70,59 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	u := &User{}
 	id, err := uuid.NewV4()
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 	u.ID = id.String()
 
 	err = json.NewDecoder(r.Body).Decode(u)
 	if err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	//checking password length at the backend as well as the frontend
 	passwordLength := len(u.Password)
 	if passwordLength < 6 {
-		w.WriteHeader(http.StatusBadRequest)
+		response := JsonResponse{
+			Message: "Your password must be at least 6 character long.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	//one way hashing to create password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), 8)
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	//creating a token to send to the database- in sendEmail.go. This is the token that will be compared to the user's entered code to verify their email
 	token, err := CreateToken()
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -111,12 +134,10 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username, false, token)
 	if err != nil {
-		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
 		}
-		fmt.Println(err)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -157,8 +178,12 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	//decoding the request body into the instanced User(u)
 	err := json.NewDecoder(r.Body).Decode(u)
 	if err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 	//Querying our database where our email column = the email the user input on the frontend
@@ -168,26 +193,24 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	//scanning the id, email and password from the DB into the created variables above
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerified)
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
-			Message:    "Your username or password is incorrect.",
-			IsValid:    false,
-			IsVerified: isVerified,
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
 		}
 		json.NewEncoder(w).Encode(response)
-		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
 	//comparing the password from the DB and from the users input. If theres an error, it writes a response body to send to the front end.
 	err = bcrypt.CompareHashAndPassword([]byte(password_hash), []byte(u.Password))
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
 		response := JsonResponse{
 			Message:    "Your username or password is incorrect.",
 			IsValid:    false,
 			IsVerified: isVerified,
 		}
-		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -209,13 +232,12 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	SessionManager.Put(r.Context(), "username", username)
 	SessionManager.Put(r.Context(), "email", email)
 
-	login := JsonResponse{
+	response := JsonResponse{
 		Message:    "Success!",
 		IsValid:    true,
 		IsVerified: isVerified,
 	}
-	json.NewEncoder(w).Encode(login)
-	fmt.Println("FINISHED", email, password_hash)
+	json.NewEncoder(w).Encode(response)
 }
 
 func VerifyEmail(w http.ResponseWriter, r *http.Request) {
@@ -230,12 +252,11 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 
 	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&name)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Couldn't find your account, please double check your code.",
 			IsValid: false,
 		}
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -246,13 +267,12 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, qCode)
 	if err != nil {
-		fmt.Println(err)
 		response := JsonResponse{
-			Message: "Oops, something went wrong. Please try again.",
+			Message: "Something went wrong, please try again.",
 			IsValid: false,
 		}
 		json.NewEncoder(w).Encode(response)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		w.WriteHeader(http.StatusInternalServerError)
 
 		return
 	}
@@ -272,15 +292,15 @@ type CurrentPassword struct {
 func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	err := SessionManager.Destroy(r.Context())
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	logout := JsonResponse{
+	response := JsonResponse{
 		Message: "Successfully logged out!",
 		IsValid: true,
 	}
-	json.NewEncoder(w).Encode(logout)
+	json.NewEncoder(w).Encode(response)
 }
 
 func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
@@ -290,8 +310,12 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 
 	err := json.NewDecoder(r.Body).Decode(c)
 	if err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -303,7 +327,7 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
 	if err != nil {
 		response := JsonResponse{
-			Message:    "Please try again.",
+			Message:    "Something went wrong, please try again.",
 			IsValid:    false,
 			IsVerified: u.IsVerfied,
 		}
@@ -321,21 +345,31 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 			IsValid:    false,
 			IsVerified: u.IsVerfied,
 		}
-		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	sqlStatement = `DELETE FROM users WHERE id = $1`
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	err = SessionManager.Destroy(r.Context())
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -352,8 +386,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	var dbPassword []byte
 	err := json.NewDecoder(r.Body).Decode(p)
 	if err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		j.IsValid = false
 		j.Message = "Something went wrong, please try again"
 		json.NewEncoder(w).Encode(j)
@@ -372,8 +405,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	//scanning the id password from the DB into the created variables above
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
 	if err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		j.IsValid = false
 		j.Message = "Something went wrong, please try again"
 		json.NewEncoder(w).Encode(j)
@@ -383,6 +415,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	//comparing the current password input against our password stored in the database
 	err = bcrypt.CompareHashAndPassword(dbPassword, []byte(p.Password))
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		j.IsValid = false
 		j.Message = "Your password does not match our records."
 		json.NewEncoder(w).Encode(j)
@@ -394,8 +427,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	//scanning the id password from the DB into the created variables above
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, p.Username, p.Name)
 	if err != nil {
-		fmt.Println("Update Error", err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
 		j.IsValid = false
 		j.Message = "Something went wrong, please try again"
 		json.NewEncoder(w).Encode(j)
@@ -421,7 +453,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&dbPassword)
 	if err != nil {
 		response = JsonResponse{
-			Message: "Bad request, please try again",
+			Message: "Oops! something went wrong, please try again.",
 			IsValid: false,
 		}
 		return response, err
@@ -450,7 +482,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	newHashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPass), 8)
 	if err != nil {
 		response := JsonResponse{
-			Message: "Bad request, please try again",
+			Message: "Oops! something went wrong, please try again.",
 			IsValid: false,
 		}
 		return response, err
@@ -462,7 +494,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, newHashedPassword, id)
 	if err != nil {
 		response = JsonResponse{
-			Message: "Bad request, please try again",
+			Message: "Oops! something went wrong, please try again.",
 			IsValid: false,
 		}
 		return response, err
@@ -487,13 +519,18 @@ func UpdatePassword(w http.ResponseWriter, r *http.Request, u *User) {
 
 	err := json.NewDecoder(r.Body).Decode(p)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	response, err := generalUpdatePassword(u.ID, p.CurrentPassword, p.NewPassword, p.Confirmation)
 	if err != nil {
-		fmt.Println(response, err)
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -506,8 +543,12 @@ func ForgotPassword(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(u)
 	if err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -517,11 +558,11 @@ func ForgotPassword(w http.ResponseWriter, r *http.Request) {
 
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email).Scan(&name)
 	if err != nil {
-		fmt.Println(err)
 		response := JsonResponse{
 			Message: "We couldn't find your email.",
 			IsValid: false,
 		}
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -545,7 +586,6 @@ func ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.Email, token)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Something went wrong, please try again.",
 			IsValid: false,
@@ -578,8 +618,22 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(p)
 	if err != nil {
-		fmt.Println(err)
-		w.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	passwordLength := len(p.Password)
+	if passwordLength < 6 {
+		response := JsonResponse{
+			Message: "Your password must be at least 6 character long.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -599,7 +653,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, p.Email).Scan(&dbToken)
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
 		response := JsonResponse{
 			Message: "We couldn't find your email.",
 			IsValid: false,
@@ -621,7 +675,12 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	//if code reaches here, we can hash the password and enter it into our database
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(p.Password), 8)
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -643,7 +702,6 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, p.Email, hashedPassword, token)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Something went wrong, please try again.",
 			IsValid: false,

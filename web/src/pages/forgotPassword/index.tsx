@@ -33,7 +33,6 @@ export function ForgotPassword() {
 				body: JSON.stringify({ email: emailRef?.current?.value }),
 			});
 			const data: IData = await response.json();
-			console.log(data);
 
 			if (data.isValid) {
 				setRedirect("/resetPassword");

@@ -30,7 +30,7 @@ export function DeleteAccount() {
 				body: JSON.stringify({ currentPassword: currentPasswordRef?.current?.value }),
 			});
 			const data: IData = await response.json();
-			console.log(data);
+
 			if (data.isValid) {
 				setRedirect("/deletedAccount");
 				setMessage(data.message);
@@ -66,7 +66,7 @@ export function DeleteAccount() {
 						<b>This action cannot be undone.</b>
 					</Typography>
 					<form onSubmit={handleDeleteAccount}>
-						<TextField fullWidth required label="Password" type="password" inputRef={currentPasswordRef} />
+						<TextField fullWidth required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={currentPasswordRef} />
 						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
 							Delete
 						</Button>

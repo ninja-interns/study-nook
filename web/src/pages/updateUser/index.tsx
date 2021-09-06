@@ -45,7 +45,6 @@ export function UpdateUser() {
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: IData = await response.json();
-			console.log(data);
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 
 			if (data.isValid) {

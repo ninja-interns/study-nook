@@ -19,7 +19,6 @@ interface ITransitionProps {
 
 function Transition({ children }: ITransitionProps): JSX.Element {
 	const lastLocation: string | undefined = useLastLocation()?.pathname;
-	console.log("Login Transition", lastLocation);
 	if (lastLocation === "/registration") {
 		return (
 			<Slide direction={"right"} in={true} timeout={1000}>
@@ -59,12 +58,10 @@ export function LoginPage() {
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: IData = await response.json();
-			console.log(data, "isLoggedIn", isLoggedIn);
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 			if (data.isValid && data.isVerified) {
 				setIsLoggedIn(true);
 				setRedirect("/dashboard");
-				console.log(redirect);
 			} else {
 				setMessage(data.message);
 				setIsOpen(true);

@@ -20,7 +20,7 @@ func WithUser(next SecureHandler) http.HandlerFunc {
 		}
 		user, err := auth.GetUserById(id)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
 			fmt.Println(err)
 			return
 		}
