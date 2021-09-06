@@ -193,9 +193,9 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	//scanning the id, email and password from the DB into the created variables above
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerified)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		response := JsonResponse{
-			Message: "Something went wrong, please try again.",
+			Message: "Your username or password is incorrect.",
 			IsValid: false,
 		}
 		json.NewEncoder(w).Encode(response)
@@ -427,9 +427,10 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	//scanning the id password from the DB into the created variables above
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, p.Username, p.Name)
 	if err != nil {
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		j.IsValid = false
-		j.Message = "Something went wrong, please try again"
+		j.Message = "The username has already been used."
 		json.NewEncoder(w).Encode(j)
 		return
 	}

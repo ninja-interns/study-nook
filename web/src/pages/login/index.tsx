@@ -2,10 +2,10 @@ import { Button, Fade, Slide, TextField, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
+import { useLastLocation } from "react-router-last-location";
 import { Snackbars } from "../../components";
 import { ContextContainer } from "../../contexts/ContextContainer";
 import { useStyles } from "./loginPageCss";
-import { useLastLocation } from "react-router-last-location";
 
 interface IData {
 	isValid: boolean;
@@ -43,7 +43,7 @@ export function LoginPage() {
 	const [severity, setSeverity] = useState<Color | undefined>(undefined);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [redirect, setRedirect] = useState<string | null>(null);
-	const { isLoggedIn, setIsLoggedIn } = ContextContainer.useContainer();
+	const { setIsLoggedIn } = ContextContainer.useContainer();
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();

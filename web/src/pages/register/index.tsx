@@ -47,7 +47,7 @@ export function RegisterPage(): JSX.Element {
 		message: string;
 	}
 
-	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+	async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		setMessage("");
 		setLoading(true);
@@ -119,7 +119,7 @@ export function RegisterPage(): JSX.Element {
 					<Typography>StudyNookLogo📚</Typography>
 					<Typography variant="h2">Register</Typography>
 					<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-					<form className={css.form} onSubmit={handleLogin}>
+					<form className={css.form} onSubmit={handleRegister}>
 						<TextField fullWidth required label="Username" type="text" inputRef={usernameRef} />
 						<TextField fullWidth required label="Name" type="text" inputRef={nameRef} />
 						<TextField fullWidth required label="Email" type="email" inputRef={emailRef} />
