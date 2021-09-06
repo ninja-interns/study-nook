@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"studynook.go/auth"
 	"studynook.go/emails"
@@ -12,9 +13,9 @@ import (
 )
 
 type Report struct {
-	Username string `json: Username`
-	Date     string `json: Date`
-	Message  string `json: Message`
+	Username string `json:"username"`
+	Date     string `json:"date"`
+	Message  string `json:"message"`
 }
 
 //creating a struct for the JSON response message
@@ -39,8 +40,10 @@ func SubmitReports(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	fmt.Println(check)
 
 	if check {
-		insertToDB(report)
-		emails.SendEmail("studynookapp@gmail.com", "Submission Report", "emails/emailTemplates/reportSubmission.html", map[string]string{"username": report.Username, "message": report.Message, "date": report.Date})
+		var submission_id string
+		InsertToDB(report)
+		submission_id = GetReportID(report.Username)
+		emails.SendEmail("studynookapp@gmail.com", "Submission Report", "emails/emailTemplates/reportSubmission.html", map[string]string{"id": submission_id, "username": report.Username, "message": report.Message, "date": report.Date})
 		response := JsonResponse{
 			Message: "Success! Please, wait while the management team review your report. Thanks for your collaboration!",
 			IsValid: true,
@@ -49,10 +52,35 @@ func SubmitReports(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	} else {
 		fmt.Println(err)
 		response := JsonResponse{
-			Message: "Error, you cannot send more than report a day. Please, try again tomorrow.",
+			Message: "Error, you cannot send more than one report a day. Please, try again tomorrow.",
 			IsValid: false,
 		}
 		json.NewEncoder(w).Encode(response)
+	}
+}
+
+func GetReportID(username string) string {
+
+	sqlQuery := `SELECT submission_id from reports WHERE date_submission > NOW() - INTERVAL '1' day AND username = $1;`
+
+	tempID := 0
+	err := initializeDB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempID)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("This is username: " + strconv.Itoa(tempID))
+
+	return strconv.Itoa(tempID)
+}
+
+func InsertToDB(report *Report) {
+
+	sqlQuery := `INSERT INTO reports (username, message) VALUES ($1, $2);`
+
+	_, err := initializeDB.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
+	if err != nil {
+		fmt.Println(err)
 	}
 }
 

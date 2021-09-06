@@ -27,9 +27,9 @@ export function Logout() {
 	return (
 		<>
 			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
-			<Button variant="contained" color="secondary" onClick={handleLogout}>
+			<p onClick={handleLogout}>
 				Logout
-			</Button>
+			</p>
 		</>
 	);
 }

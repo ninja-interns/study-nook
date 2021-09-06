@@ -8,12 +8,6 @@ export const useStyles = makeStyles((theme: Theme) =>
             height: "600px",
             position: "absolute",
             border: "solid black",
-            top: "0",
-            bottom: "0",
-            left: "0",
-            right: "0",
-
-            margin: "auto",
         },
         closeButton: {
             width: "40px",

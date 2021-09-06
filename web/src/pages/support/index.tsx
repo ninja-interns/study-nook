@@ -1,15 +1,16 @@
-import React, { ChangeEventHandler, EventHandler, TextareaHTMLAttributes, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+
 import { useStyles } from "./supportCss";
-import { TextField, Card, Button, Typography, TextareaAutosize, TextareaAutosizeProps } from "@material-ui/core";
+
 import { useHistory, Route, Redirect } from "react-router-dom";
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
+
+import { Color } from "@material-ui/lab";
+import { Modal, Backdrop, Slide, Fade, Button, Typography, TextareaAutosize } from "@material-ui/core";
+
 import { AuthContainer } from "../../containers/AuthContainer";
 import { useGetState } from "./../../utils/getState";
-import { getCurrentDate } from "./../../utils/getDate";
-import { Color } from "@material-ui/lab/Alert";
 import { Snackbars } from "../../components";
+import { getCurrentDate } from "./../../utils/getDate";
 
 import closeButton from "../../assets/close-button.png";
 
@@ -104,38 +105,40 @@ export function SupportPage() {
     );
 
     return (
-        <div className={css.container}>
-            <img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
+        <Slide in={true} direction={"left"} timeout={1000}>
+            <div className={css.container}>
+                <img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
 
-            <Snackbars message={boxMessage} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+                <Snackbars message={boxMessage} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 
-            <Typography className={css.pageTitle} variant="h5">Submit a ticket</Typography>
+                <Typography className={css.pageTitle} variant="h5">Submit a ticket</Typography>
 
-            <div>
-                <Typography className={css.userInfo} variant="h5">Username: {currentUser.username}</Typography>
-                <Typography className={css.userInfo} variant="h5">Message:</Typography>
+                <div>
+                    <Typography className={css.userInfo} variant="h5">Username: {currentUser.username}</Typography>
+                    <Typography className={css.userInfo} variant="h5">Message:</Typography>
 
-                <TextareaAutosize required className={css.textArea} minRows={15} onKeyUp={handleMessage}></TextareaAutosize>
-                <Button className={css.submitReportButton} variant="contained" color="primary" onClick={handlePopupOpen}>Submit</Button>
+                    <TextareaAutosize required className={css.textArea} minRows={15} onKeyUp={handleMessage}></TextareaAutosize>
+                    <Button className={css.submitReportButton} variant="contained" color="primary" onClick={handlePopupOpen}>Submit</Button>
 
-                <div className={css.centralizeModal}>
-                    <Modal
-                        open={popup}
-                        onClose={handlePopupClose}
-                        aria-labelledby="Confirm"
-                        aria-describedby="Idk"
-                        BackdropComponent={Backdrop}
-                        BackdropProps={{
-                            timeout: 500,
-                        }}
-                    >
-                        <Fade in={popup}>
-                            {body}
-                        </Fade>
-                    </Modal>
+                    <div className={css.centralizeModal}>
+                        <Modal
+                            open={popup}
+                            onClose={handlePopupClose}
+                            aria-labelledby="Confirm"
+                            aria-describedby="Idk"
+                            BackdropComponent={Backdrop}
+                            BackdropProps={{
+                                timeout: 500,
+                            }}
+                        >
+                            <Fade in={popup}>
+                                {body}
+                            </Fade>
+                        </Modal>
+                    </div>
                 </div>
-            </div>
 
-        </div >
+            </div >
+        </Slide>
     );
 }
