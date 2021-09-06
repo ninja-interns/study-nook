@@ -45,6 +45,8 @@ func main() {
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
 	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
 	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
+	r.HandleFunc("/api/forgotPassword", auth.ForgotPassword)
+	r.HandleFunc("/api/resetPassword", auth.ResetPassword)
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
 	r.HandleFunc("/api/deleteAccount", middleware.WithUser(auth.DeleteAccount))
 	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))

@@ -104,6 +104,12 @@ export function LoginPage() {
 								Register
 							</Button>
 						</Typography>
+						<Typography variant="body1">
+							Forgot your password?{" "}
+							<Button onClick={() => setRedirect("/forgotPassword")} disabled={loading}>
+								Recover
+							</Button>
+						</Typography>
 					</form>
 				</div>
 			</div>

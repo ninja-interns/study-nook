@@ -26,7 +26,7 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Println(err)
 		response := JsonResponse{
-			Message: "Couldn't find your account, please double check your code",
+			Message: "Couldn't find your account, please double check your code.",
 			IsValid: false,
 		}
 		json.NewEncoder(w).Encode(response)

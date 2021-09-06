@@ -58,6 +58,7 @@ export function RegisterPage(): JSX.Element {
 			setMessage("Passwords do not match.");
 			setSeverity("error");
 			setIsOpen(true);
+			setLoading(false);
 			return;
 		}
 
@@ -66,6 +67,7 @@ export function RegisterPage(): JSX.Element {
 			setMessage("Please fill out all fields");
 			setSeverity("error");
 			setIsOpen(true);
+			setLoading(false);
 			return;
 		}
 
