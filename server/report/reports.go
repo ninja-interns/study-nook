@@ -104,13 +104,3 @@ func ValidateReport(username string) bool {
 	}
 
 }
-
-func insertToDB(report *Report) {
-
-	sqlQuery := `INSERT INTO reports (username, message) VALUES ($1, $2);`
-
-	_, err := initializeDB.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
-	if err != nil {
-		fmt.Println(err)
-	}
-}

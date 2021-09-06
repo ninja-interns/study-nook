@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
-import { HomePage, RegisterPage, LoginPage, Dashboard, Profile, EmailVerificationPage, MenuPage, SupportPage } from "../pages";
+import { HomePage, RegisterPage, LoginPage, Dashboard, Profile, EmailVerificationPage, MenuPage, SupportPage, AchievementsPage } from "../pages";
 import { PrivateRoute } from "./PrivateRoute";
 
 const Routes = () => {
@@ -14,6 +14,7 @@ const Routes = () => {
 				<PrivateRoute path="/profile" component={Profile} />
 				<PrivateRoute path="/menu" component={MenuPage} />
 				<PrivateRoute path="/support" component={SupportPage} />
+				<PrivateRoute path="/achievements" component={AchievementsPage} />
 				<Route path="/" component={HomePage} />
 			</Switch>
 		</Router>
