@@ -454,7 +454,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&dbPassword)
 	if err != nil {
 		response = JsonResponse{
-			Message: "Oops! something went wrong, please try again.",
+			Message: "Something went wrong, please try again.",
 			IsValid: false,
 		}
 		return response, err
@@ -483,7 +483,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	newHashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPass), 8)
 	if err != nil {
 		response := JsonResponse{
-			Message: "Oops! something went wrong, please try again.",
+			Message: "Something went wrong, please try again.",
 			IsValid: false,
 		}
 		return response, err
@@ -495,7 +495,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, newHashedPassword, id)
 	if err != nil {
 		response = JsonResponse{
-			Message: "Oops! something went wrong, please try again.",
+			Message: "Something went wrong, please try again.",
 			IsValid: false,
 		}
 		return response, err
