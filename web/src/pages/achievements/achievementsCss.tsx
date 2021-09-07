@@ -12,7 +12,6 @@ export const useStyles = makeStyles({
             display: "none",
         },
     },
-
     closeButton: {
         width: "40px",
         position: "absolute",
@@ -35,7 +34,6 @@ export const useStyles = makeStyles({
         '&:hover': {
             "& ~ $textBox": {
                 display: "block",
-                position: "absolute",
             }
         }
     },
@@ -44,19 +42,16 @@ export const useStyles = makeStyles({
         marginRight: "5px",
         marginBottom: "20px",
         cursor: "pointer",
-        '&:hover': {
-            "& + $textBox": {
-                display: "block",
-            }
-        }
     },
     textBox: {
+        margin: "-70px",
+        marginLeft: "-30px",
         background: "#F8F8F8",
         border: "5px solid #DFDFDF",
         color: "#717171",
         fontSize: "13px",
         height: "40px",
-        width: "310px",
+        width: "150px",
         letterSpacing: "1px",
         lineHeight: "20px",
         position: "absolute",
@@ -64,7 +59,6 @@ export const useStyles = makeStyles({
         textTransform: "uppercase",
         display: "none",
         padding: "0 0px",
-        overflow: "auto"
-    }
-
+        pointerEvents: "none",
+    },
 });
