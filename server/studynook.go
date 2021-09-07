@@ -7,7 +7,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"studynook.go/api"
@@ -17,7 +16,6 @@ import (
 	"studynook.go/middleware"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -25,18 +23,18 @@ func main() {
 
 	auth.SessionsConfig()
 
-	err := godotenv.Load(".env.local")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	//err := godotenv.Load(".env.local")
+	//if err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
 
 	//setting my EMailConfigs variable equal to this Emailer struct taking in environmental variables from my ".env.local"
 	//emails.EmailConfigs, err = emails.NewEmailer(os.Getenv("SMTP_USERNAME"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_SERVER"), os.Getenv("SMTP_PORT"))
-	if err != nil {
-		fmt.Println("package main email err", err)
-		return
-	}
+	//if err != nil {
+	//	fmt.Println("package main email err", err)
+	//	return
+	//}
 
 	r := chi.NewRouter()
 
@@ -46,7 +44,7 @@ func main() {
 	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
 
-	r.Route("/api/users", func(r chi.Router) {
+	r.Route("/admin/users", func(r chi.Router) {
 		r.Post("/", api.CreateUser) // POST /users
 		r.Get("/", api.GetAllUsers) // GET /users
 

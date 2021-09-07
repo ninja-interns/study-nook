@@ -37,7 +37,7 @@ func UserContext(next http.Handler) http.Handler {
 	})
 }
 
-//CreateUser handles: POST /api/users
+//CreateUser handles: POST /admin/users
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	user := &schema.User{}
@@ -89,7 +89,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//GetAllUsers handles: GET /api/users
+//GetAllUsers handles: GET /admin/users
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 	//database operation to get all the users
@@ -104,7 +104,7 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//GetUser handles: GET /api/users/123
+//GetUser handles: GET /admin/users/123
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("userID").(int)
 
@@ -120,7 +120,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//UpdateUser handles: PUT /api/users/123
+//UpdateUser handles: PUT /admin/users/123
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("userID").(int)
 
@@ -174,7 +174,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//DeleteUser handles: DELETE /api/users/123
+//DeleteUser handles: DELETE /admin/users/123
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("userID").(int)
 

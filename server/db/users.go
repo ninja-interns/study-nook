@@ -27,7 +27,7 @@ func GetAllUsers() ([]schema.User, error) {
 		userList = append(userList, user)
 	}
 
-	return userList, err
+	return userList, nil
 }
 
 //AddUser inserts a user in the database
@@ -35,9 +35,9 @@ func AddUser(user schema.User) error {
 	query := `INSERT INTO users (email, name, username, password) VALUES ($1,$2,$3,$4)`
 	_, err := Conn.Exec(context.Background(), query, user.Email, user.Name, user.Username, user.Password)
 	if err != nil {
-		return nil
+		return err
 	}
-	return err
+	return nil
 }
 
 //GetUserByID returns a user with given ID
