@@ -1,22 +1,17 @@
 import { makeStyles } from "@material-ui/styles";
-import pastelBookShelf from "../../assets/pastelBookShelf.jpg";
 
 export const useStyles = makeStyles({
 	container: {
-		display: "flex",
 		height: "100%",
 		width: "100%",
+		display: "flex",
 		flexDirection: "column",
-		justifyContent: "space-between",
+		justifyContent: "center",
+		alignItems: "center",
 		textAlign: "center",
-		padding: "1rem",
-		backgroundImage: `url(${pastelBookShelf})`,
-		backgroundRepeat: "no-repeat",
-		backgroundPosition: "center center",
 	},
 	buttonContainer: {
 		display: "flex",
-		position: "sticky",
 		width: "100%",
 		justifyContent: "space-between",
 	},
