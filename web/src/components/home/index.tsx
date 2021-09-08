@@ -1,42 +1,49 @@
+import { Typography, Button } from "@material-ui/core"
+import React, { useState } from "react"
+import { Redirect, Route } from "react-router-dom"
+import { ContextContainer } from "../../contexts/ContextContainer"
 import { useStyles } from "./homeCss"
-import Button from "@material-ui/core/Button"
-import { useHistory } from "react-router-dom"
+import { useHistory } from "react-router"
 
-export function Home() {
-	const css = useStyles()
-	const history = useHistory()
+export function Home(): JSX.Element {
+    const css = useStyles()
+    const [redirect, setRedirect] = useState<string | null>(null)
+    const { isLoggedIn } = ContextContainer.useContainer()
+    const history = useHistory()
 
-	return (
-		<div className={css.container}>
-			<div className={css.verticalCenter}>
-				<h3 className={css.imageCss}>Cute Image Here</h3>
-			</div>
+    if (isLoggedIn) {
+        history.push("/dashboard")
+    }
 
-			<div className={css.buttonsClass}>
-				<div className={css.left}>
-					<Button
-						onClick={() => {
-							history.push("/registration")
-						}}
-						variant="contained"
-						color="primary"
-					>
-						Create Account
-					</Button>
-				</div>
+    return (
+        <>
+            <Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
+            <div className={css.container}>
+                <Typography variant="h3">StudyNookLogo📚</Typography>
 
-				<div className={css.right}>
-					<Button
-						variant="contained"
-						color="primary"
-						onClick={() => {
-							history.push("/login")
-						}}
-					>
-						Login
-					</Button>
-				</div>
-			</div>
-		</div>
-	)
+                <div className={css.buttonContainer}>
+                    <Button
+                        className={css.button}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            setRedirect("/login")
+                        }}
+                    >
+                        Login
+                    </Button>
+                    <Button
+                        className={css.button}
+                        onClick={() => {
+                            setRedirect("/registration")
+                        }}
+                        variant="contained"
+                        color="primary"
+                    >
+                        Register
+                    </Button>
+                </div>
+            </div>
+        </>
+    )
 }

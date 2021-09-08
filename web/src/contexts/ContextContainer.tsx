@@ -8,8 +8,9 @@ export interface IAuthCurrentUser {
 	email: string | null
 }
 
-function AuthDataContainer() {
-	const isLoggedIn = document.cookie.includes("session")
+function ContextDataContainer() {
+	//Auth
+	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(document.cookie.includes("session"));
 	const [currentUser, setCurrentUser] = useState<IAuthCurrentUser>({
 		name: null,
 		username: null,
@@ -18,9 +19,10 @@ function AuthDataContainer() {
 
 	return {
 		isLoggedIn,
+		setIsLoggedIn,
 		currentUser,
 		setCurrentUser,
 	}
 }
 
-export const AuthContainer = createContainer(AuthDataContainer)
+export const ContextContainer = createContainer(ContextDataContainer);

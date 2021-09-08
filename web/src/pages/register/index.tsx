@@ -1,78 +1,142 @@
 //ts-ignore is ignoring error "possibly undefined"
 
+import { Button, Fade, Slide, TextField, Typography } from "@material-ui/core"
+import { Color } from "@material-ui/lab/Alert"
 import React, { useRef, useState } from "react"
+import { Redirect, Route } from "react-router-dom"
+import { useLastLocation } from "react-router-last-location"
+import { Snackbars } from "./../../components/snackbar/index"
 import { useStyles } from "./registerPageCss"
-import { TextField, Card, Button, Typography } from "@material-ui/core"
-import { useHistory, Link } from "react-router-dom"
 
-export function RegisterPage() {
-	const css = useStyles()
-	const emailRef = useRef<HTMLInputElement>()
-	const nameRef = useRef<HTMLInputElement>()
-	const usernameRef = useRef<HTMLInputElement>()
-	const passwordRef = useRef<HTMLInputElement>()
-	const passwordConfirmRef = useRef<HTMLInputElement>()
-	const [error, setError] = useState<string>("")
-	const history = useHistory()
+interface ITransitionProps {
+    children: JSX.Element
+}
 
-	interface IData {
-		isValid: boolean
-		message: string
-	}
+function Transition({ children }: ITransitionProps): JSX.Element {
+    const lastLocation: string | undefined = useLastLocation()?.pathname
+    if (lastLocation === "/login") {
+        return (
+            <Slide direction={"left"} in={true} timeout={1000}>
+                {children}
+            </Slide>
+        )
+    } else {
+        return (
+            <Fade in={true} timeout={1000}>
+                {children}
+            </Fade>
+        )
+    }
+}
 
-	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
-		setError("")
+export function RegisterPage(): JSX.Element {
+    const css = useStyles()
+    const emailRef = useRef<HTMLInputElement>()
+    const nameRef = useRef<HTMLInputElement>()
+    const usernameRef = useRef<HTMLInputElement>()
+    const passwordRef = useRef<HTMLInputElement>()
+    const passwordConfirmRef = useRef<HTMLInputElement>()
+    const [loading, setLoading] = useState<boolean>(false)
+    const [message, setMessage] = useState<string>("")
+    const [severity, setSeverity] = useState<Color | undefined>(undefined)
+    const [redirect, setRedirect] = useState<string | null>(null)
+    const [isOpen, setIsOpen] = useState<boolean>(false)
 
-		//not letting user continue to send to DB if the passwords do not match
-		if (passwordRef?.current?.value.trim() !== passwordConfirmRef?.current?.value) {
-			setError("Passwords do not match.")
-			return
-		}
+    interface IData {
+        isValid: boolean
+        message: string
+    }
 
-		//not letting user continue to send to DB if the password or email ref if there are just spaces filled out.
-		if (emailRef?.current?.value.trim() === "" || passwordRef?.current?.value.trim() === "") {
-			setError("Please fill out all fields")
-			return
-		}
+    async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+        setMessage("")
+        setLoading(true)
 
-		try {
-			const response = await fetch("/api/createUser", {
-				method: "POST",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({
-					email: emailRef?.current?.value,
-					password: passwordRef?.current?.value,
-					username: usernameRef?.current?.value,
-					name: nameRef?.current?.value,
-				}),
-			})
-			const data: IData = await response.json()
-			if (data.isValid) {
-				history.push("/login")
-			} else {
-				setError(data.message)
-			}
-		} catch (err) {
-			console.log(err)
-		}
-	}
+        //not letting user continue to send to DB if the passwords do not match
+        if (passwordRef?.current?.value.trim() !== passwordConfirmRef?.current?.value) {
+            setMessage("Passwords do not match.")
+            setSeverity("error")
+            setIsOpen(true)
+            setLoading(false)
+            return
+        }
 
-	return (
-		<Card className={css.container}>
-			<Typography variant="h2">Register</Typography>
-			<Typography variant="body1">{error}</Typography>
-			<form className={css.form} onSubmit={handleLogin}>
-				<TextField required label="Name" type="text" inputRef={nameRef} />
-				<TextField required label="Username" type="text" inputRef={usernameRef} />
-				<TextField required label="Email" type="email" inputRef={emailRef} />
-				<TextField required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
-				<TextField required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
-				<Button type="submit">Register</Button>
-				<Typography variant="body1">
-					Already have an account? <Link to="/login">Log in here</Link>
-				</Typography>
-			</form>
-		</Card>
-	)
+        //not letting user continue to send to DB if the password or email ref if there are just spaces filled out.
+        if (emailRef?.current?.value.trim() === "" || passwordRef?.current?.value.trim() === "") {
+            setMessage("Please fill out all fields")
+            setSeverity("error")
+            setIsOpen(true)
+            setLoading(false)
+            return
+        }
+
+        try {
+            setMessage("Loading...")
+            setIsOpen(true)
+            setSeverity("info")
+            const response = await fetch("/api/createUser", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                    email: emailRef?.current?.value,
+                    password: passwordRef?.current?.value,
+                    username: usernameRef?.current?.value,
+                    name: nameRef?.current?.value,
+                }),
+            })
+
+            //pushing to the page where they can verify their email
+            const data: IData = await response.json()
+            if (data.isValid) {
+                setRedirect("/verifyEmail")
+                setMessage(data.message)
+                setSeverity("success")
+                setIsOpen(true)
+            } else {
+                setMessage(data.message)
+                setSeverity("error")
+                setIsOpen(true)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+        setLoading(false)
+    }
+
+    const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === "clickaway") {
+            return
+        }
+
+        setIsOpen(false)
+    }
+
+    return (
+        <Transition>
+            <div className={css.container}>
+                <Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
+                <div className={css.content}>
+                    <Typography>StudyNookLogo📚</Typography>
+                    <Typography variant="h2">Register</Typography>
+                    <Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+                    <form className={css.form} onSubmit={handleRegister}>
+                        <TextField fullWidth required label="Username" type="text" inputRef={usernameRef} />
+                        <TextField fullWidth required label="Name" type="text" inputRef={nameRef} />
+                        <TextField fullWidth required label="Email" type="email" inputRef={emailRef} />
+                        <TextField fullWidth required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
+                        <TextField fullWidth required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
+                        <Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
+                            Register
+                        </Button>
+                        <Typography variant="body1">
+                            Already have an account?{" "}
+                            <Button onClick={() => setRedirect("/login")} disabled={loading}>
+                                Log in
+                            </Button>
+                        </Typography>
+                    </form>
+                </div>
+            </div>
+        </Transition>
+    )
 }
