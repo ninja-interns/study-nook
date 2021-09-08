@@ -12,12 +12,12 @@ export function Dashboard() {
 	return (
 		<Fade in={true} timeout={1000}>
 			<div>
-				<Logout />
 				<DeleteAccount />
 				<Typography variant="body1">Welcome to your StudyNook Dashboard, {currentUser.name}!</Typography>
 				<Button onClick={() => history.push("/profile")}>Profile</Button>
 				<Link to="/updateUser">Update User</Link>
 				<Link to="/updatePassword">Update Password</Link>
+				<Button onClick={() => history.push("/menu")}>Menu</Button>
 			</div>
 		</Fade>
 	);

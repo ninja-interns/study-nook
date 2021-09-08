@@ -134,6 +134,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username, false, token)
 	if err != nil {
+		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,

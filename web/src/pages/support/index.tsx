@@ -7,7 +7,7 @@ import { useHistory, Route, Redirect } from "react-router-dom";
 import { Color } from "@material-ui/lab";
 import { Modal, Backdrop, Slide, Fade, Button, Typography, TextareaAutosize } from "@material-ui/core";
 
-import { AuthContainer } from "../../containers/AuthContainer";
+import { ContextContainer } from "../../contexts/ContextContainer";
 import { useGetState } from "./../../utils/getState";
 import { Snackbars } from "../../components";
 import { getCurrentDate } from "./../../utils/getDate";
@@ -23,7 +23,7 @@ export function SupportPage() {
     const css = useStyles();
     const history = useHistory();
     useGetState();
-    const { currentUser } = AuthContainer.useContainer();
+    const { currentUser } = ContextContainer.useContainer();
 
     const [error, setError] = useState("");
     const [popup, setPopup] = useState(false);

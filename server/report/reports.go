@@ -12,6 +12,7 @@ import (
 	initializeDB "studynook.go/initializedb"
 )
 
+// Struct to store report data content
 type Report struct {
 	Username string `json:"username"`
 	Date     string `json:"date"`
@@ -25,8 +26,10 @@ type JsonResponse struct {
 	IsVerified bool   `json:"isVerified"`
 }
 
+// Handler to submit reports
 func SubmitReports(w http.ResponseWriter, r *http.Request, u *auth.User) {
 
+	// Creates instance of report struct and decode fatched data to it
 	report := &Report{}
 	err := json.NewDecoder(r.Body).Decode(report)
 	if err != nil {
@@ -35,57 +38,72 @@ func SubmitReports(w http.ResponseWriter, r *http.Request, u *auth.User) {
 		return
 	}
 
+	// Check if user is allowed to submit report
+	// Users are allowed to submit one report per day
 	check := ValidateReport(report.Username)
 
-	fmt.Println(check)
-
+	// Conditional statement to call functions depending
+	// on check response
 	if check {
 		var submission_id string
+		// Insert report into report table
 		InsertToDB(report)
+		// Get serial ID from report
 		submission_id = GetReportID(report.Username)
+		// Send email to Study Nook office gmail with report ID, username, date and report content
 		emails.SendEmail("studynookapp@gmail.com", "Submission Report", "emails/emailTemplates/reportSubmission.html", map[string]string{"id": submission_id, "username": report.Username, "message": report.Message, "date": report.Date})
 		response := JsonResponse{
 			Message: "Success! Please, wait while the management team review your report. Thanks for your collaboration!",
 			IsValid: true,
 		}
 		json.NewEncoder(w).Encode(response)
-	} else {
+	} else { // Else, if user is not allowed, display error message
 		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Error, you cannot send more than one report a day. Please, try again tomorrow.",
 			IsValid: false,
 		}
+		// Send response back
 		json.NewEncoder(w).Encode(response)
 	}
 }
 
+// Func to get report ID based on latest submission ( 1 day interval)
+// and username
 func GetReportID(username string) string {
 
+	// Query to select ID
 	sqlQuery := `SELECT submission_id from reports WHERE date_submission > NOW() - INTERVAL '1' day AND username = $1;`
 
 	tempID := 0
+
+	// Execution of query
 	err := initializeDB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempID)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println("This is username: " + strconv.Itoa(tempID))
-
 	return strconv.Itoa(tempID)
 }
 
+// Func to insert report into table
 func InsertToDB(report *Report) {
 
+	// Query to insert report
 	sqlQuery := `INSERT INTO reports (username, message) VALUES ($1, $2);`
 
+	// Execution of query
 	_, err := initializeDB.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
+// Func to check if user is allowed to submit report
 func ValidateReport(username string) bool {
 
+	// Query to check if any report was sent
+	// within 1 day
 	sqlQuery := `SELECT username from reports WHERE date_submission > NOW() - INTERVAL '1' day AND username = $1;`
 
 	tempUsername := ""
@@ -95,12 +113,9 @@ func ValidateReport(username string) bool {
 		fmt.Println(err)
 	}
 
-	fmt.Println("This is username: " + tempUsername)
-
 	if tempUsername == username {
 		return false
 	} else {
 		return true
 	}
-
 }
