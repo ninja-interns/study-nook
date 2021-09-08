@@ -1,7 +1,8 @@
-import React from "react";
-import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
-import { HomePage, RegisterPage, LoginPage, Dashboard, Profile, EmailVerificationPage } from "../pages";
-import { PrivateRoute } from "./PrivateRoute";
+import React from "react"
+import { Route, Switch, BrowserRouter as Router } from "react-router-dom"
+import { HomePage, RegisterPage, LoginPage, Dashboard, Profile, EmailVerificationPage } from "../pages"
+import { PrivateRoute } from "./PrivateRoute"
+import AdminDashboard from "../admin/AdminDashboard"
 
 const Routes = () => {
 	return (
@@ -13,9 +14,11 @@ const Routes = () => {
 				<PrivateRoute path="/dashboard" component={Dashboard} />
 				<PrivateRoute path="/profile" component={Profile} />
 				<Route exact path="/" component={HomePage} />
+
+				<Route exact path="/admin" component={AdminDashboard} />
 			</Switch>
 		</Router>
-	);
-};
+	)
+}
 
-export default Routes;
+export default Routes

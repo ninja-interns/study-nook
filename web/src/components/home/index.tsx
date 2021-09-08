@@ -1,11 +1,11 @@
-import Button from "@material-ui/core/Button";
-import React, { useState } from "react";
-import { Redirect, Route } from "react-router-dom";
-import { useStyles } from "./homeCss";
+import Button from "@material-ui/core/Button"
+import React, { useState } from "react"
+import { Redirect, Route } from "react-router-dom"
+import { useStyles } from "./homeCss"
 
 export function Home() {
-	const css = useStyles();
-	const [redirect, setRedirect] = useState<string | null>(null);
+	const css = useStyles()
+	const [redirect, setRedirect] = useState<string | null>(null)
 
 	return (
 		<>
@@ -19,7 +19,7 @@ export function Home() {
 					<div className={css.left}>
 						<Button
 							onClick={() => {
-								setRedirect("/registration");
+								setRedirect("/registration")
 							}}
 							variant="contained"
 							color="primary"
@@ -33,7 +33,7 @@ export function Home() {
 							variant="contained"
 							color="primary"
 							onClick={() => {
-								setRedirect("/login");
+								setRedirect("/login")
 							}}
 						>
 							Login
@@ -42,5 +42,5 @@ export function Home() {
 				</div>
 			</div>
 		</>
-	);
+	)
 }
