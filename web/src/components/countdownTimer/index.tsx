@@ -1,16 +1,16 @@
 // Import dependencies
 import * as React from "react"
-import { render } from "react-dom"
 import { v4 as uuidv4 } from "uuid"
 
 // Import Components
 import { TimerForm } from "./Form"
 import { Timer } from "./Timer"
+
 // Import Interfaces
 import { TimerInterface } from "./interfaces"
 
 // TimerApp Component
-export const TimerApp = () => {
+function TimerApp() {
 	// This state represents a Timer object
 	const [timer, setState] = React.useState<TimerInterface>({ id: uuidv4(), timerHours: 0, timerMinutes: 0, timerSeconds: 0 })
 
@@ -31,6 +31,4 @@ export const TimerApp = () => {
 		</div>
 	)
 }
-
-const rootElement = document.getElementById("root")
-render(<TimerApp />, rootElement)
+export { TimerApp }

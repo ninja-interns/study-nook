@@ -1,16 +1,15 @@
-import React from "react"
-import { TodoListApp } from "./components"
-import { TimerApp } from "./components/countdownTimer"
 import { AuthContainer } from "./containers/AuthContainer"
-import Routes from "./routes/Routes"
+
+// Importing Components
+import TodoListApp from "./components/todoList"
+// import { TimerApp } from "./components"
 
 function App() {
-	return (
-		<AuthContainer.Provider>
-			<Routes />
-			<TodoListApp />
-			<TimerApp />
-		</AuthContainer.Provider>
-	)
+    return (
+        <AuthContainer.Provider>
+            <TodoListApp />
+            {/* <TimerApp /> */}
+        </AuthContainer.Provider>
+    )
 }
 export default App

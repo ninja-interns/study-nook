@@ -1,37 +1,29 @@
-// Import dependencies
 import * as React from "react"
-
 import Button from "@material-ui/core/Button"
-
 import ButtonGroup from "@material-ui/core/ButtonGroup"
-
-// Import interfaces
-import { TimerFormInterface } from "./interfaces"
+import { TimerFormInterface, TimerInterface } from "./interfaces"
 import { TextField } from "@material-ui/core"
+import { v4 as uuidv4 } from "uuid"
 
-export const TimerForm = (props: TimerFormInterface) => {
+function TimerForm(props: TimerFormInterface) {
 	// Create reference for form input
-	const timerRef = React.useRef<HTMLInputElement>(null)
+	const timerRef = React.useRef<HTMLInputElement>()
 
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
 		// Prevent the page refreshing
 		event.preventDefault()
 
-		// This is where we access the database
+		// Prepare new timer object
+		const newTimer: TimerInterface = {
+			id: uuidv4(),
+			timerHours: 0,
+			timerMinutes: 10,
+			timerSeconds: 0,
+		}
 
-		// // Reset the input field OR could try to remove the input field?
-		// if (timerRef && timerRef.current) {
-		// 	timerRef.current.value = ""
-		// }
+		// Create new timer
+		props.handleTimerCreate(newTimer)
 	}
-
-	// //function createTimer(initTime: number, interval: number) {
-	// const { time, start, pause, reset, status } = useTimer({
-	// 	initialTime: 100,
-	// 	timerType: "DECREMENTAL",
-	// 	interval: 1000,
-	// 	endTime: 0,
-	// })
 
 	return (
 		<div>
@@ -44,7 +36,7 @@ export const TimerForm = (props: TimerFormInterface) => {
 					variant="outlined"
 					// --
 					inputRef={timerRef}
-					type="text"
+					type="number"
 				/>
 				<Button type="submit">Submit</Button>
 			</form>
@@ -55,11 +47,13 @@ export const TimerForm = (props: TimerFormInterface) => {
 					<Button className="pause-button">Pause</Button>
 					<Button className="reset-button">Reset</Button>
 				</ButtonGroup>
-				<p></p>
+				<p>{props.timer.timerMinutes}</p>
 			</div>
 		</div>
 	)
 }
+
+export { TimerForm }
 
 // add 30 minutes to the current time then countdown to that time?
 // save the timer on a cookie?

@@ -4,7 +4,7 @@ import * as React from "react"
 import { TextField } from "@material-ui/core"
 // import { useHistory } from "react-router-dom"
 
-export function Timer() {
+function Timer() {
 	const timerDurationRef = React.useRef<HTMLInputElement>()
 
 	//const history = useHistory()
@@ -33,28 +33,28 @@ export function Timer() {
 	}
 
 	// HAVE NOT FINISHED THIS YET
-	async function fetchTimeRemaining(error: React.FormEvent<HTMLFormElement>) {
-		// Prevent the page from reloading
-		error.preventDefault()
+	// async function fetchTimeRemaining(error: React.FormEvent<HTMLFormElement>) {
+	// 	// Prevent the page from reloading
+	// 	error.preventDefault()
 
-		// Do not send the data to DB if the number is not a number?
+	// 	// Do not send the data to DB if the number is not a number?
 
-		// Adding to DB
-		const response = await fetch("/api/createTimer", {
-			method: "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify({
-				timerDuration: timerDurationRef?.current?.value,
-			}),
-		})
+	// 	// Adding to DB
+	// 	const response = await fetch("/api/createTimer", {
+	// 		method: "POST",
+	// 		headers: { "content-type": "application/json" },
+	// 		body: JSON.stringify({
+	// 			timerDuration: timerDurationRef?.current?.value,
+	// 		}),
+	// 	})
 
-		if (response.ok) {
-			return await response.json()
-		} else {
-			const errorMessage = await response.text()
-			return Promise.reject(new Error(errorMessage))
-		}
-	}
+	// 	if (response.ok) {
+	// 		return await response.json()
+	// 	} else {
+	// 		const errorMessage = await response.text()
+	// 		return Promise.reject(new Error(errorMessage))
+	// 	}
+	// }
 
 	return (
 		<div>
@@ -67,3 +67,5 @@ export function Timer() {
 		</div>
 	)
 }
+
+export { Timer }

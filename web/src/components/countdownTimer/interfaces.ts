@@ -1,5 +1,3 @@
-import * as React from "react"
-
 //Timer Interface
 export interface TimerInterface {
 	id: string
@@ -12,7 +10,6 @@ export interface TimerInterface {
 export interface TimerFormInterface {
 	timer: TimerInterface
 	handleTimerCreate: (timer: TimerInterface) => void
-	//handleSubmit: (timer: TimerInterface) => void
 }
 
 export interface TimerItemInterface {

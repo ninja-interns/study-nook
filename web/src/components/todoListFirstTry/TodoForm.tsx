@@ -1,18 +1,16 @@
-// Import Dependencies
+// Import dependencies
 import * as React from "react"
-import { v4 as uuidv4 } from "uuid"
+import shortid from "shortid"
 
+// Import Material UI
 import { TextField } from "@material-ui/core"
 
 // Import interfaces
 import { TodoInterface, TodoFormInterface } from "./interfaces"
 
-/* Todo form component
-    The useState hook stores the text passed into the input element, text for the todo title before you create new todo item
-    The useRef hook stores the reference to this input
-*/
+// Todo form component
 const TodoForm = (props: TodoFormInterface) => {
-	// Create reference for form input
+	// Create ref for form input
 	const inputRef = React.useRef<HTMLInputElement>(null)
 	// Create form state
 	const [formState, setFormState] = React.useState("")
@@ -25,22 +23,22 @@ const TodoForm = (props: TodoFormInterface) => {
 
 	// Handle 'Enter' in todo input
 	function handleInputEnter(event: React.KeyboardEvent) {
+		// Stop the page from reloading
+		event.preventDefault()
+
 		// Check for 'Enter' key
 		if (event.key === "Enter") {
-			// Prevent the page refreshing
-			event.preventDefault()
-
 			// Prepare new todo object
 			const newTodo: TodoInterface = {
-				id: uuidv4(),
-				title: formState,
+				id: shortid.generate(),
+				text: formState,
 				isCompleted: false,
 			}
 
 			// Create new todo item
 			props.handleTodoCreate(newTodo)
 
-			// Reset the input field - NOT WORKING since material-ui
+			// Reset the input field
 			if (inputRef && inputRef.current) {
 				inputRef.current.value = ""
 			}
@@ -48,13 +46,13 @@ const TodoForm = (props: TodoFormInterface) => {
 	}
 
 	return (
-		<form>
+		<form className="todo-form">
 			<TextField
 				// Material UI Styling
-				label="Enter new todo"
 				id="outlined-basic"
 				variant="outlined"
 				// --
+				label="Enter new todo"
 				inputRef={inputRef}
 				type="text"
 				onChange={(event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event)}
