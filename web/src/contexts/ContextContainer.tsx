@@ -10,7 +10,7 @@ export interface IAuthCurrentUser {
 
 function ContextDataContainer() {
 	//Auth
-	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(document.cookie.includes("session"));
+	const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 	const [currentUser, setCurrentUser] = useState<IAuthCurrentUser>({
 		name: null,
 		username: null,

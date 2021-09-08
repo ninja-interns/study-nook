@@ -51,14 +51,16 @@ export function LoginPage() {
 		setLoading(true);
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("/api/loginUser", {
+			const response = await fetch("http://localhost:8080/api/loginUser", {
 				method: "POST",
+
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: userRef?.current?.value, username: userRef?.current?.value, password: passwordRef?.current?.value }),
 			});
 			//awaiting the response to comeback and turn it into readable json data
 			const data: IData = await response.json();
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
+
 			if (data.isValid && data.isVerified) {
 				setIsLoggedIn(true);
 				setRedirect("/dashboard");

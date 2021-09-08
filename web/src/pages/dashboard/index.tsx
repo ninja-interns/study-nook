@@ -9,7 +9,6 @@ export function Dashboard() {
 	useGetState();
 	const { currentUser } = ContextContainer.useContainer();
 	const history = useHistory();
-
 	return (
 		<Fade in={true} timeout={1000}>
 			<div>
