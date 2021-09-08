@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	initializeDB "main.go/initializedb"
+	initializeDB "studynook.go/initializedb"
 )
 
 type Timer struct {

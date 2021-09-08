@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"main.go/auth"
+	"studynook.go/auth"
 )
 
 //creating a new struct for a more extensible currentUser. Here we can add tasks and other states
@@ -23,7 +23,7 @@ func CurrentUserState(w http.ResponseWriter, r *http.Request, u *auth.User) {
 
 	err := json.NewEncoder(w).Encode(currentUser)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println(err)
 		return
 	}
