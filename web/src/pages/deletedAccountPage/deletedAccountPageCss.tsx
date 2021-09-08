@@ -5,20 +5,11 @@ export const useStyles = makeStyles({
 		height: "100%",
 		width: "100%",
 		display: "flex",
-		alignItems: "center",
-	},
-	content: {
-		display: "flex",
 		flexDirection: "column",
+		justifyContent: "center",
 		alignItems: "center",
-		width: "100%",
-	},
-	form: {
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		width: "100%",
 		padding: "1rem",
+		textAlign: "center",
 	},
 	button: {
 		margin: "1rem",

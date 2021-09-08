@@ -13,7 +13,8 @@
     "128": "logo192.png"
   },
   "permissions": [
-    "*://localhost:*/*"
+    "*://localhost:*/*",
+    "cookies"
   ],
   "content_security_policy": "script-src 'self' 'sha256-AUreulBIC0DSBna3NBBd0Irx4n9k5m2yEH/s6OJ5uA0='; object-src 'self'"
 }
