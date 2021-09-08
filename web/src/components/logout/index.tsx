@@ -1,10 +1,10 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
 import { Redirect, Route } from "react-router-dom";
-import { AuthContainer } from "../../containers/AuthContainer";
+import { ContextContainer } from "../../contexts/ContextContainer";
 
 export function Logout() {
-	const { setIsLoggedIn } = AuthContainer.useContainer();
+	const { setIsLoggedIn } = ContextContainer.useContainer();
 	const [redirect, setRedirect] = useState<string | null>(null);
 
 	async function handleLogout() {
@@ -26,7 +26,7 @@ export function Logout() {
 	}
 	return (
 		<>
-			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Button variant="contained" color="secondary" onClick={handleLogout}>
 				Logout
 			</Button>
