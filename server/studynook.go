@@ -45,14 +45,12 @@ func main() {
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
 
 	r.Route("/admin/users", func(r chi.Router) {
-		r.Post("/", api.CreateUser) // POST /users
-		r.Get("/", api.GetAllUsers) // GET /users
-
+		r.Post("/", api.UserCreateHandler) // POST /admin/users
+		r.Get("/", api.UserGetAllHandler)  // GET /admin/users
 		r.Route("/{userID}", func(r chi.Router) {
-			r.Use(api.UserContext)        // Load the *User on the request context
-			r.Get("/", api.GetUser)       // GET /users/123
-			r.Put("/", api.UpdateUser)    // PUT /users/123
-			r.Delete("/", api.DeleteUser) // DELETE /users/123
+			r.Get("/", api.UserGetHandler)       // GET /admin/users/123
+			r.Put("/", api.UserUpdateHandler)    // PUT /admin/users/123
+			r.Delete("/", api.UserDeleteHandler) // DELETE /admin/users/123
 		})
 	})
 

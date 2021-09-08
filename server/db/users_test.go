@@ -2,6 +2,6 @@ package db
 
 import "testing"
 
-func TestGetAllUsers(t *testing.T){
-	
+func TestGetAllUsers(t *testing.T) {
+
 }

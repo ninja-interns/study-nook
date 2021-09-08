@@ -1,59 +1,48 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/gofrs/uuid"
 	"studynook.go/db"
 	"studynook.go/schema"
 	"studynook.go/util"
 )
 
-//creating a struct for the JSON response message
-type JsonResponse struct {
+// ErrorResponse is a error message
+type ErrorResponse struct {
 	Message string `json:"message"`
 	IsValid bool   `json:"isValid"`
 }
 
-// UserContext middleware extracts the userID URL paramater
-// Checks if validity of userID exists and is valid, and goes on to add it to the request context
-func UserContext(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		userID := chi.URLParam(r, "userID")
-		if userID == "" {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		id, err := strconv.Atoi(userID)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		ctx := context.WithValue(r.Context(), "userID", id)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
-}
-
-//CreateUser handles: POST /admin/users
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+// UserCreateHandler handles: POST /admin/users
+func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 
 	user := &schema.User{}
 
-	//decoding JSON payload
+	// Decoding JSON payload
 	err := json.NewDecoder(r.Body).Decode(user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	//validate JSON payload
+	// Generate user ID
+	id, err := uuid.NewV4()
+	user.ID = id.String()
+	fmt.Println(user.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	err = user.Validate()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := JsonResponse{
+		response := ErrorResponse{
 			Message: err.Error(),
 			IsValid: false,
 		}
@@ -61,17 +50,16 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//hash the password
-	hashedPassword, err := util.Hash(user.Password)
+	// Hash the password
+	user.PasswordHash, err = util.Hash(user.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	user.Password = hashedPassword
 
-	//database operation to insert the user
-	if err = db.AddUser(*user); err != nil {
-		response := JsonResponse{
+	// Database operation to insert the user
+	if err = db.AddUser(user); err != nil {
+		response := ErrorResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
 		}
@@ -80,64 +68,63 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if it reaches here, everything is okay, sends back a success to the front end via a response
-	response := JsonResponse{
-		Message: "Success!",
-		IsValid: true,
-	}
-	json.NewEncoder(w).Encode(response)
+	// If it reaches here, everything is okay, sends back the created user without the password and hashed password
+	user.Password = "" // Password set to empty string so JSON encoder can suppress the output of this field
+	json.NewEncoder(w).Encode(user)
 
 }
 
-//GetAllUsers handles: GET /admin/users
-func GetAllUsers(w http.ResponseWriter, r *http.Request) {
+// UserGetAllHandler handles: GET /admin/users
+func UserGetAllHandler(w http.ResponseWriter, r *http.Request) {
 
-	//database operation to get all the users
+	//Database operation to get all the users
 	userList, err := db.GetAllUsers()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	//if it reaches here, everything is okay, sends back a list of users as JSON payload
+	// If it reaches here, everything is okay, sends back a list of users as JSON payload
 	json.NewEncoder(w).Encode(userList)
 
 }
 
-//GetUser handles: GET /admin/users/123
-func GetUser(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value("userID").(int)
+// UserGetHandler handles: GET /admin/users/123
+func UserGetHandler(w http.ResponseWriter, r *http.Request) {
+	// Extract userID parameter from the URL
+	userID := chi.URLParam(r, "userID")
 
-	//database operation to get a user by the ID
+	// Database operation to get a user by the given ID
 	user, err := db.GetUserByID(userID)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	//if it reaches here, everything is okay, sends back user as JSON payload
+	// If it reaches here, everything is okay, sends back user as JSON payload
 	json.NewEncoder(w).Encode(user)
 
 }
 
-//UpdateUser handles: PUT /admin/users/123
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value("userID").(int)
+// UserUpdateHandler handles: PUT /admin/users/123
+func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
+	// Extract userID parameter from the URL
+	userID := chi.URLParam(r, "userID")
 
 	userData := &schema.User{}
 
-	//decoding JSON payload
+	// Decoding JSON payload
 	err := json.NewDecoder(r.Body).Decode(userData)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	//validate JSON payload
+	// Validate JSON payload
 	err = userData.Validate()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := JsonResponse{
+		response := ErrorResponse{
 			Message: err.Error(),
 			IsValid: false,
 		}
@@ -146,18 +133,18 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	//hash the password
+	// Hash the password
 	hashedPassword, err := util.Hash(userData.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	userData.Password = hashedPassword
+	userData.PasswordHash = hashedPassword
 
-	//database operation to update the user with given ID
-	err = db.UpdateUser(userID, *userData)
+	// Database operation to update the user with given ID
+	err = db.UpdateUser(userID, userData)
 	if err != nil {
-		response := JsonResponse{
+		response := ErrorResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
 		}
@@ -165,31 +152,25 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if it reaches here, everything is okay, sends back a success to the front end via a response
-	response := JsonResponse{
-		Message: "Success!",
-		IsValid: true,
-	}
-	json.NewEncoder(w).Encode(response)
+	// If it reaches here, everything is okay, sends back the created user without the password and hashed password
+	userData.Password = "" // Password set to empty string so JSON encoder can suppress the output of this field
+	json.NewEncoder(w).Encode(userData)
 
 }
 
-//DeleteUser handles: DELETE /admin/users/123
-func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value("userID").(int)
+// UserDeleteHandler handles: DELETE /admin/users/123
+func UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
+	// Extract userID parameter from the URL
+	userID := chi.URLParam(r, "userID")
 
-	//database delete operation
+	// Database operation to delete the user with given ID
 	err := db.DeleteUser(userID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	//if it reaches here, everything is okay, sends back a success to the front end via a response
-	response := JsonResponse{
-		Message: "Success!",
-		IsValid: true,
-	}
-	json.NewEncoder(w).Encode(response)
+	// If it reaches here, everything is okay
+	w.WriteHeader(http.StatusNoContent)
 
 }
