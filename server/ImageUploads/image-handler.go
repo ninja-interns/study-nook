@@ -31,7 +31,7 @@ func (wrapper dbWrapper) imageHandler() {
 
 func (wrapper *dbWrapper) handleImageOnReceive(w http.ResponseWriter, r *http.Request) {
 	img := ImageData{}
-	err := json.NewDecoder(r.Body).Decode(&img)
+	file, err := r.FormFile("image")
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -45,7 +45,7 @@ func (wrapper *dbWrapper) handleImageOnReceive(w http.ResponseWriter, r *http.Re
 	}
 
 	query := `UPDATE userimages SET imagedata = $1 WHERE id = $2;`
-
+	conn.exec(query, data)
 }
 
 func (db_wr *dbWrapper) handleImageSend(w http.ResponseWriter, r *http.Request) {

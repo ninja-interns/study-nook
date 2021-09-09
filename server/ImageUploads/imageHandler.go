@@ -7,10 +7,8 @@ import (
 )
 
 type FileData struct {
-	file_name    string `json: "file_name"`
-	fileExt      string `json: "extension"`
-	encoded_data string `json: "b64Encoding"`
-	image_blob   Blob   `json: FormData`
+	file_name string `json: "file_name"`
+	fileExt   string `json: "extension"`
 }
 
 type UserData struct {

@@ -1,8 +1,10 @@
 import React, { useRef } from "react";
 import { useStyles } from "./loginPageCss";
 import { TextField, Card, Button, Typography, Link } from "@material-ui/core";
+import { useGetState } from "../../utils/getState";
 
 export function LoginPage() {
+	useGetState();
 	const css = useStyles();
 	const usernameRef = useRef();
 	const passwordRef = useRef();
@@ -11,6 +13,14 @@ export function LoginPage() {
 		console.log("submit");
 		e.preventDefault();
 	}
+
+	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+		if (reason === "clickaway") {
+			return;
+		}
+
+		setIsOpen(false);
+	};
 
 	return (
 		<Card className={css.container}>
@@ -24,3 +34,7 @@ export function LoginPage() {
 		</Card>
 	);
 }
+function setIsOpen(arg0: boolean) {
+	throw new Error("Function not implemented.");
+}
+

@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 
-	initializeDB "main.go/initializedb"
+	initializeDB "studynook.go/initializedb"
 )
 
 func GetUserById(id int) (*User, error) {

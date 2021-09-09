@@ -3,9 +3,14 @@ package auth
 import (
 	"time"
 
+<<<<<<< HEAD
 	"github.com/alexedwards/scs/postgresstore"
+=======
+	initializeDB "studynook.go/initializedb"
+
+	"github.com/alexedwards/scs/pgxstore"
+>>>>>>> 0baeca8d898cab22081a9742beaa65ef1dd25a85
 	"github.com/alexedwards/scs/v2"
-	initializeDB "main.go/initializedb"
 )
 
 /**        <Typography variant="body1">

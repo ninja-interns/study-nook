@@ -1,4 +1,4 @@
-module main.go
+module studynook.go
 
 go 1.16
 
