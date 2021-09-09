@@ -2,14 +2,18 @@ import { Typography } from "@material-ui/core";
 import React from "react";
 import { IShopList } from "../../models/shopModels";
 import { ShopItemCard } from "../shopItemCard";
+import { useStyles } from "./shopListCss";
 
 export default function ShopList({ category, array }: IShopList) {
+	const css = useStyles();
 	return (
-		<div>
-			<Typography variant="h4">{category}</Typography>
-			<div>
+		<div className={css.container}>
+			<Typography variant="h5" className={css.category}>
+				{category}
+			</Typography>
+			<div className={css.content}>
 				{array.map((x) => (
-					<ShopItemCard title={x.title} description={x.description} price={x.price} level={x.level} src={x.src} />
+					<ShopItemCard title={x.title} price={x.price} level={x.level} src={x.src} />
 				))}
 			</div>
 		</div>

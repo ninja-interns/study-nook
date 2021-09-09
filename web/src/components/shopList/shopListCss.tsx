@@ -2,23 +2,14 @@ import { makeStyles } from "@material-ui/styles";
 
 export const useStyles = makeStyles({
 	container: {
-		minWidth: "45%",
-		margin: ".2rem",
+		display: "flex",
+		flexDirection: "column",
 	},
 	content: {
 		display: "flex",
-		flexDirection: "column",
 		padding: ".2rem",
-	},
-	media: {},
-	level: {
-		display: "flex",
-		justifyContent: "space-between",
-	},
-	button: {
+		overflowX: "auto",
 		width: "100%",
 	},
-	title: {
-		textAlign: "center",
-	},
+	category: {},
 });
