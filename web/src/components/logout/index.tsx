@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import { AuthContainer } from "../../containers/AuthContainer";
+import { ContextContainer } from "../../contexts/ContextContainer";
 
 export function Logout() {
-	const { setIsLoggedIn } = AuthContainer.useContainer();
+	const { setIsLoggedIn } = ContextContainer.useContainer();
 	const [redirect, setRedirect] = useState<string | null>(null);
 
 	async function handleLogout() {

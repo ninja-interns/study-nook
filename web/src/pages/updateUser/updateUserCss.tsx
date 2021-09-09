@@ -20,8 +20,13 @@ export const useStyles = makeStyles({
 		width: "100%",
 		padding: "1rem",
 	},
+	buttonContainer: {
+		display: "flex",
+		width: "100%",
+		justifyContent: "space-around",
+	},
 	button: {
 		margin: "1rem",
-		width: "75%",
+		width: "45%",
 	},
 });
