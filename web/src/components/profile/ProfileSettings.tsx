@@ -1,4 +1,4 @@
-import { makeStyles, Modal } from "@material-ui/core";
+import { Button, makeStyles, Modal } from "@material-ui/core";
 import { render } from "@testing-library/react";
 import React from "react";
 import { IProgressPercentage, IProps } from "./IProfile";
@@ -41,7 +41,9 @@ export function PlayerProfileSettings() {
 
     return (
         <div>
-            <button style={modalButton} type="button" onClick={handleOpen}>User Name</button>
+            <Button variant="contained" color="primary" component="span" onClick={handleOpen}>
+                User Name
+            </Button>
             <Modal open={open} onClose={handleClose} 
                 aria-labelledby="simple-modal-title" 
                 aria-describedby="modal-description">{body}</Modal>

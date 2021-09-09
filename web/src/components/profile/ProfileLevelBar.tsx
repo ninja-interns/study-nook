@@ -1,33 +1,18 @@
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
-import React from "react";
-import {IProps, IProgressPercentage} from "./IProfile";
-const Filler = (prop: any) => {
-    return (<div className="filler" />);
-}
+const useStyles = makeStyles({
+  root: {
+    width: '100%',
+  },
+});
 
-
-/**Level bar doesn't work properly**/
-const LevelBar = (props: any) => {
-    return (
-    <div className="progress-bar">
-        <Filler percentage={props.percentage} />
+export function PlayerProgressBar() {
+  const classes = useStyles();
+  return (
+    <div className={classes.root}>
+      <LinearProgress variant="determinate" value={50} />
     </div>
-    )
-}
-
-export class PlayerProgressBar extends React.Component<IProps, IProgressPercentage> {
-    constructor(props: IProps) {
-        super(props)
-        this.state = {
-            percentage: 0,
-        }
-    }
-
-    render() {
-        return (
-            <div>
-                <LevelBar percentage={this.state.percentage} />
-            </div>
-        );
-    }
+  );
 }
