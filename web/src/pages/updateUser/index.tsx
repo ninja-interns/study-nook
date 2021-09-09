@@ -33,7 +33,7 @@ export function UpdateUser() {
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("/api/updateUser", {
+			const response = await fetch("/api/update_user", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({

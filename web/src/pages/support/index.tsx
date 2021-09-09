@@ -41,7 +41,7 @@ export function SupportPage() {
 
         //hitting the backend route of /loginUser with the body of necessary values
         try {
-            const response = await fetch("/api/reportSubmission", {
+            const response = await fetch("/api/report_submission", {
                 method: "POST",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({ username: currentUser.username, date: getCurrentDate(), message: message }),
@@ -86,7 +86,6 @@ export function SupportPage() {
 
     const body = (
         <>
-            <Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
             <div className={css.popUpBody}>
                 <Typography variant="h5" className={css.popUpTitle}>Confirmation</Typography>
                 <Typography variant="h6" className={css.popUpContent}>Username: {currentUser.username}</Typography>
@@ -105,40 +104,44 @@ export function SupportPage() {
     );
 
     return (
-        <Slide in={true} direction={"left"} timeout={1000}>
-            <div className={css.container}>
-                <img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
+        <>
+            <Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
+            <Slide in={true} direction={"left"} timeout={1000}>
+                <div className={css.container}>
+                    <img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
 
-                <Snackbars message={boxMessage} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+                    <Snackbars message={boxMessage} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 
-                <Typography className={css.pageTitle} variant="h5">Submit a ticket</Typography>
+                    <Typography className={css.pageTitle} variant="h5">Submit a ticket</Typography>
 
-                <div>
-                    <Typography className={css.userInfo} variant="h5">Username: {currentUser.username}</Typography>
-                    <Typography className={css.userInfo} variant="h5">Message:</Typography>
+                    <div>
+                        <Typography className={css.userInfo} variant="h5">Username: {currentUser.username}</Typography>
+                        <Typography className={css.userInfo} variant="h5">Message:</Typography>
 
-                    <TextareaAutosize required className={css.textArea} minRows={15} onKeyUp={handleMessage}></TextareaAutosize>
-                    <Button className={css.submitReportButton} variant="contained" color="primary" onClick={handlePopupOpen}>Submit</Button>
+                        <TextareaAutosize required className={css.textArea} minRows={15} onKeyUp={handleMessage}></TextareaAutosize>
+                        <Button className={css.submitReportButton} variant="contained" color="primary" onClick={handlePopupOpen}>Submit</Button>
 
-                    <div className={css.centralizeModal}>
-                        <Modal
-                            open={popup}
-                            onClose={handlePopupClose}
-                            aria-labelledby="Confirm"
-                            aria-describedby="Idk"
-                            BackdropComponent={Backdrop}
-                            BackdropProps={{
-                                timeout: 500,
-                            }}
-                        >
-                            <Fade in={popup}>
-                                {body}
-                            </Fade>
-                        </Modal>
+                        <div className={css.centralizeModal}>
+                            <Modal
+                                open={popup}
+                                onClose={handlePopupClose}
+                                aria-labelledby="Confirm"
+                                aria-describedby="Idk"
+                                BackdropComponent={Backdrop}
+                                BackdropProps={{
+                                    timeout: 500,
+                                }}
+                            >
+                                <Fade in={popup}>
+                                    {body}
+                                </Fade>
+                            </Modal>
+                        </div>
                     </div>
-                </div>
 
-            </div >
-        </Slide>
+                </div >
+            </Slide>
+
+        </>
     );
 }

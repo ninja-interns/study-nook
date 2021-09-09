@@ -9,7 +9,7 @@ import (
 
 	"studynook.go/auth"
 	"studynook.go/emails"
-	initializeDB "studynook.go/initializedb"
+	initializeDB "studynook.go/initializeDB"
 )
 
 // Struct to store report data content
@@ -24,6 +24,16 @@ type JsonResponse struct {
 	Message    string `json:"message"`
 	IsValid    bool   `json:"isValid"`
 	IsVerified bool   `json:"isVerified"`
+}
+
+func ErrorMessage(w http.ResponseWriter) {
+
+	response := JsonResponse{
+		Message: "There was an error with your submission. Please, try again later.",
+		IsValid: false,
+	}
+	// Send response back
+	json.NewEncoder(w).Encode(response)
 }
 
 // Handler to submit reports
@@ -47,9 +57,19 @@ func SubmitReports(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	if check {
 		var submission_id string
 		// Insert report into report table
-		InsertToDB(report)
+		err := InsertToDB(report)
+		if err != nil {
+			ErrorMessage(w)
+			return
+		}
+
 		// Get serial ID from report
-		submission_id = GetReportID(report.Username)
+		submission_id, err = GetReportID(report.Username)
+		if err != nil {
+			ErrorMessage(w)
+			return
+		}
+
 		// Send email to Study Nook office gmail with report ID, username, date and report content
 		emails.SendEmail("studynookapp@gmail.com", "Submission Report", "emails/emailTemplates/reportSubmission.html", map[string]string{"id": submission_id, "username": report.Username, "message": report.Message, "date": report.Date})
 		response := JsonResponse{
@@ -57,20 +77,21 @@ func SubmitReports(w http.ResponseWriter, r *http.Request, u *auth.User) {
 			IsValid: true,
 		}
 		json.NewEncoder(w).Encode(response)
-	} else { // Else, if user is not allowed, display error message
-		fmt.Println(err)
-		response := JsonResponse{
-			Message: "Error, you cannot send more than one report a day. Please, try again tomorrow.",
-			IsValid: false,
-		}
-		// Send response back
-		json.NewEncoder(w).Encode(response)
+		return
 	}
+
+	response := JsonResponse{
+		Message: "Error, you cannot send more than one report a day. Please, try again tomorrow.",
+		IsValid: false,
+	}
+	// Send response back
+	json.NewEncoder(w).Encode(response)
+
 }
 
 // Func to get report ID based on latest submission ( 1 day interval)
 // and username
-func GetReportID(username string) string {
+func GetReportID(username string) (string, error) {
 
 	// Query to select ID
 	sqlQuery := `SELECT submission_id from reports WHERE date_submission > NOW() - INTERVAL '1' day AND username = $1;`
@@ -80,14 +101,14 @@ func GetReportID(username string) string {
 	// Execution of query
 	err := initializeDB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempID)
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
-	return strconv.Itoa(tempID)
+	return strconv.Itoa(tempID), nil
 }
 
 // Func to insert report into table
-func InsertToDB(report *Report) {
+func InsertToDB(report *Report) error {
 
 	// Query to insert report
 	sqlQuery := `INSERT INTO reports (username, message) VALUES ($1, $2);`
@@ -95,8 +116,9 @@ func InsertToDB(report *Report) {
 	// Execution of query
 	_, err := initializeDB.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
+	return nil
 }
 
 // Func to check if user is allowed to submit report
@@ -107,15 +129,8 @@ func ValidateReport(username string) bool {
 	sqlQuery := `SELECT username from reports WHERE date_submission > NOW() - INTERVAL '1' day AND username = $1;`
 
 	tempUsername := ""
-	fmt.Println(username)
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempUsername)
-	if err != nil {
-		fmt.Println(err)
-	}
 
-	if tempUsername == username {
-		return false
-	} else {
-		return true
-	}
+	initializeDB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempUsername)
+
+	return tempUsername != username
 }

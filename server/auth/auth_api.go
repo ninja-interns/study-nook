@@ -11,7 +11,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
-	initializeDB "studynook.go/initializedb"
+	initializeDB "studynook.go/initializeDB"
 
 	"golang.org/x/crypto/bcrypt"
 	"studynook.go/emails"
