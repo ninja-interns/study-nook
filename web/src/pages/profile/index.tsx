@@ -9,7 +9,7 @@ export function ProfilePage() {
     return (
         <div className={cssStyle.container}>
             <ProfileAvatar />
-            <ProgressBar/>
+            <ProgressBar />
             <Button variant="contained" color="primary" component="span">
                 Start nooking
             </Button>
