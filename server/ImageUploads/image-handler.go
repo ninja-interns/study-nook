@@ -5,14 +5,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/h2non/filetype"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
-
-	"github.com/h2non/filetype"
 )
 
 const MAX_UPLOAD_SIZE = 1024 * 1024
@@ -46,6 +45,7 @@ func (wrapper *dbWrapper) handleImageOnReceive(w http.ResponseWriter, r *http.Re
 
 	query := `UPDATE userimages SET imagedata = $1 WHERE id = $2;`
 	conn.exec(query, data)
+
 }
 
 func (db_wr *dbWrapper) handleImageSend(w http.ResponseWriter, r *http.Request) {

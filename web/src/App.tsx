@@ -1,14 +1,16 @@
-import React from "react";
 import Routes from "./Routes";
-import { Route } from "react-router";
-import { ProfilePage } from "./pages";
+import { ThemeProvider } from "@material-ui/styles";
+import { ContextContainer } from "./contexts/ContextContainer";
+import { theme } from "./contexts/themeContext";
 
 
 function App() {
 	return (
-		<div>
-			<Routes />
-		</div>
+		<ThemeProvider theme={theme}>
+				<ContextContainer.Provider>
+					<Routes />
+				</ContextContainer.Provider>
+		</ThemeProvider>
 	);
 }
 export default App;

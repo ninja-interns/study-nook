@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useStyles } from "./loginPageCss";
 import { TextField, Card, Button, Typography, Link, Slide, Fade } from "@material-ui/core";
 import { useGetState } from "../../utils/getState";
+import { useLastLocation } from "react-router-last-location";
 
 interface ITransitionProps {
 	children: JSX.Element;

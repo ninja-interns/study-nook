@@ -5,7 +5,6 @@ import { ContextContainer } from "../../contexts/ContextContainer";
 import { useStyles } from "./homeCss";
 import { useHistory } from "react-router";
 
-
 export function Home() {
 	const css = useStyles();
 	const [redirect, setRedirect] = useState<string | null>(null);

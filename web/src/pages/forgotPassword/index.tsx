@@ -2,7 +2,7 @@ import { Button, TextField, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab/Alert";
 import React, { useRef, useState } from "react";
 import { Redirect, Route } from "react-router";
-import { Snackbars } from "../../components";
+import { Snackbars } from "../../components/snackbar";
 import { useStyles } from "./forgotPasswordCss";
 
 interface IData {

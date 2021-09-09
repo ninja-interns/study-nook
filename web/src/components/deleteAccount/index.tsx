@@ -2,9 +2,9 @@ import React, { useRef, useState } from "react";
 import { Button, TextField, Typography } from "@material-ui/core";
 import { SimpleModal } from "./../modal";
 import { Redirect, Route } from "react-router";
-import { Snackbars } from "..";
 import { Color } from "@material-ui/lab/Alert";
 import { useStyles } from "./deleteAccountCss";
+import { Snackbars } from "../snackbar";
 
 interface IData {
 	isValid: boolean;
