@@ -27,7 +27,7 @@ const Routes = () => {
 					<Route path="/deletedAccount" component={DeletedAccount} />
 					<Route path="/forgotPassword" component={ForgotPassword} />
 					<Route path="/resetPassword" component={ResetPassword} />
-					<PrivateRoute path="/dashboard" component={Dashboard} />
+					<Route path="/dashboard" component={Dashboard} />
 					<PrivateRoute path="/profile" component={Profile} />
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
