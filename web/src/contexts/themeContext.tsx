@@ -31,11 +31,11 @@ export const theme = createTheme({
 			fontSize: "2rem",
 		},
 		h5: {
-			fontSize: "1.7rem",
+			fontSize: "1.5rem",
 		},
 		h6: {
-			fontSize: "1.5rem",
-			fontWeight: "normal",
+			fontSize: "1.4rem",
+			fontWeight: "lighter",
 		},
 	},
 });

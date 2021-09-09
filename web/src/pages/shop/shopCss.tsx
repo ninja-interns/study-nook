@@ -23,4 +23,14 @@ export const useStyles = makeStyles({
 	soon: {
 		fontWeight: "lighter",
 	},
+	button: {
+		display: "inline-block",
+		border: "none",
+		textDecoration: "none",
+		backgroundColor: "transparent",
+		cursor: "pointer",
+		"&:hover": {
+			backgroundColor: "#ebedf0",
+		},
+	},
 });
