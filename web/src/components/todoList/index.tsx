@@ -3,11 +3,17 @@ import TodoForm from "./TodoForm"
 import TodoList from "./TodoList"
 import { useStyles } from "./todoCss"
 import { TodoContent } from "./interfaces"
-import { Typography } from "@material-ui/core"
 
 const TodoListApp = () => {
     const css = useStyles()
     const [todos, setTodos] = React.useState<TodoContent[]>([])
+
+    async function getTodos() {
+        const response = await fetch("/api/getTodos")
+        const result = await response.json()
+        console.log(result)
+        return result["Todo"]
+    }
 
     function handleTodoCreate(todo: TodoContent) {
         const newTodosState: TodoContent[] = [...todos]
@@ -34,9 +40,17 @@ const TodoListApp = () => {
 
     return (
         <div className={css.container}>
-            {/* <Typography variant="h2">Todo List</Typography> */}
             <TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
             <TodoList todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoComplete={handleTodoComplete} handleTodoRemove={handleTodoRemove} />
+            <button
+                onClick={async () => {
+                    const todo = await getTodos()
+                    setTodos(todo)
+                }}
+            >
+                Get Todos
+            </button>
+            <p>{todos}</p>
         </div>
     )
 }

@@ -9,22 +9,27 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+	//CURRENT IMPORTS
 	"os"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/joho/godotenv"
 	"studynook.go/auth"
 	"studynook.go/currentUser"
 	"studynook.go/emails"
 	initializeDB "studynook.go/initializedb"
 	"studynook.go/middleware"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/joho/godotenv"
+	"studynook.go/todo"
 )
 
+// THIS IS THE CURRENT MAIN
 func main() {
 	initializeDB.InitDB()
 
 	auth.SessionsConfig()
+	todo.SessionsConfig()
+	
 
 	err := godotenv.Load(".env.local")
 	if err != nil {
@@ -41,6 +46,7 @@ func main() {
 
 	r := chi.NewRouter()
 
+	// AUTH
 	r.HandleFunc("/api/createUser", auth.CreateUser)
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
 	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
@@ -51,6 +57,9 @@ func main() {
 	r.HandleFunc("/api/deleteAccount", middleware.WithUser(auth.DeleteAccount))
 	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))
 	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
+
+	// TODO LIST
+	r.HandleFunc("/api/getTodos", todo.GetTodos)
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }
@@ -90,7 +99,7 @@ func main() {
 // 	r.HandleFunc("/api/getTimeLeft", timer.GetTimeLeft)
 
 // 	// Todo List
-// 	r.HandleFunc("/api/getTasks", todo.GetAllTasks)
+// 	
 // 	r.HandleFunc("/api/createTask", todo.CreateTask)
 // 	r.HandleFunc("/api/taskComplete", todo.TaskComplete)
 // 	r.HandleFunc("/api/deleteTask", todo.DeleteTask)
