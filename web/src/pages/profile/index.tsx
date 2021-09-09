@@ -1,5 +1,4 @@
-import { Button } from '@material-ui/core';
-import { ProfileSettings, ProfileAvatar, ProgressBar } from '../../components';
+import { ProfileSettings, ProfileAvatar, ProgressBar, NookButton, LatestAchievementButton } from '../../components';
 import { NookInterface } from '../../components/profile/NookInterface';
 import { useStyles } from './profileStyle';
 
@@ -10,15 +9,10 @@ export function ProfilePage() {
         <div className={cssStyle.container}>
             <ProfileAvatar />
             <ProgressBar />
-            <Button variant="contained" color="primary" component="span">
-                Start nooking
-            </Button>
+            <NookButton/>
             <ProfileSettings />
             <NookInterface />
-            <Button variant="contained" color="primary" component="span">
-                Latest Badge
-            </Button>
-
+            <LatestAchievementButton/>
         </div>
     );
 }

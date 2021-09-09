@@ -3,6 +3,7 @@ import { ChangeProfileImage } from "./ProfileImageHandler";
 import { PlayerProgressBar } from "./ProfileLevelBar";
 import { PlayerProfileSettings } from "./ProfileSettings";
 import defaultImage from '../../assets/default-profile.png'
+import { AchievementButton, StartNookButton } from "./ProfileButtons";
 export function Interface() {
     return (
         <NookInterface/>
@@ -20,6 +21,18 @@ export function ProfileSettings() {
 export function ProgressBar() {
     return (
         <PlayerProgressBar />
+    );
+}
+
+export function NookButton() {
+    return (
+        <StartNookButton />
+    );
+}
+
+export function LatestAchievementButton() {
+    return (
+        <AchievementButton/>
     );
 }
 
