@@ -6,6 +6,9 @@ import { useStyles } from "./shopListCss";
 
 export default function ShopList({ category, array }: IShopList) {
 	const css = useStyles();
+
+	if (array === null) return null;
+
 	return (
 		<div className={css.container}>
 			<Typography variant="h5" className={css.category}>
@@ -13,7 +16,7 @@ export default function ShopList({ category, array }: IShopList) {
 			</Typography>
 			<div className={css.content}>
 				{array.map((x) => (
-					<ShopItemCard title={x.title} price={x.price} level={x.level} src={x.src} />
+					<ShopItemCard key={x.id} name={x.name} cost={x.cost} level={x.level} src={x.src} />
 				))}
 			</div>
 		</div>

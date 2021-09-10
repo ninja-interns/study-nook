@@ -3,18 +3,18 @@ import React from "react";
 import { IShopItem } from "../../models/shopModels";
 import { useStyles } from "./shopItemCardCss";
 
-export function ShopItemCard({ title, level, price, src }: IShopItem) {
+export function ShopItemCard({ name, level, cost, src }: IShopItem) {
 	const css = useStyles();
 	return (
 		<Card className={css.container}>
-			<CardMedia className={css.media} component="img" alt="example" height="140" image={src} title="Contemplative Reptile" />
+			<CardMedia className={css.media} component="img" alt={name} height="140" src={`data:image/png;base64, ${src}`} />
 			<CardContent className={css.content}>
 				<div className={css.level}>
 					<Typography>lv: {level}</Typography>
-					<Typography>${price}</Typography>
+					<Typography>${cost}</Typography>
 				</div>
 				<Typography className={css.title} variant="h6">
-					{title}
+					{name}
 				</Typography>
 			</CardContent>
 			<CardActions>

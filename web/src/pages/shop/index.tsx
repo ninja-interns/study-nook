@@ -1,12 +1,13 @@
 import { Divider, Typography } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ShopList from "../../components/shopList";
-import { ShopItemArray } from "../../models/shopModels";
+import { IShopItem } from "../../models/shopModels";
 import { useStyles } from "./shopCss";
 
 export function Shop() {
 	const css = useStyles();
+	const [bgArray, setBgArray] = useState<IShopItem[] | null>(null);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -14,11 +15,12 @@ export function Shop() {
 			try {
 				const response = await fetch("/api/getShopItems", {
 					method: "GET",
-					headers: { "content-type": "application/json" },
+					headers: { "content-type": "application/json, image/jpeg" },
 				});
 				const data = await response.json();
 				if (isMounted) {
 					console.log(data);
+					setBgArray(data);
 				}
 			} catch (err) {
 				console.error(err);
@@ -43,7 +45,7 @@ export function Shop() {
 				<Typography>Coins: ~~coins~~</Typography>
 			</div>
 			<Divider />
-			<ShopList category="Backgrounds" array={ShopItemArray} />
+			<ShopList category="Backgrounds" array={bgArray} />
 
 			<Typography variant="h5">Avatars</Typography>
 			<div className={css.placeholder}>

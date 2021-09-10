@@ -1,21 +1,13 @@
-import exampleBackground from "../assets/exampleBackground.jpg";
-import pastelBookShelf from "../assets/pastelBookShelf.jpg";
-
 export interface IShopItem {
-	title: string;
-	price: number;
+	id?: string;
+	category?: string;
+	name: string;
+	cost: number;
 	level: number;
-	src: string;
+	src: "base64";
 }
 
 export interface IShopList {
 	category: string;
-	array: IShopItem[];
+	array: IShopItem[] | null;
 }
-
-export const ShopItemArray: IShopItem[] = [
-	{ title: "Cool Orange", level: 3, price: 25, src: exampleBackground },
-	{ title: "Minimalist", level: 4, price: 30, src: pastelBookShelf },
-	{ title: "Cool Orange", level: 3, price: 25, src: exampleBackground },
-	{ title: "Minimalist", level: 4, price: 30, src: pastelBookShelf },
-];
