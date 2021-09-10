@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS shopItems(
     category TEXT NOT NULL,
     name TEXT NOT NULL,
     lvRequired INT NOT NULL,
-    cost INT NOT NULL
+    cost INT NOT NULL,
+    imageByte BYTEA NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS shopItemsOwned(
