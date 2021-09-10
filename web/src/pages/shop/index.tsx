@@ -1,12 +1,13 @@
-import { Button, Divider, Typography } from "@material-ui/core";
+import { Divider, Typography } from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
 import React from "react";
 import ShopList from "../../components/shopList";
 import { ShopItemArray } from "../../models/shopModels";
 import { useStyles } from "./shopCss";
-import MenuIcon from "@material-ui/icons/Menu";
 
 export function Shop() {
 	const css = useStyles();
+
 	return (
 		<div className={css.container}>
 			<div className={css.title}>

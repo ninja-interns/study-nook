@@ -15,3 +15,17 @@ CREATE TABLE IF NOT EXISTS sessions (
 );
 
 CREATE INDEX IF NOT EXISTS sessions_expiry_idx ON sessions (expiry);
+
+CREATE TABLE IF NOT EXISTS shopItems(
+    id TEXT PRIMARY KEY,
+    category TEXT NOT NULL,
+    name TEXT NOT NULL,
+    lvRequired INT NOT NULL,
+    cost INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS shopItemsOwned(
+    id TEXT PRIMARY KEY,
+    shopItemID TEXT REFERENCES shopItems(id),
+    userID TEXT REFERENCES users(id)
+);
