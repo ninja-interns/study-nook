@@ -16,6 +16,7 @@ import (
 	"studynook.go/emails"
 	initializeDB "studynook.go/initializedb"
 	"studynook.go/middleware"
+	"studynook.go/shop"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
@@ -41,6 +42,7 @@ func main() {
 
 	r := chi.NewRouter()
 
+	//auth handlers
 	r.HandleFunc("/api/createUser", auth.CreateUser)
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
 	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
@@ -51,6 +53,9 @@ func main() {
 	r.HandleFunc("/api/deleteAccount", middleware.WithUser(auth.DeleteAccount))
 	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))
 	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
+
+	//shop handlers
+	r.HandleFunc("/api/getShopItems", middleware.WithUser(shop.GetShopItems))
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }
