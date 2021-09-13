@@ -30,7 +30,6 @@ func main() {
 	auth.SessionsConfig()
 	todo.SessionsConfig()
 	
-
 	err := godotenv.Load(".env.local")
 	if err != nil {
 		fmt.Println(err)
@@ -63,46 +62,3 @@ func main() {
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }
-
-// OLD MAIN FILE
-
-// package main
-
-// import (
-// 	"net/http"
-
-// 	"github.com/go-chi/chi/v5"
-// 	"main.go/auth"
-// 	"main.go/currentUser"
-// 	initializeDB "main.go/initializedb"
-// 	"main.go/middleware"
-// 	"main.go/timer"
-// 	"main.go/todo"
-// )
-
-
-// func main() {
-// 	initializeDB.InitDB()
-
-// 	auth.SessionsConfig()
-
-// 	r := chi.NewRouter()
-
-// 	// Auth
-// 	r.HandleFunc("/api/createUser", auth.CreateUser)
-// 	r.HandleFunc("/api/loginUser", auth.LoginUser)
-// 	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
-// 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
-
-// 	// Timer
-// 	r.HandleFunc("/api/createTimer", timer.CreateTimer)
-// 	r.HandleFunc("/api/getTimeLeft", timer.GetTimeLeft)
-
-// 	// Todo List
-// 	
-// 	r.HandleFunc("/api/createTask", todo.CreateTask)
-// 	r.HandleFunc("/api/taskComplete", todo.TaskComplete)
-// 	r.HandleFunc("/api/deleteTask", todo.DeleteTask)
-
-// 	http.ListenAndServe(":8080", r)
-// }

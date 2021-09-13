@@ -8,13 +8,21 @@ const TodoListApp = () => {
     const css = useStyles()
     const [todos, setTodos] = React.useState<TodoContent[]>([])
 
-    async function getTodos() {
+    // Getting todo from Database
+    React.useEffect(() => {
+        ;(async () => {
+            const todo = await getTodo()
+            handleTodoCreate(todo)
+        })()
+    }, [])
+
+    async function getTodo() {
         const response = await fetch("/api/getTodos")
-        const result = await response.json()
-        console.log(result)
-        return result["Todo"]
+        const result: TodoContent = await response.json()
+        return result
     }
 
+    // Handler Functions
     function handleTodoCreate(todo: TodoContent) {
         const newTodosState: TodoContent[] = [...todos]
         newTodosState.push(todo)
@@ -42,15 +50,6 @@ const TodoListApp = () => {
         <div className={css.container}>
             <TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
             <TodoList todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoComplete={handleTodoComplete} handleTodoRemove={handleTodoRemove} />
-            <button
-                onClick={async () => {
-                    const todo = await getTodos()
-                    setTodos(todo)
-                }}
-            >
-                Get Todos
-            </button>
-            <p>{todos}</p>
         </div>
     )
 }
