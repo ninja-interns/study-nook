@@ -26,7 +26,6 @@ CREATE TABLE IF NOT EXISTS timer (
 
 CREATE TABLE IF NOT EXISTS todo (
     id text PRIMARY KEY,
-    -- owner_id text REFERENCES users (id),
     owner_id text NOT NULL,
     todo_text text NOT NULL,
     is_completed boolean NOT NULL

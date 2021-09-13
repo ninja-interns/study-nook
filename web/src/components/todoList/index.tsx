@@ -11,14 +11,19 @@ const TodoListApp = () => {
     // Getting todo from Database
     React.useEffect(() => {
         ;(async () => {
-            const todo = await getTodo()
-            handleTodoCreate(todo)
+            const todoResponse = await getTodo()
+            setTodos(todoResponse)
         })()
     }, [])
 
     async function getTodo() {
         const response = await fetch("/api/getTodos")
-        const result: TodoContent = await response.json()
+        if (!response.ok) {
+            const err = `Error: ${response.status}`
+            throw new Error(err)
+        }
+        console.log("here is the error")
+        const result: TodoContent[] = await response.json()
         return result
     }
 

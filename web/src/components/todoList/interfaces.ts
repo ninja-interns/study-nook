@@ -1,6 +1,6 @@
 export interface TodoContent {
     id: string
-    ownerId: string | null
+    userId: string | null
     text: string
     isCompleted: boolean
 }
