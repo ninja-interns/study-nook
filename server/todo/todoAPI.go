@@ -11,7 +11,6 @@ import (
 
 	"github.com/alexedwards/scs/pgxstore"
 	"github.com/alexedwards/scs/v2"
-	"github.com/gofrs/uuid"
 )
 
 type TodoItem struct {
@@ -19,6 +18,10 @@ type TodoItem struct {
 	UserId		string 	`json:"user_id"`
 	Text		string	`json:"todo_text"`
 	IsCompleted	bool	`json:"is_completed"`
+}
+
+type UserId struct {
+	ID	string	`json:"id"`
 }
 
 var SessionManager *scs.SessionManager
@@ -29,22 +32,6 @@ func SessionsConfig() {
 	SessionManager.Lifetime = 1000000 * time.Hour
 	SessionManager.Cookie.Persist = true
 	SessionManager.Cookie.HttpOnly = false
-}
-
-// Get rid of this function once I have implemented sending the userId from react
-func GetTodos(w http.ResponseWriter, r *http.Request) {
-	// Create userID
-	userId, err := uuid.NewV4()
-	if (err != nil) {
-		fmt.Println(err)
-		return
-	}
-
-	// Get users Todos from the Database
-	err = getTodoByUserId(userId.String(), w, r)
-	if err != nil {
-		fmt.Println(err)
-	}
 }
 
 func CreateTodo(w http.ResponseWriter, r *http.Request) {
@@ -125,7 +112,19 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 // Change this to be either userId or ownerId for less reused code?
-func getTodoByUserId(userId string, w http.ResponseWriter, r *http.Request) error {
+func GetTodos( w http.ResponseWriter, r *http.Request) error {
+	w.Header().Set("Content-Type", "application/json")
+
+	// Create a var for the user_id to be read into
+	userId := &UserId{}
+
+	// Decoding the request into the userId
+	err := json.NewDecoder(r.Body).Decode(userId)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	
 	// Create todo item Array
 	todoArray := []TodoItem{}
 
@@ -136,7 +135,7 @@ func getTodoByUserId(userId string, w http.ResponseWriter, r *http.Request) erro
 	`
 	
 	// Get the rows from the database with the same user id
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&todoArray)
+	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&todoArray)
 	if err != nil {
 		return err
 	}

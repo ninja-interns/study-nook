@@ -1,6 +1,6 @@
 export interface TodoContent {
     id: string
-    user_id: string
+    user_id: string | null
     todo_text: string
     is_completed: boolean
 }
