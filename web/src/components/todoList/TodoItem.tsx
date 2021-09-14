@@ -10,7 +10,7 @@ const TodoItem = (props: TodoItemInterface) => {
 
     return (
         <div className={css.todoItem}>
-            <Checkbox onClick={() => props.handleTodoComplete(props.todo.id)} className={css.todoCheckbox} />
+            <Checkbox onClick={() => props.handleTodoComplete(props.todo)} className={css.todoCheckbox} />
             <TextField
                 className={css.todoInput}
                 required
@@ -19,7 +19,7 @@ const TodoItem = (props: TodoItemInterface) => {
                 error={props.todo.todo_text === ""}
                 helperText={props.todo.todo_text === "" ? "Empty field!" : " "}
             />
-            <IconButton className={css.todoDelete} aria-label="delete" onClick={() => props.handleTodoRemove(props.todo.id)}>
+            <IconButton className={css.todoDelete} aria-label="delete" onClick={() => props.handleTodoRemove(props.todo)}>
                 <DeleteIcon />
             </IconButton>
         </div>

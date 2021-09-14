@@ -21,13 +21,6 @@ const TodoListApp = () => {
 
     // Handler Functions
     async function handleTodoCreate(todo: TodoContent) {
-        // Add const response error handler
-        await fetch("/api/createTodo", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(todo),
-        })
-
         // Update the todos state - Was getting error because the inital todos state was null
         if (todos == null) {
             const newTodosState: TodoContent[] = []
@@ -38,6 +31,13 @@ const TodoListApp = () => {
             newTodosState.push(todo)
             setTodos(newTodosState)
         }
+
+        // Add todo to the database - need to add error handling
+        await fetch("/api/createTodo", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(todo),
+        })
     }
 
     async function handleTodoUpdate(event: React.ChangeEvent<HTMLInputElement>, todoItem: TodoContent) {
@@ -54,14 +54,23 @@ const TodoListApp = () => {
         })
     }
 
-    function handleTodoRemove(id: string) {
-        const newTodosState: TodoContent[] = todos.filter((todo: TodoContent) => todo.id !== id)
+    async function handleTodoRemove(todoItem: TodoContent) {
+        // Updating the todos state
+        const newTodosState: TodoContent[] = todos.filter((todo: TodoContent) => todo.id !== todoItem.id)
         setTodos(newTodosState)
+
+        // Deleting todo from the database
+        await fetch("/api/deleteTodo", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(todoItem),
+        })
     }
 
-    function handleTodoComplete(id: string) {
+    function handleTodoComplete(todoItem: TodoContent) {
         const newTodosState: TodoContent[] = [...todos]
-        newTodosState.find((todo: TodoContent) => todo.id === id)!.is_completed = !newTodosState.find((todo: TodoContent) => todo.id === id)!.is_completed
+        newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.is_completed = !newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!
+            .is_completed
         setTodos(newTodosState)
     }
 

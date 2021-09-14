@@ -101,6 +101,29 @@ func UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func DeleteTodo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	
+	// Create and instance of todoItem
+	todo := &TodoItem{}	
+	
+	// Decoding the request into the todo item
+	err := json.NewDecoder(r.Body).Decode(todo)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	
+	sqlStatement := `DELETE FROM todo WHERE id=$1`
+	
+	// Intserting into Database
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, todo.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
 // Change this to be either userId or ownerId for less reused code?
 func getTodoByUserId(userId string, w http.ResponseWriter, r *http.Request) error {
 	// Create todo item Array

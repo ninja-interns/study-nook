@@ -61,6 +61,7 @@ func main() {
 	r.HandleFunc("/api/getTodos", todo.GetTodos)
 	r.HandleFunc("/api/createTodo", todo.CreateTodo)
 	r.HandleFunc("/api/updateTodo", todo.UpdateTodo)
+	r.HandleFunc("/api/deleteTodo", todo.DeleteTodo)
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }
