@@ -67,11 +67,19 @@ const TodoListApp = () => {
         })
     }
 
-    function handleTodoComplete(todoItem: TodoContent) {
+    async function handleTodoComplete(todoItem: TodoContent) {
+        // Updating todos state
         const newTodosState: TodoContent[] = [...todos]
         newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.is_completed = !newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!
             .is_completed
         setTodos(newTodosState)
+
+        // Updating completion status in the database
+        await fetch("/api/updateTodo", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(todoItem),
+        })
     }
 
     return (
