@@ -4,7 +4,7 @@ import { IShopList } from "../../models/shopModels";
 import { ShopItemCard } from "../shopItemCard";
 import { useStyles } from "./shopListCss";
 
-export default function ShopList({ category, array }: IShopList) {
+export function ShopList({ category, array }: IShopList) {
 	const css = useStyles();
 
 	if (array === null) return null;

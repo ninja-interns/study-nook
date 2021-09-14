@@ -11,6 +11,7 @@ import {
 	DeletedAccount,
 	ForgotPassword,
 	ResetPassword,
+	Inventory,
 	Shop,
 } from "../pages";
 import { PrivateRoute } from "./PrivateRoute";
@@ -30,6 +31,7 @@ const Routes = () => {
 					<Route path="/resetPassword" component={ResetPassword} />
 					<PrivateRoute path="/dashboard" component={Dashboard} />
 					<PrivateRoute path="/shop" component={Shop} />
+					<PrivateRoute path="/inventory" component={Inventory} />
 					<PrivateRoute path="/profile" component={Profile} />
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />

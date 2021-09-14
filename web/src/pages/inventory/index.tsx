@@ -1,11 +1,11 @@
 import { Divider, Typography } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import React, { useEffect, useState } from "react";
-import { ShopList } from "../../components";
+import { InventoryList } from "../../components";
 import { IShopItem } from "../../models/shopModels";
-import { useStyles } from "./shopCss";
+import { useStyles } from "./inventoryCss";
 
-export function Shop() {
+export function Inventory() {
 	const css = useStyles();
 	const [bgArray, setBgArray] = useState<IShopItem[] | null>(null);
 
@@ -13,7 +13,7 @@ export function Shop() {
 		let isMounted = true;
 		(async () => {
 			try {
-				const response = await fetch("/api/getShopItems", {
+				const response = await fetch("/api/getInventoryItems", {
 					method: "GET",
 					headers: { "content-type": "application/json, image/jpeg" },
 				});
@@ -34,25 +34,13 @@ export function Shop() {
 	return (
 		<div className={css.container}>
 			<div className={css.title}>
-				<Typography variant="h4">Shop</Typography>
+				<Typography variant="h4">Inventory</Typography>
 				<button className={css.button}>
 					<MenuIcon fontSize="large" />
 				</button>
 			</div>
 			<Divider />
-			<div className={css.level}>
-				<Typography>Level: ~~level~~</Typography>
-				<Typography>Coins: ~~coins~~</Typography>
-			</div>
-			<Divider />
-			<ShopList category="Backgrounds" array={bgArray} />
-
-			<Typography variant="h5">Avatars</Typography>
-			<div className={css.placeholder}>
-				<Typography variant="h6" className={css.soon}>
-					Coming soon!
-				</Typography>
-			</div>
+			<InventoryList category="Backgrounds" array={bgArray} />
 		</div>
 	);
 }
