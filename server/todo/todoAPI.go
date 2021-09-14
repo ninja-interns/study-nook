@@ -40,9 +40,9 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	// Inserting Dummy Todos into the Database
-	insertTodo(userId.String(), "Todo 1", w, r)
-	insertTodo(userId.String(), "Todo 2", w, r)
-	insertTodo(userId.String(), "Todo 3", w, r)
+	// createTodo(userId.String(), "Todo 1", w, r)
+	// createTodo(userId.String(), "Todo 2", w, r)
+	// createTodo(userId.String(), "Todo 3", w, r)
 
 	// Get Todos from the Database
 	err = getTodoByOwnderId(userId.String(), w, r)
@@ -53,16 +53,15 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 }
 
 func getTodoByOwnderId(userId string, w http.ResponseWriter, r *http.Request) error {
-	// Create todo item
+	// Create todo item Array
 	todoArray := []TodoItem{}
-	// var todoArray interface{}
 
 	sqlStatement := `
         SELECT array_to_json(array_agg(row_to_json(todo)))
         FROM todo
         WHERE user_id=$1
 	`
-
+	
 	// Get the rows from the database with the same user id
 	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&todoArray)
 	if err != nil {
@@ -74,22 +73,29 @@ func getTodoByOwnderId(userId string, w http.ResponseWriter, r *http.Request) er
 }
 
 
-func insertTodo(userId string, text string, w http.ResponseWriter, r *http.Request) {
-	// Create new todo Item
+func CreateTodo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	
+	// Create and instance of todoItem
 	todo := &TodoItem{}	
 
-	// Create a new ID
+	// Decoding the request into the todo item
+	err := json.NewDecoder(r.Body).Decode(todo)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// Giving the todo an ID
 	id, err := uuid.NewV4()
 	if (err != nil) {
 		fmt.Println(err)
 		return
 	}
-
 	todo.ID = id.String()
-	todo.UserId = userId
-	todo.Text = text
-	todo.IsCompleted = false
 
+	fmt.Println(todo)
+	
 	// Creating an insert in our database
 	sqlStatement := `
 	INSERT INTO todo (id, user_id, todo_text, is_completed)
