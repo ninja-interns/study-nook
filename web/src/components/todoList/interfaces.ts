@@ -12,14 +12,14 @@ export interface TodoFormInterface {
 
 export interface TodoListInterface {
     todos: TodoContent[]
-    handleTodoUpdate: (event: React.ChangeEvent<HTMLInputElement>, id: string) => void
+    handleTodoUpdate: (event: React.ChangeEvent<HTMLInputElement>, todoItem: TodoContent) => void
     handleTodoRemove: (id: string) => void
     handleTodoComplete: (id: string) => void
 }
 
 export interface TodoItemInterface {
     todo: TodoContent
-    handleTodoUpdate: (event: React.ChangeEvent<HTMLInputElement>, id: string) => void
+    handleTodoUpdate: (event: React.ChangeEvent<HTMLInputElement>, todoItem: TodoContent) => void
     handleTodoRemove: (id: string) => void
     handleTodoComplete: (id: string) => void
 }

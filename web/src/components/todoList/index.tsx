@@ -40,10 +40,18 @@ const TodoListApp = () => {
         }
     }
 
-    function handleTodoUpdate(event: React.ChangeEvent<HTMLInputElement>, id: string) {
+    async function handleTodoUpdate(event: React.ChangeEvent<HTMLInputElement>, todoItem: TodoContent) {
+        // Updating the todos state
         const newTodosState: TodoContent[] = [...todos]
-        newTodosState.find((todo: TodoContent) => todo.id === id)!.todo_text = event.target.value
+        newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.todo_text = event.target.value
         setTodos(newTodosState)
+
+        // Updating the todo in the database
+        await fetch("/api/updateTodo", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(todoItem),
+        })
     }
 
     function handleTodoRemove(id: string) {

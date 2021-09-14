@@ -3,6 +3,7 @@ import { TextField, ThemeProvider, Button } from "@material-ui/core"
 import { useStyles, theme } from "./todoCss"
 import AddIcon from "@material-ui/icons/Add"
 import { TodoContent, TodoFormInterface } from "./interfaces"
+import { v4 as uuidv4 } from "uuid"
 
 const TodoForm = (props: TodoFormInterface) => {
     const css = useStyles()
@@ -18,7 +19,7 @@ const TodoForm = (props: TodoFormInterface) => {
 
         // Prepare new todo
         const newTodo: TodoContent = {
-            id: "",
+            id: uuidv4(),
             user_id: "", // need to get this info from logged in user
             todo_text: inputText,
             is_completed: false,

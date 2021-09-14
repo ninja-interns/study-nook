@@ -15,7 +15,7 @@ const TodoItem = (props: TodoItemInterface) => {
                 className={css.todoInput}
                 required
                 value={props.todo.todo_text}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => props.handleTodoUpdate(event, props.todo.id)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => props.handleTodoUpdate(event, props.todo)}
                 error={props.todo.todo_text === ""}
                 helperText={props.todo.todo_text === "" ? "Empty field!" : " "}
             />

@@ -60,6 +60,7 @@ func main() {
 	// TODO LIST
 	r.HandleFunc("/api/getTodos", todo.GetTodos)
 	r.HandleFunc("/api/createTodo", todo.CreateTodo)
+	r.HandleFunc("/api/updateTodo", todo.UpdateTodo)
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }
