@@ -7,7 +7,7 @@ export function ShopItemCard({ name, level, cost, src }: IShopItem) {
 	const css = useStyles();
 	return (
 		<Card className={css.container}>
-			<CardMedia className={css.media} component="img" alt={name} height="140" src={`data:image/png;base64, ${src}`} />
+			<CardMedia className={css.media} component="img" alt={name} height="140" src={`/assets/${src}`} />
 			<CardContent className={css.content}>
 				<div className={css.level}>
 					<Typography>lv: {level}</Typography>
