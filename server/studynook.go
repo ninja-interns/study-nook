@@ -57,6 +57,7 @@ func main() {
 	//shop handlers
 	r.HandleFunc("/api/getShopItems", middleware.WithUser(shop.GetShopItems))
 	r.HandleFunc("/api/buyItem", middleware.WithUser(shop.HandleShopItemBuy))
+	r.HandleFunc("/api/getInventoryItems", middleware.WithUser(shop.GetInventoryItems))
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }

@@ -53,3 +53,19 @@ func HandleShopItemBuy(w http.ResponseWriter, r *http.Request, u *auth.User) {
 
 	json.NewEncoder(w).Encode(http.StatusOK)
 }
+
+func GetInventoryItems(w http.ResponseWriter, r *http.Request, u *auth.User) {
+	var arr interface{}
+
+	fmt.Println("hit shop")
+
+	sqlStatement := `SELECT array_to_json(array_agg(row_to_json(shopItemsOwned))) FROM shopItemsOwned;`
+
+	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement).Scan(&arr)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	json.NewEncoder(w).Encode(arr)
+}

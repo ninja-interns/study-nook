@@ -2,12 +2,12 @@ import { Divider, Typography } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import React, { useEffect, useState } from "react";
 import { InventoryList } from "../../components";
-import { IShopItem } from "../../models/shopModels";
+import { IInventoryItem } from "../../models/shopModels";
 import { useStyles } from "./inventoryCss";
 
 export function Inventory() {
 	const css = useStyles();
-	const [bgArray, setBgArray] = useState<IShopItem[] | null>(null);
+	const [inventoryArray, setInventoryArray] = useState<IInventoryItem[] | null>(null);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -20,7 +20,7 @@ export function Inventory() {
 				const data = await response.json();
 				if (isMounted) {
 					console.log(data);
-					setBgArray(data);
+					setInventoryArray(data);
 				}
 			} catch (err) {
 				console.error(err);
@@ -40,7 +40,7 @@ export function Inventory() {
 				</button>
 			</div>
 			<Divider />
-			<InventoryList category="Backgrounds" array={bgArray} />
+			<InventoryList category="Backgrounds" array={inventoryArray} />
 		</div>
 	);
 }

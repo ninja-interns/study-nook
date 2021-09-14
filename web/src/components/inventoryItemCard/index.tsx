@@ -1,9 +1,9 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@material-ui/core";
 import React from "react";
-import { IShopItem } from "../../models/shopModels";
+import { IInventoryItem } from "../../models/shopModels";
 import { useStyles } from "./inventoryItemCss";
 
-export function InventoryItemCard({ id, name, category, level, cost, src }: IShopItem) {
+export function InventoryItemCard({ id, name, category, level, src }: IInventoryItem) {
 	const css = useStyles();
 
 	async function handleApply() {
