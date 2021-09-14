@@ -13,15 +13,29 @@ func GetShopItems(w http.ResponseWriter, r *http.Request) {
 	var arr interface{}
 
 	fmt.Println("hit shop")
-	//Querying our database where our email column = the email the user input on the frontend
+
 	sqlStatement := `SELECT array_to_json(array_agg(row_to_json(shopItems))) FROM shopItems;`
 
-	//scanning the id, email and password from the DB into the created variables above
 	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement).Scan(&arr)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
+	fmt.Println(arr)
 	json.NewEncoder(w).Encode(arr)
+}
+
+type shopItemID struct {
+	Id string `json:"shopItemID"`
+}
+
+func HandleShopItemBuy(w http.ResponseWriter, r *http.Request) {
+	i := &shopItemID{}
+	err := json.NewDecoder(r.Body).Decode(i)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(i)
 }
