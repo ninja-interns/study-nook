@@ -14,10 +14,10 @@ const TodoItem = (props: TodoItemInterface) => {
             <TextField
                 className={css.todoInput}
                 required
-                value={props.todo.text}
+                value={props.todo.todo_text}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => props.handleTodoUpdate(event, props.todo.id)}
-                error={props.todo.text === ""}
-                helperText={props.todo.text === "" ? "Empty field!" : " "}
+                error={props.todo.todo_text === ""}
+                helperText={props.todo.todo_text === "" ? "Empty field!" : " "}
             />
             <IconButton className={css.todoDelete} aria-label="delete" onClick={() => props.handleTodoRemove(props.todo.id)}>
                 <DeleteIcon />

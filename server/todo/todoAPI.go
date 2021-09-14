@@ -16,9 +16,9 @@ import (
 
 type TodoItem struct {
 	ID			string	`json:"id"`
-	UserId		string 	`json:"userId"`
-	Text		string	`json:"text"`
-	IsCompleted	bool	`json:"isCompleted"`
+	UserId		string 	`json:"user_id"`
+	Text		string	`json:"todo_text"`
+	IsCompleted	bool	`json:"is_completed"`
 }
 
 var SessionManager *scs.SessionManager
@@ -54,32 +54,22 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 
 func getTodoByOwnderId(userId string, w http.ResponseWriter, r *http.Request) error {
 	// Create todo item
-	todos := []*TodoItem{}
+	todoArray := []TodoItem{}
+	// var todoArray interface{}
 
 	sqlStatement := `
-        SELECT id, owner_id, todo_text, is_completed
+        SELECT array_to_json(array_agg(row_to_json(todo)))
         FROM todo
-        WHERE owner_id=$1
+        WHERE user_id=$1
 	`
 
 	// Get the rows from the database with the same user id
-	results, err := initializeDB.Conn.Query(context.Background(), sqlStatement, userId)
+	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&todoArray)
 	if err != nil {
 		return err
 	}
 
-	// Scan each row into the todoItem and encode it
-	for results.Next() {
-		item := &TodoItem{}
-		err = results.Scan(&item.ID, &item.UserId, &item.Text, &item.IsCompleted)
-		if err != nil {
-			return  err
-		}
-		todos = append(todos, item)
-
-		json.NewEncoder(w).Encode(todos)
-	}
-
+	json.NewEncoder(w).Encode(todoArray)
 	return nil
 }
 
@@ -102,7 +92,7 @@ func insertTodo(userId string, text string, w http.ResponseWriter, r *http.Reque
 
 	// Creating an insert in our database
 	sqlStatement := `
-	INSERT INTO todo (id, owner_id, todo_text, is_completed)
+	INSERT INTO todo (id, user_id, todo_text, is_completed)
 	VALUES ($1, $2, $3, $4)`
 
 	// Intserting into Database

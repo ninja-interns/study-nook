@@ -20,9 +20,9 @@ const TodoForm = (props: TodoFormInterface) => {
         // Prepare new todo
         const newTodo: TodoContent = {
             id: uuidv4(),
-            userId: null, // need to get this info from logged in user
-            text: inputText,
-            isCompleted: false,
+            user_id: null, // need to get this info from logged in user
+            todo_text: inputText,
+            is_completed: false,
         }
 
         // Create new todo item

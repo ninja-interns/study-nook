@@ -8,24 +8,17 @@ const TodoListApp = () => {
     const css = useStyles()
     const [todos, setTodos] = React.useState<TodoContent[]>([])
 
-    // Getting todo from Database
+    // Getting todos from Database
     React.useEffect(() => {
-        ;(async () => {
-            const todoResponse = await getTodo()
-            setTodos(todoResponse)
-        })()
-    }, [])
-
-    async function getTodo() {
-        const response = await fetch("/api/getTodos")
-        if (!response.ok) {
-            const err = `Error: ${response.status}`
-            throw new Error(err)
+        async function getTodoList() {
+            const response = await fetch("/api/getTodos")
+            const result: TodoContent[] = await response.json()
+            console.log(result)
+            setTodos(result)
         }
-        console.log("here is the error")
-        const result: TodoContent[] = await response.json()
-        return result
-    }
+
+        getTodoList()
+    }, [])
 
     // Handler Functions
     function handleTodoCreate(todo: TodoContent) {
@@ -36,7 +29,7 @@ const TodoListApp = () => {
 
     function handleTodoUpdate(event: React.ChangeEvent<HTMLInputElement>, id: string) {
         const newTodosState: TodoContent[] = [...todos]
-        newTodosState.find((todo: TodoContent) => todo.id === id)!.text = event.target.value
+        newTodosState.find((todo: TodoContent) => todo.id === id)!.todo_text = event.target.value
         setTodos(newTodosState)
     }
 
@@ -47,7 +40,7 @@ const TodoListApp = () => {
 
     function handleTodoComplete(id: string) {
         const newTodosState: TodoContent[] = [...todos]
-        newTodosState.find((todo: TodoContent) => todo.id === id)!.isCompleted = !newTodosState.find((todo: TodoContent) => todo.id === id)!.isCompleted
+        newTodosState.find((todo: TodoContent) => todo.id === id)!.is_completed = !newTodosState.find((todo: TodoContent) => todo.id === id)!.is_completed
         setTodos(newTodosState)
     }
 
