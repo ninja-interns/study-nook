@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core";
 import React from "react";
 import { IShopList } from "../../models/shopModels";
 import { ShopItemCard } from "../shopItemCard";
-import { useStyles } from "./shopListCss";
+import { useStyles } from "./inventoryListCss";
 
 export default function ShopList({ category, array }: IShopList) {
 	const css = useStyles();

@@ -55,8 +55,8 @@ func main() {
 	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
 
 	//shop handlers
-	r.HandleFunc("/api/getShopItems", shop.GetShopItems)
-	r.HandleFunc("/api/buyItem", shop.HandleShopItemBuy)
+	r.HandleFunc("/api/getShopItems", middleware.WithUser(shop.GetShopItems))
+	r.HandleFunc("/api/buyItem", middleware.WithUser(shop.HandleShopItemBuy))
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }

@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"net/http"
 
+	"studynook.go/auth"
 	initializeDB "studynook.go/initializedb"
 )
 
-func GetShopItems(w http.ResponseWriter, r *http.Request) {
+func GetShopItems(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	var arr interface{}
 
 	fmt.Println("hit shop")
@@ -22,20 +23,33 @@ func GetShopItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(arr)
 	json.NewEncoder(w).Encode(arr)
 }
 
 type shopItemID struct {
-	Id string `json:"shopItemID"`
+	ID       string `json:"shopItemID"`
+	Name     string `json:"name"`
+	Category string `json:"category"`
+	Level    int    `json:"level"`
+	Src      string `json:"src"`
 }
 
-func HandleShopItemBuy(w http.ResponseWriter, r *http.Request) {
+func HandleShopItemBuy(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	i := &shopItemID{}
 	err := json.NewDecoder(r.Body).Decode(i)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(i)
+
+	//insert into table shopItemsOwn that has the category, name, lv, src, userid and item id
+	sqlStatement := `INSERT INTO shopItemsOwned(shopItemID, userID, category, name, level, src) VALUES($1, $2, $3, $4, $5, $6);`
+
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, i.ID, u.ID, i.Category, i.Name, i.Level, i.Src)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	json.NewEncoder(w).Encode(http.StatusOK)
 }

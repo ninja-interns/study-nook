@@ -32,7 +32,11 @@ INSERT INTO shopItems(category, name, level, cost, src) VALUES('backgrounds', 'C
 INSERT INTO shopItems(category, name, level, cost, src) VALUES('backgrounds', 'Pastels', 3, 200, 'pastelBookShelf.jpg');
 
 CREATE TABLE IF NOT EXISTS shopItemsOwned(
-    id TEXT PRIMARY KEY,
+    id UUID NOT NULL DEFAULT uuid_generate_v4(),
     shopItemID UUID REFERENCES shopItems(id),
-    userID TEXT REFERENCES users(id)
+    userID TEXT REFERENCES users(id),
+    category TEXT NOT NULL,
+    name TEXT NOT NULL,
+    level INT NOT NULL,
+    src TEXT
 );
