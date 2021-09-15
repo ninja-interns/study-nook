@@ -1,8 +1,8 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -23,26 +23,43 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 
 	user := &schema.User{}
 
-	// Decoding JSON payload
 	err := json.NewDecoder(r.Body).Decode(user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// Generate user ID
 	id, err := uuid.NewV4()
 	user.ID = id.String()
-	fmt.Println(user.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		response := &ErrorResponse{
+			Message: "Internal server error!",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+
+	}
+
+	token, err := uuid.NewV4()
+	user.Token = token.String()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		response := &ErrorResponse{
+			Message: "Internal server error!",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
+
+	user.IsVerified = true
 
 	err = user.Validate()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := ErrorResponse{
+		response := &ErrorResponse{
 			Message: err.Error(),
 			IsValid: false,
 		}
@@ -50,16 +67,14 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Hash the password
 	user.PasswordHash, err = util.Hash(user.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	// Database operation to insert the user
-	if err = db.AddUser(user); err != nil {
-		response := ErrorResponse{
+	if err = db.AddUser(context.Background(), user); err != nil {
+		response := &ErrorResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
 		}
@@ -77,8 +92,7 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 // UserGetAllHandler handles: GET /admin/users
 func UserGetAllHandler(w http.ResponseWriter, r *http.Request) {
 
-	//Database operation to get all the users
-	userList, err := db.GetAllUsers()
+	userList, err := db.GetAllUsers(context.Background())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -91,11 +105,9 @@ func UserGetAllHandler(w http.ResponseWriter, r *http.Request) {
 
 // UserGetHandler handles: GET /admin/users/123
 func UserGetHandler(w http.ResponseWriter, r *http.Request) {
-	// Extract userID parameter from the URL
 	userID := chi.URLParam(r, "userID")
 
-	// Database operation to get a user by the given ID
-	user, err := db.GetUserByID(userID)
+	user, err := db.GetUserByID(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
@@ -108,23 +120,19 @@ func UserGetHandler(w http.ResponseWriter, r *http.Request) {
 
 // UserUpdateHandler handles: PUT /admin/users/123
 func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	// Extract userID parameter from the URL
 	userID := chi.URLParam(r, "userID")
-
 	userData := &schema.User{}
 
-	// Decoding JSON payload
 	err := json.NewDecoder(r.Body).Decode(userData)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	// Validate JSON payload
 	err = userData.Validate()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := ErrorResponse{
+		response := &ErrorResponse{
 			Message: err.Error(),
 			IsValid: false,
 		}
@@ -133,7 +141,6 @@ func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	// Hash the password
 	hashedPassword, err := util.Hash(userData.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -141,10 +148,9 @@ func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	userData.PasswordHash = hashedPassword
 
-	// Database operation to update the user with given ID
-	err = db.UpdateUser(userID, userData)
+	err = db.UpdateUser(context.Background(), userID, userData)
 	if err != nil {
-		response := ErrorResponse{
+		response := &ErrorResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
 		}
@@ -160,11 +166,9 @@ func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 // UserDeleteHandler handles: DELETE /admin/users/123
 func UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
-	// Extract userID parameter from the URL
 	userID := chi.URLParam(r, "userID")
 
-	// Database operation to delete the user with given ID
-	err := db.DeleteUser(userID)
+	err := db.DeleteUser(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
