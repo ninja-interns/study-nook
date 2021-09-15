@@ -1,17 +1,16 @@
 //Timer Interface
 export interface TimerInterface {
-	id: string
-	timerHours: number
-	timerMinutes: number
-	timerSeconds: number
+    isPaused: boolean
+    time_left: string
+    timer_duration: number // in minutes
 }
 
 // Timer Form Interface
 export interface TimerFormInterface {
-	timer: TimerInterface
-	handleTimerCreate: (timer: TimerInterface) => void
+    timer: TimerInterface
+    handleTimerCreate: (timer: TimerInterface) => void
 }
 
 export interface TimerItemInterface {
-	timer: TimerInterface
+    timer: TimerInterface
 }

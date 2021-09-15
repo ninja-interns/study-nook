@@ -20,6 +20,7 @@ import (
 	"studynook.go/emails"
 	initializeDB "studynook.go/initializedb"
 	"studynook.go/middleware"
+	"studynook.go/timer"
 	"studynook.go/todo"
 )
 
@@ -62,6 +63,11 @@ func main() {
 	r.HandleFunc("/api/createTodo", todo.CreateTodo)
 	r.HandleFunc("/api/updateTodo", todo.UpdateTodo)
 	r.HandleFunc("/api/deleteTodo", todo.DeleteTodo)
+
+	// TIMER
+	r.HandleFunc("/api/createTimer", timer.CreateTimer)
+	r.HandleFunc("/api/getTimeLeft", timer.GetTimeLeft)
+	r.HandleFunc("/api/deleteTimer", timer.DeleteTimer)
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }

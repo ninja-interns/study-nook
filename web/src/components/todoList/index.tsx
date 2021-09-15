@@ -1,3 +1,9 @@
+// TODO: Remove user ID as it is handled in the backend
+// TODO: Add error handling
+// TODO: Fix the material UI on the delete and checkbox button
+// ? Add functionality to sort the completed items to the bottom
+// ? Add functionality to load only non completed items or both
+
 import * as React from "react"
 import TodoForm from "./TodoForm"
 import TodoList from "./TodoList"
@@ -6,7 +12,6 @@ import { TodoContent } from "./interfaces"
 
 const TodoListApp = () => {
     const css = useStyles()
-
     const [todos, setTodos] = React.useState<TodoContent[]>([])
 
     // Getting todos from Database using username - Should run once at the beginning

@@ -4,6 +4,7 @@ import Routes from "./routes/Routes"
 import { ThemeProvider } from "@material-ui/styles"
 import { theme } from "./contexts/themeContext"
 import TodoListApp from "./components/todoList"
+import TimerApp from "./components/countdownTimer"
 
 function App() {
     return (
@@ -11,6 +12,7 @@ function App() {
             <ContextContainer.Provider>
                 {/* <Routes /> */}
                 <TodoListApp />
+                <TimerApp />
             </ContextContainer.Provider>
         </ThemeProvider>
     )
