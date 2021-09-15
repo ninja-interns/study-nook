@@ -3,33 +3,22 @@ import TodoForm from "./TodoForm"
 import TodoList from "./TodoList"
 import { useStyles } from "./todoCss"
 import { TodoContent } from "./interfaces"
-import { ContextContainer } from "../../contexts/ContextContainer"
 
 const TodoListApp = () => {
     const css = useStyles()
-    // This is the logged in user info
-    const { currentUser } = ContextContainer.useContainer()
-    const userId = currentUser.username
 
     const [todos, setTodos] = React.useState<TodoContent[]>([])
 
-    // Getting todos from Database - Should run once at the beginning
+    // Getting todos from Database using username - Should run once at the beginning
     React.useEffect(() => {
         async function getTodoList() {
-            // Send user_id to database
-            await fetch("/api/getTodos", {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify(userId),
-            })
-
             const response = await fetch("/api/getTodos")
             const data: TodoContent[] = await response.json()
             setTodos(data)
             // Add error handling here
         }
         getTodoList()
-    }, [])
+    }, []) // not sure that I need this dependency?
 
     // Handler Functions
     async function handleTodoCreate(todo: TodoContent) {

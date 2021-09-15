@@ -11,6 +11,7 @@ import (
 
 	"github.com/alexedwards/scs/pgxstore"
 	"github.com/alexedwards/scs/v2"
+	"studynook.go/auth"
 )
 
 type TodoItem struct {
@@ -34,10 +35,37 @@ func SessionsConfig() {
 	SessionManager.Cookie.HttpOnly = false
 }
 
+// Change this to be either userId or ownerId for less reused code?
+// Return the error so it bubbles up?
+func GetTodos( w http.ResponseWriter, r *http.Request) {
+	// Getting the logged in userId
+	userId := auth.SessionManager.GetString(r.Context(), "id")
+	
+	// Create todo item Array for the users todos to be read into
+	todoArray := []TodoItem{}
+
+	sqlStatement := `
+		SELECT array_to_json(array_agg(row_to_json(todo)))
+		FROM todo
+		WHERE user_id=$1
+	`
+	
+	// Get the rows from the database with the same user id
+	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&todoArray)
+	if err != nil {
+		return
+	}
+
+	json.NewEncoder(w).Encode(todoArray)
+}
+
 func CreateTodo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	
-	// Create and instance of todoItem
+	// Getting the logged in userId
+	userId := auth.SessionManager.GetString(r.Context(), "id")
+
+	// Create and instance of todoItem 
 	todo := &TodoItem{}	
 	
 	// Decoding the request into the todo item
@@ -53,12 +81,11 @@ func CreateTodo(w http.ResponseWriter, r *http.Request) {
 	VALUES ($1, $2, $3, $4)`
 	
 	// Intserting into Database
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, todo.ID, todo.UserId, todo.Text, todo.IsCompleted)
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, todo.ID, userId, todo.Text, todo.IsCompleted)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	
 }
 
 func UpdateTodo(w http.ResponseWriter, r *http.Request) {
@@ -109,37 +136,4 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-}
-
-// Change this to be either userId or ownerId for less reused code?
-func GetTodos( w http.ResponseWriter, r *http.Request) error {
-	w.Header().Set("Content-Type", "application/json")
-
-	// Create a var for the user_id to be read into
-	userId := &UserId{}
-
-	// Decoding the request into the userId
-	err := json.NewDecoder(r.Body).Decode(userId)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	
-	// Create todo item Array
-	todoArray := []TodoItem{}
-
-	sqlStatement := `
-		SELECT array_to_json(array_agg(row_to_json(todo)))
-		FROM todo
-		WHERE user_id=$1
-	`
-	
-	// Get the rows from the database with the same user id
-	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&todoArray)
-	if err != nil {
-		return err
-	}
-
-	json.NewEncoder(w).Encode(todoArray)
-	return nil
 }
