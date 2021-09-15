@@ -4,10 +4,10 @@ import { IShopList } from "../../models/shopModels";
 import { ShopItemCard } from "../shopItemCard";
 import { useStyles } from "./shopListCss";
 
-export function ShopList({ category, array }: IShopList) {
+export function ShopList({ category, shopArray }: IShopList) {
 	const css = useStyles();
 
-	if (array === null) return null;
+	if (shopArray === null) return null;
 
 	return (
 		<div className={css.container}>
@@ -15,7 +15,7 @@ export function ShopList({ category, array }: IShopList) {
 				{category}
 			</Typography>
 			<div className={css.content}>
-				{array.map((x) => (
+				{shopArray.map((x) => (
 					<ShopItemCard key={x.id} id={x.id} category={category} name={x.name} cost={x.cost} level={x.level} src={x.src} />
 				))}
 			</div>

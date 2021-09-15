@@ -57,7 +57,7 @@ func HandleShopItemBuy(w http.ResponseWriter, r *http.Request, u *auth.User) {
 func GetInventoryItems(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	var arr interface{}
 
-	fmt.Println("hit shop")
+	fmt.Println("hit inventory")
 
 	sqlStatement := `SELECT array_to_json(array_agg(row_to_json(shopItemsOwned))) FROM shopItemsOwned;`
 
