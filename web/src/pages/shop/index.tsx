@@ -7,8 +7,8 @@ import { useStyles } from "./shopCss";
 
 export function Shop() {
 	const css = useStyles();
-	const [shopArray, setShopArray] = useState<IShopItem[] | null>(null);
 	const [invArray, setInvArray] = useState<IInventoryItem[] | null>(null);
+	const [bgArray, setBgArray] = useState<IShopItem[] | null>(null);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -26,7 +26,11 @@ export function Shop() {
 				const invData = await invResponse.json();
 				if (isMounted) {
 					console.log(data);
-					setShopArray(data);
+					setBgArray(
+						data.filter((x: IShopItem) => {
+							return x.category === "backgrounds";
+						}),
+					);
 					setInvArray(invData);
 					console.log(invData);
 				}
@@ -53,7 +57,7 @@ export function Shop() {
 				<Typography>Coins: ~~coins~~</Typography>
 			</div>
 			<Divider />
-			<ShopList category="Backgrounds" shopArray={shopArray} invArray={invArray} />
+			<ShopList category="Backgrounds" array={bgArray} invArray={invArray} />
 
 			<Typography variant="h5">Avatars</Typography>
 			<div className={css.placeholder}>

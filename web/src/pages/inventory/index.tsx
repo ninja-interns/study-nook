@@ -7,7 +7,7 @@ import { useStyles } from "./inventoryCss";
 
 export function Inventory() {
 	const css = useStyles();
-	const [inventoryArray, setInventoryArray] = useState<IInventoryItem[] | null>(null);
+	const [bgInvArray, setBgInvArray] = useState<IInventoryItem[] | null>(null);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -20,7 +20,11 @@ export function Inventory() {
 				const data = await response.json();
 				if (isMounted) {
 					console.log(data);
-					setInventoryArray(data);
+					setBgInvArray(
+						data.filter((x: IInventoryItem) => {
+							return x.category === "backgrounds";
+						}),
+					);
 				}
 			} catch (err) {
 				console.error(err);
@@ -40,7 +44,7 @@ export function Inventory() {
 				</button>
 			</div>
 			<Divider />
-			<InventoryList category="Backgrounds" array={inventoryArray} />
+			<InventoryList category="Backgrounds" array={bgInvArray} />
 		</div>
 	);
 }
