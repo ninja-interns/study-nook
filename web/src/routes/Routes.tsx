@@ -13,7 +13,8 @@ import {
 	ResetPassword,
 	MenuPage,
 	SupportPage,
-	AchievementsPage
+	AchievementsPage,
+	SVGSTesting
 } from "../pages";
 
 import { PrivateRoute } from "./PrivateRoute";
@@ -38,6 +39,7 @@ const Routes = () => {
 					<PrivateRoute path="/menu" component={MenuPage} />
 					<PrivateRoute path="/support" component={SupportPage} />
 					<PrivateRoute path="/achievements" component={AchievementsPage} />
+					<PrivateRoute path="/testing" component={SVGSTesting} />
 					<Route path="/" component={HomePage} />
 				</Switch>
 			</LastLocationProvider>

@@ -3,6 +3,7 @@ package report
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -43,9 +44,9 @@ func SubmitReports(w http.ResponseWriter, r *http.Request, u *auth.User) {
 
 	// Check if user is allowed to submit report
 	// Users are allowed to submit one report per day
-	check, error := ValidateReport(report.Username)
+	check, err := ValidateReport(report.Username)
 	if err != nil {
-
+		fmt.Println(err)
 	}
 
 	// Conditional statement to call functions depending
