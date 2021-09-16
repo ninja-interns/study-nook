@@ -28,18 +28,16 @@ export function ShopItemCard({ id, name, category, level, cost, src }: IShopItem
 		};
 	}, []);
 
-	let isOwned;
+	let isOwned: any;
 	invArray?.map((x) => {
-		console.log("inventory", invArray, "shopitem from inv", x.shopitemid, "current item", id);
 		if (x.shopitemid === id) {
-			return (isOwned = 1);
+			return (isOwned = true);
 		} else {
-			return (isOwned = 0);
+			return (isOwned = false);
 		}
 	});
 
 	async function handleBuy() {
-		console.log(id);
 		try {
 			const response = await fetch("/api/buyItem", {
 				method: "POST",

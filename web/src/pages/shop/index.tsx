@@ -20,7 +20,6 @@ export function Shop() {
 				const data = await response.json();
 
 				if (isMounted) {
-					console.log(data);
 					setBgArray(
 						data.filter((x: IShopItem) => {
 							return x.category === "backgrounds";
