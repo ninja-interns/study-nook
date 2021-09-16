@@ -9,6 +9,7 @@ import TodoForm from "./TodoForm"
 import TodoList from "./TodoList"
 import { useStyles } from "./todoCss"
 import { TodoContent } from "./interfaces"
+import { Box, Card } from "@material-ui/core"
 
 const TodoListApp = () => {
     const css = useStyles()
@@ -89,9 +90,11 @@ const TodoListApp = () => {
     }
 
     return (
-        <div className={css.container}>
+        <div className="todo-list-app">
+            {/* <Card className={css.root}> */}
             <TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
             <TodoList todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoComplete={handleTodoComplete} handleTodoRemove={handleTodoRemove} />
+            {/* // </Card> */}
         </div>
     )
 }

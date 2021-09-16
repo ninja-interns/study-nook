@@ -1,9 +1,10 @@
 import * as React from "react"
-import { TextField, ThemeProvider, Button } from "@material-ui/core"
-import { useStyles, theme } from "./todoCss"
+import { TextField, Button } from "@material-ui/core"
+import { useStyles } from "./todoCss"
 import AddIcon from "@material-ui/icons/Add"
 import { TodoContent, TodoFormInterface } from "./interfaces"
 import { v4 as uuidv4 } from "uuid"
+// import Theme
 
 const TodoForm = (props: TodoFormInterface) => {
     const css = useStyles()
@@ -35,14 +36,12 @@ const TodoForm = (props: TodoFormInterface) => {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <form onSubmit={handleSubmit} className={css.inputForm}>
-                <TextField className={css.textField} variant="filled" label="Add a todo" inputRef={inputRef} onChange={handleInputChange} color="secondary" />
-                <Button type="submit" className={css.addTodoButton} color="secondary" variant="contained">
-                    <AddIcon />
-                </Button>
-            </form>
-        </ThemeProvider>
+        <form onSubmit={handleSubmit} className={css.inputForm}>
+            <TextField className={css.textField} variant="filled" label="Add a todo" inputRef={inputRef} onChange={handleInputChange} color="secondary" />
+            <Button type="submit" className={css.addTodoButton} color="secondary" variant="contained">
+                <AddIcon />
+            </Button>
+        </form>
     )
 }
 

@@ -15,6 +15,7 @@ import {
 import { PrivateRoute } from "./PrivateRoute"
 import { UpdatePassword } from "./../pages/updatePassword/index"
 import { LastLocationProvider } from "react-router-last-location"
+import NookingSetup from "../pages/nookingSetup"
 
 const Routes = () => {
     return (
@@ -29,6 +30,7 @@ const Routes = () => {
                     <Route path="/resetPassword" component={ResetPassword} />
                     <PrivateRoute path="/dashboard" component={Dashboard} />
                     <PrivateRoute path="/profile" component={Profile} />
+                    <PrivateRoute path="/nookingSetup" component={NookingSetup} />
                     <PrivateRoute path="/updateUser" component={UpdateUser} />
                     <PrivateRoute path="/updatePassword" component={UpdatePassword} />
                     <Route path="/" component={HomePage} />
