@@ -10,7 +10,6 @@ export interface IShopItem {
 export interface IShopList {
 	category: string;
 	array: IShopItem[] | null;
-	invArray: IInventoryItem[] | null;
 }
 
 export interface IInventoryList {

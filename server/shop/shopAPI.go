@@ -57,11 +57,9 @@ func HandleShopItemBuy(w http.ResponseWriter, r *http.Request, u *auth.User) {
 func GetInventoryItems(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	var arr interface{}
 
-	fmt.Println("hit inventory")
+	sqlStatement := `SELECT array_to_json(array_agg(row_to_json(shopItemsOwned))) FROM shopItemsOwned WHERE userid = $1;`
 
-	sqlStatement := `SELECT array_to_json(array_agg(row_to_json(shopItemsOwned))) FROM shopItemsOwned;`
-
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement).Scan(&arr)
+	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&arr)
 	if err != nil {
 		fmt.Println(err)
 		return
