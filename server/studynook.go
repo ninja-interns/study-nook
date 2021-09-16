@@ -9,17 +9,14 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"os"
 
 	"studynook.go/api"
 	"studynook.go/auth"
 	"studynook.go/currentUser"
 	"studynook.go/db"
-	"studynook.go/emails"
 	"studynook.go/middleware"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -27,22 +24,24 @@ func main() {
 	err := db.Initialize()
 	if err != nil {
 		panic(err)
+	} else {
+		fmt.Println("CONNECTED TO DB")
 	}
 
 	auth.SessionsConfig()
 
-	err = godotenv.Load(".env.local")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	// err = godotenv.Load(".env.local")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
 
-	//setting my EMailConfigs variable equal to this Emailer struct taking in environmental variables from my ".env.local"
-	emails.EmailConfigs, err = emails.NewEmailer(os.Getenv("SMTP_USERNAME"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_SERVER"), os.Getenv("SMTP_PORT"))
-	if err != nil {
-		fmt.Println("package main email err", err)
-		return
-	}
+	// //setting my EMailConfigs variable equal to this Emailer struct taking in environmental variables from my ".env.local"
+	// emails.EmailConfigs, err = emails.NewEmailer(os.Getenv("SMTP_USERNAME"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_SERVER"), os.Getenv("SMTP_PORT"))
+	// if err != nil {
+	// 	fmt.Println("package main email err", err)
+	// 	return
+	// }
 
 	r := chi.NewRouter()
 

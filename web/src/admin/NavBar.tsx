@@ -1,6 +1,5 @@
-import { makeStyles, AppBar, Toolbar, Typography, Badge, Avatar, InputBase, alpha } from "@material-ui/core"
-import { Cancel, Mail, Notifications, Search } from "@material-ui/icons"
-import { useState } from "react"
+import { makeStyles, AppBar, Toolbar, Typography, Badge, Avatar } from "@material-ui/core"
+import { Mail, Notifications } from "@material-ui/icons"
 
 const useStyles = makeStyles((theme) => ({
 	toolbar: {
@@ -22,42 +21,9 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 
-	search: {
-		display: "flex",
-		alignItems: "center",
-		backgroundColor: alpha(theme.palette.common.white, 0.15),
-		"&:hover": {
-			backgroundColor: alpha(theme.palette.common.white, 0.25),
-		},
-		borderRadius: theme.shape.borderRadius,
-		width: "50%",
-		[theme.breakpoints.down("sm")]: {
-			display: (props) => (props.open ? "flex" : "none"),
-			width: "70%",
-		},
-	},
-
-	input: {
-		color: "white",
-		marginLeft: theme.spacing(1),
-	},
-
-	cancel: {
-		[theme.breakpoints.up("sm")]: {
-			display: "none",
-		},
-	},
-
-	searchButton: {
-		marginRight: theme.spacing(2),
-		[theme.breakpoints.up("sm")]: {
-			display: "none",
-		},
-	},
-
 	icons: {
 		alignItems: "center",
-		display: (props) => (props.open ? "none" : "flex"),
+		display: "flex",
 	},
 
 	badge: {
@@ -66,10 +32,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const NavBar = () => {
-	const [open, setOpen] = useState(false)
-	const classes = useStyles({ open })
+	const classes = useStyles()
 	return (
-		<AppBar position="fixed" style={{ margin: 0 }}>
+		<AppBar position="fixed">
 			<Toolbar className={classes.toolbar}>
 				<Typography variant="h6" className={classes.logoLarge}>
 					Study Nook
@@ -77,13 +42,7 @@ const NavBar = () => {
 				<Typography variant="h6" className={classes.logoSmall}>
 					SN
 				</Typography>
-				<div className={classes.search}>
-					<Search />
-					<InputBase placeholder="Search..." className={classes.input} />
-					<Cancel className={classes.cancel} onClick={() => setOpen(false)} />
-				</div>
 				<div className={classes.icons}>
-					<Search className={classes.searchButton} onClick={() => setOpen(true)} />
 					<Badge badgeContent={4} color="secondary" className={classes.badge}>
 						<Mail />
 					</Badge>

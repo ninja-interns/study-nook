@@ -1,4 +1,3 @@
-import React from "react"
 import { ContextContainer } from "./contexts/ContextContainer"
 import Routes from "./routes/Routes"
 import { ThemeProvider } from "@material-ui/styles"

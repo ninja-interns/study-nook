@@ -1,19 +1,9 @@
-import { Grid, makeStyles } from "@material-ui/core"
+import { Grid } from "@material-ui/core"
 import NavBar from "./NavBar"
 import LeftBar from "./LeftBar"
 import Feed from "./Feed"
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
 
-const useStyles = makeStyles((theme) => ({
-	right: {
-		[theme.breakpoints.down("sm")]: {
-			display: "none",
-		},
-	},
-}))
-
-export default function AdminDashboard() {
-	const classes = useStyles()
+const AdminDashboard = () => {
 	return (
 		<div>
 			<NavBar />
@@ -28,3 +18,5 @@ export default function AdminDashboard() {
 		</div>
 	)
 }
+
+export default AdminDashboard

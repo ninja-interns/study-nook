@@ -126,6 +126,11 @@ func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(userData)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		response := &ErrorResponse{
+			Message: "Bad request!",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -144,12 +149,18 @@ func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	hashedPassword, err := util.Hash(userData.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		response := &ErrorResponse{
+			Message: "Internal server error!",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 	userData.PasswordHash = hashedPassword
 
 	err = db.UpdateUser(context.Background(), userID, userData)
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		response := &ErrorResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
@@ -171,6 +182,11 @@ func UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	err := db.DeleteUser(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		response := &ErrorResponse{
+			Message: "Internal server error!",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 

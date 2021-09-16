@@ -6,7 +6,7 @@ import AddIcon from "@material-ui/icons/Add"
 import CheckIcon from "@material-ui/icons/Check"
 import ClearIcon from "@material-ui/icons/Clear"
 import { useState, useEffect } from "react"
-import { useRouteMatch, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
 	button: {
@@ -15,20 +15,24 @@ const useStyles = makeStyles((theme) => ({
 	title: {
 		display: "flex",
 		justifyContent: "space-between",
+		margin: "1",
 	},
 }))
 
-export default function Users() {
+const UserListGrid = () => {
 	const classes = useStyles()
-
-	const { url } = useRouteMatch()
-
 	const [users, setUsers] = useState([])
 
-	//Fetch User list from the API endpoint
-	fetch("https://mocki.io/v1/9d8366db-f92f-4d65-9638-90e33aec0ae0") //Fake REST API
-		.then((response) => response.json())
-		.then((json) => setUsers(json))
+	useEffect(() => {
+		try {
+			//Fetch User list from the API endpoint
+			fetch("/admin/users")
+				.then((response) => response.json())
+				.then((json) => setUsers(json))
+		} catch (err) {
+			console.log(err)
+		}
+	}, [])
 
 	//Columns of Datagrid
 	const columns = [
@@ -36,19 +40,25 @@ export default function Users() {
 		{
 			field: "name",
 			headerName: "Full Name ",
-			width: 200,
+			width: 150,
 			editable: true,
 		},
 		{
 			field: "username",
 			headerName: "Username",
-			width: 200,
+			width: 150,
 			editable: true,
 		},
 		{
 			field: "email",
 			headerName: "Email",
-			width: 250,
+			width: 200,
+			editable: true,
+		},
+		{
+			field: "token",
+			headerName: "Token",
+			width: 150,
 			editable: true,
 		},
 		{
@@ -56,7 +66,7 @@ export default function Users() {
 			headerName: "Is Verified",
 			sortable: false,
 			width: 150,
-			renderCell: (params) => {
+			renderCell: (params: any) => {
 				if (params.row.isVerified) {
 					return <CheckIcon color="primary" />
 				}
@@ -67,13 +77,23 @@ export default function Users() {
 			field: "action",
 			headerName: "Action",
 			width: 200,
-			renderCell: (params) => {
+			renderCell: (params: any) => {
 				return (
 					<>
-						<Button variant="contained" size="small" color="primary" className={classes.button} startIcon={<EditIcon />}>
-							Edit
-						</Button>
-						<Button variant="contained" size="small" color="secondary" className={classes.button} startIcon={<DeleteIcon />}>
+						<Link to={"/admin/users/" + params.row.id} style={{ textDecoration: "none" }}>
+							<Button variant="contained" size="small" color="primary" className={classes.button} startIcon={<EditIcon />}>
+								Edit
+							</Button>
+						</Link>
+
+						<Button
+							variant="contained"
+							size="small"
+							color="secondary"
+							className={classes.button}
+							startIcon={<DeleteIcon />}
+							onClick={() => handleDelete(params.row.id)}
+						>
 							Delete
 						</Button>
 					</>
@@ -82,20 +102,26 @@ export default function Users() {
 		},
 	]
 
+	const handleDelete = (id: string) => {
+		setUsers(users.filter((user: any) => user.id !== id))
+	}
+
 	return (
-		<div style={{ height: 600, width: "100%" }}>
+		<div>
 			<div className={classes.title}>
 				<Typography variant="h6" color="primary" gutterBottom>
 					RECENT USERS
 				</Typography>
-				<Link to={`${url}/users/create`} style={{ textDecoration: "none" }}>
-					<Button color="primary" startIcon={<AddIcon />}>
+				<Link to="/admin/users/create" style={{ textDecoration: "none" }}>
+					<Button color="primary" size="medium" startIcon={<AddIcon />} variant="contained">
 						CREATE USER
 					</Button>
 				</Link>
 			</div>
 
-			<DataGrid rows={users} columns={columns} pageSize={10} checkboxSelection disableSelectionOnClick />
+			<DataGrid rows={users} columns={columns} pageSize={8} checkboxSelection disableSelectionOnClick />
 		</div>
 	)
 }
+
+export default UserListGrid

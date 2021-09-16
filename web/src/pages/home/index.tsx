@@ -1,17 +1,6 @@
-<<<<<<< HEAD
 import React from "react"
 import { Home } from "../../components"
-
-export function HomePage() {
-	return (
-		<div>
-			<Home />
-		</div>
-	)
-=======
-import React from "react";
-import { Home } from "../../components";
-import { Fade } from "@material-ui/core";
+import { Fade } from "@material-ui/core"
 
 export function HomePage() {
 	return (
@@ -20,6 +9,5 @@ export function HomePage() {
 				<Home />
 			</div>
 		</Fade>
-	);
->>>>>>> d2b5e9b056b859125bc141a27c27ed87a2ea864c
+	)
 }

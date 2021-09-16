@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 import React from "react"
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom"
-import { HomePage, RegisterPage, LoginPage, Dashboard, Profile, EmailVerificationPage } from "../pages"
-import { PrivateRoute } from "./PrivateRoute"
-import AdminDashboard from "../admin/AdminDashboard"
-=======
-import React from "react";
-import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import {
 	HomePage,
 	RegisterPage,
@@ -14,31 +7,23 @@ import {
 	Dashboard,
 	Profile,
 	EmailVerificationPage,
-	UpdateUser,
 	DeletedAccount,
 	ForgotPassword,
 	ResetPassword,
-} from "../pages";
-import { PrivateRoute } from "./PrivateRoute";
-import { UpdatePassword } from "./../pages/updatePassword/index";
-import { LastLocationProvider } from "react-router-last-location";
->>>>>>> d2b5e9b056b859125bc141a27c27ed87a2ea864c
-
+	UpdateUser,
+	UpdatePassword,
+} from "../pages"
+import { PrivateRoute } from "./PrivateRoute"
+import AdminDashboard from "../admin/AdminDashboard"
+import { LastLocationProvider } from "react-router-last-location"
+import AdminLoginPage from "../admin/AdminLoginPage"
+import CreateUserPage from "../admin/UserCreatePage"
+import UserListPage from "../admin/UserListPage"
+import AnalyticsPage from "../admin/AnalyticsPage"
+import UserEditPage from "../admin/UserEditPage"
 const Routes = () => {
 	return (
 		<Router>
-<<<<<<< HEAD
-			<Switch>
-				<Route path="/registration" component={RegisterPage} />
-				<Route path="/login" component={LoginPage} />
-				<Route path="/verifyEmail" component={EmailVerificationPage} />
-				<PrivateRoute path="/dashboard" component={Dashboard} />
-				<PrivateRoute path="/profile" component={Profile} />
-				<Route exact path="/" component={HomePage} />
-
-				<Route exact path="/admin" component={AdminDashboard} />
-			</Switch>
-=======
 			<LastLocationProvider>
 				<Switch>
 					<Route path="/registration" component={RegisterPage} />
@@ -51,10 +36,30 @@ const Routes = () => {
 					<PrivateRoute path="/profile" component={Profile} />
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
-					<Route path="/" component={HomePage} />
+
+					<Route exact path="/admin">
+						<AdminLoginPage />
+					</Route>
+					<Route path="/admin/dashboard">
+						<AdminDashboard />
+					</Route>
+					<Route exact path="/admin/users">
+						<UserListPage />
+					</Route>
+					<Route exact path="/admin/users/create">
+						<CreateUserPage />
+					</Route>
+					<Route path="/admin/users/:userID">
+						<UserEditPage />
+					</Route>
+
+					<Route path="/admin/analytics">
+						<AnalyticsPage />
+					</Route>
+
+					<Route exact path="/" component={HomePage} />
 				</Switch>
 			</LastLocationProvider>
->>>>>>> d2b5e9b056b859125bc141a27c27ed87a2ea864c
 		</Router>
 	)
 }
