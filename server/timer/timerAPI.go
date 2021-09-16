@@ -66,7 +66,7 @@ func GetTimeLeft(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(timeUntilFinish)
 
 	
-	timer.TimeLeft = timeUntilFinish.Round(timeUntilFinish).String()
+	timer.TimeLeft = timeUntilFinish.Round(time.Second).String()
 	
 
 	fmt.Println(timer.TimeLeft)

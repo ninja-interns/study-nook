@@ -1,12 +1,13 @@
 import * as React from "react"
-import Button from "@material-ui/core/Button"
-import ButtonGroup from "@material-ui/core/ButtonGroup"
+// Interfaces
 import { TimerFormInterface, TimerInterface } from "./interfaces"
-import { TextField } from "@material-ui/core"
+// Material UI Imports
+import { ButtonGroup, Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@material-ui/core"
+import { useStyles } from "./timerCss"
 
-function TimerForm(props: TimerFormInterface) {
-    // Create reference for form input
-    const timerRef = React.useRef<HTMLInputElement>()
+const TimerForm = (props: TimerFormInterface) => {
+    const css = useStyles()
+    const [timerDuration, setTimerDuration] = React.useState(0)
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         // Prevent the page refreshing
@@ -16,42 +17,42 @@ function TimerForm(props: TimerFormInterface) {
         const newTimer: TimerInterface = {
             isPaused: false,
             time_left: "",
-            timer_duration: 100,
+            timer_duration: timerDuration,
         }
 
         // Create new timer
-        props.handleTimerCreate(newTimer)
+        props.handleCreateTimer(newTimer)
+    }
+
+    function handleChange(event: React.ChangeEvent<{ value: unknown }>) {
+        setTimerDuration(event.target.value as number)
     }
 
     return (
         <div>
             {/* This is the form that takes in the timer input */}
             <form onSubmit={handleSubmit}>
-                <TextField
-                    // Material UI
-                    label="Hours"
-                    id="outlined-basic"
-                    variant="outlined"
-                    // --
-                    inputRef={timerRef}
-                    type="number"
-                />
+                <FormControl variant="outlined" className={css.formControl}>
+                    <InputLabel id="demo-simple-select-outlined-label">Timer Duration</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={timerDuration}
+                        onChange={handleChange}
+                        label="timerDuration"
+                    >
+                        <MenuItem value={0}>
+                            <em>0</em>
+                        </MenuItem>
+                        <MenuItem value={5}>5</MenuItem>
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={15}>15</MenuItem>
+                    </Select>
+                </FormControl>
                 <Button type="submit">Submit</Button>
             </form>
-
-            <div className="timer-component">
-                <ButtonGroup variant="contained">
-                    <Button className="start-button">Start</Button>
-                    <Button className="pause-button">Pause</Button>
-                    <Button className="reset-button">Reset</Button>
-                </ButtonGroup>
-                <p>{props.timer.time_left}</p>
-            </div>
         </div>
     )
 }
 
-export { TimerForm }
-
-// add 30 minutes to the current time then countdown to that time?
-// save the timer on a cookie?
+export default TimerForm

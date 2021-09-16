@@ -130,7 +130,7 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	
 	sqlStatement := `DELETE FROM todo WHERE id=$1`
 	
-	// Intserting into Database
+	// Deleting into Database
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, todo.ID)
 	if err != nil {
 		fmt.Println(err)
