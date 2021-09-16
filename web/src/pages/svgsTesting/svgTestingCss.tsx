@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/styles";
+import background from "../../assets/Bedrooms/Purple-Bedroom/Purple-bedroom.jpg";
 
 export const useStyles = makeStyles({
 
@@ -13,6 +14,11 @@ export const useStyles = makeStyles({
         height: "200px",
         border: "solid black",
         position: "absolute",
+        bottom: "100px",
+        margin: "20px",
+        borderWidth: "1px",
+        backgroundImage: `url(${background})`,
+        backgroundSize: "350px 200px",
     },
 
 
