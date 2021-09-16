@@ -14,7 +14,7 @@ import (
 	"studynook.go/auth"
 	"studynook.go/currentUser"
 	"studynook.go/emails"
-	initializeDB "studynook.go/initializeDB"
+	initializedb "studynook.go/initializedb"
 	"studynook.go/middleware"
 	"studynook.go/report"
 
@@ -23,7 +23,7 @@ import (
 )
 
 func main() {
-	initializeDB.InitDB()
+	initializedb.InitDB()
 
 	auth.SessionsConfig()
 

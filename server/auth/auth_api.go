@@ -11,7 +11,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
-	initializeDB "studynook.go/initializeDB"
+	initializedb "studynook.go/initializedb"
 
 	"golang.org/x/crypto/bcrypt"
 	"studynook.go/emails"
@@ -38,7 +38,7 @@ var SessionManager *scs.SessionManager
 
 func SessionsConfig() {
 	SessionManager = scs.New()
-	SessionManager.Store = pgxstore.New(initializeDB.Conn)
+	SessionManager.Store = pgxstore.New(initializedb.Conn)
 	SessionManager.Lifetime = 1000000 * time.Hour
 	SessionManager.Cookie.Persist = true
 	SessionManager.Cookie.HttpOnly = false
@@ -56,7 +56,7 @@ func CreateToken() (string, error) {
 func GetUserById(id string) (*User, error) {
 	sqlStatement := `SELECT email, name, username FROM users WHERE id = $1`
 	result := &User{}
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&result.Email, &result.Name, &result.Username)
+	err := initializedb.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&result.Email, &result.Name, &result.Username)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +132,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username, false, token)
+	_, err = initializedb.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username, false, token)
 	if err != nil {
 		fmt.Println(err)
 		response := JsonResponse{
@@ -192,7 +192,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	SELECT id, email, password_hash, name, username, is_verified FROM users WHERE email = $1 OR username = $2`
 
 	//scanning the id, email and password from the DB into the created variables above
-	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerified)
+	err = initializedb.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerified)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := JsonResponse{
@@ -251,7 +251,7 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `
 	SELECT name FROM users WHERE token = $1`
 
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&name)
+	err := initializedb.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&name)
 	if err != nil {
 		response := JsonResponse{
 			Message: "Couldn't find your account, please double check your code.",
@@ -266,7 +266,7 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	sqlStatement = `
 	UPDATE users SET is_verified = true WHERE token = $1`
 
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, qCode)
+	_, err = initializedb.Conn.Exec(context.Background(), sqlStatement, qCode)
 	if err != nil {
 		response := JsonResponse{
 			Message: "Something went wrong, please try again.",
@@ -325,7 +325,7 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 	SELECT password_hash FROM users WHERE id = $1`
 
 	//scanning the id, email and password from the DB into the created variables above
-	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
+	err = initializedb.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
 	if err != nil {
 		response := JsonResponse{
 			Message:    "Something went wrong, please try again.",
@@ -352,7 +352,7 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 	}
 
 	sqlStatement = `DELETE FROM users WHERE id = $1`
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, id)
+	_, err = initializedb.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
@@ -404,7 +404,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	sqlStatement := `SELECT password_hash FROM users WHERE id = $1`
 
 	//scanning the id password from the DB into the created variables above
-	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
+	err = initializedb.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		j.IsValid = false
@@ -426,7 +426,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	sqlStatement = `UPDATE users SET username = $2, name = $3 WHERE id = $1`
 
 	//scanning the id password from the DB into the created variables above
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, p.Username, p.Name)
+	_, err = initializedb.Conn.Exec(context.Background(), sqlStatement, u.ID, p.Username, p.Name)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -452,7 +452,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	sqlStatement := `SELECT password_hash FROM users WHERE id = $1`
 
 	//scanning the id password from the DB into the created variables above
-	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&dbPassword)
+	err = initializedb.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&dbPassword)
 	if err != nil {
 		response = JsonResponse{
 			Message: "Something went wrong, please try again.",
@@ -493,7 +493,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	//updating our database to the new hashed password
 	sqlStatement = `
 	UPDATE users SET password_hash = $1 WHERE id = $2`
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, newHashedPassword, id)
+	_, err = initializedb.Conn.Exec(context.Background(), sqlStatement, newHashedPassword, id)
 	if err != nil {
 		response = JsonResponse{
 			Message: "Something went wrong, please try again.",
@@ -558,7 +558,7 @@ func ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `
 	SELECT name FROM users WHERE email = $1`
 
-	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.Email).Scan(&name)
+	err = initializedb.Conn.QueryRow(context.Background(), sqlStatement, u.Email).Scan(&name)
 	if err != nil {
 		response := JsonResponse{
 			Message: "We couldn't find your email.",
@@ -585,7 +585,7 @@ func ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	sqlStatement = `
 	UPDATE users SET token = $2 WHERE email = $1`
 
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.Email, token)
+	_, err = initializedb.Conn.Exec(context.Background(), sqlStatement, u.Email, token)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
@@ -653,7 +653,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `
 	SELECT token FROM users WHERE email = $1`
 
-	err = initializeDB.Conn.QueryRow(context.Background(), sqlStatement, p.Email).Scan(&dbToken)
+	err = initializedb.Conn.QueryRow(context.Background(), sqlStatement, p.Email).Scan(&dbToken)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := JsonResponse{
@@ -701,7 +701,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	sqlStatement = `
 	UPDATE users SET password_hash = $2, token = $3 WHERE email = $1`
 
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, p.Email, hashedPassword, token)
+	_, err = initializedb.Conn.Exec(context.Background(), sqlStatement, p.Email, hashedPassword, token)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{

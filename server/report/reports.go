@@ -3,13 +3,12 @@ package report
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"studynook.go/auth"
 	"studynook.go/emails"
-	initializeDB "studynook.go/initializeDB"
+	initializedb "studynook.go/initializedb"
 )
 
 // Struct to store report data content
@@ -26,14 +25,9 @@ type JsonResponse struct {
 	IsVerified bool   `json:"isVerified"`
 }
 
-func ErrorMessage(w http.ResponseWriter) {
-
-	response := JsonResponse{
-		Message: "There was an error with your submission. Please, try again later.",
-		IsValid: false,
-	}
-	// Send response back
-	json.NewEncoder(w).Encode(response)
+var ErrorMessage = &JsonResponse{
+	Message: "There was an error with your submission. Please, try again later.",
+	IsValid: false,
 }
 
 // Handler to submit reports
@@ -43,14 +37,16 @@ func SubmitReports(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	report := &Report{}
 	err := json.NewDecoder(r.Body).Decode(report)
 	if err != nil {
-		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	// Check if user is allowed to submit report
 	// Users are allowed to submit one report per day
-	check := ValidateReport(report.Username)
+	check, error := ValidateReport(report.Username)
+	if err != nil {
+
+	}
 
 	// Conditional statement to call functions depending
 	// on check response
@@ -59,14 +55,15 @@ func SubmitReports(w http.ResponseWriter, r *http.Request, u *auth.User) {
 		// Insert report into report table
 		err := InsertToDB(report)
 		if err != nil {
-			ErrorMessage(w)
+
+			json.NewEncoder(w).Encode(ErrorMessage)
 			return
 		}
 
 		// Get serial ID from report
 		submission_id, err = GetReportID(report.Username)
 		if err != nil {
-			ErrorMessage(w)
+			json.NewEncoder(w).Encode(ErrorMessage)
 			return
 		}
 
@@ -99,7 +96,7 @@ func GetReportID(username string) (string, error) {
 	tempID := 0
 
 	// Execution of query
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempID)
+	err := initializedb.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempID)
 	if err != nil {
 		return "", err
 	}
@@ -114,7 +111,7 @@ func InsertToDB(report *Report) error {
 	sqlQuery := `INSERT INTO reports (username, message) VALUES ($1, $2);`
 
 	// Execution of query
-	_, err := initializeDB.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
+	_, err := initializedb.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
 	if err != nil {
 		return err
 	}
@@ -122,7 +119,7 @@ func InsertToDB(report *Report) error {
 }
 
 // Func to check if user is allowed to submit report
-func ValidateReport(username string) bool {
+func ValidateReport(username string) (bool, error) {
 
 	// Query to check if any report was sent
 	// within 1 day
@@ -130,7 +127,10 @@ func ValidateReport(username string) bool {
 
 	tempUsername := ""
 
-	initializeDB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempUsername)
+	err := initializedb.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempUsername)
+	if err != nil {
+		return tempUsername != username, err
+	}
 
-	return tempUsername != username
+	return tempUsername != username, nil
 }
