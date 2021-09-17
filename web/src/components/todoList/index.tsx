@@ -7,15 +7,11 @@
 import * as React from "react"
 import TodoForm from "./TodoForm"
 import TodoList from "./TodoList"
-import { useStyles } from "./todoCss"
 import { TodoContent } from "./interfaces"
-import { Box, Card } from "@material-ui/core"
 
 const TodoListApp = () => {
-    const css = useStyles()
     const [todos, setTodos] = React.useState<TodoContent[]>([])
 
-    // Getting todos from Database using username - Should run once at the beginning
     React.useEffect(() => {
         async function getTodoList() {
             const response = await fetch("/api/getTodos")
@@ -46,7 +42,6 @@ const TodoListApp = () => {
             body: JSON.stringify(todo),
         })
     }
-
     async function handleTodoUpdate(event: React.ChangeEvent<HTMLInputElement>, todoItem: TodoContent) {
         // Updating the todos state
         const newTodosState: TodoContent[] = [...todos]
@@ -90,11 +85,9 @@ const TodoListApp = () => {
     }
 
     return (
-        <div className="todo-list-app">
-            {/* <Card className={css.root}> */}
+        <div>
             <TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
-            <TodoList todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoComplete={handleTodoComplete} handleTodoRemove={handleTodoRemove} />
-            {/* // </Card> */}
+            <TodoList todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} handleTodoComplete={handleTodoComplete} />
         </div>
     )
 }

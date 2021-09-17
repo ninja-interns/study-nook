@@ -1,24 +1,25 @@
 import React from "react"
 
-import TodoListApp from "../../components/todoList"
+// Material UI imports
 import { Card } from "@material-ui/core"
 import { useStyles } from "./nookingSetupCss"
 
-// Import Interfaces
-import { TodoContent } from "../../components/todoList/interfaces"
-
-// Timer Imports
-import TimerForm from "../../components/countdownTimer/TimerForm"
-import Timer from "../../components/countdownTimer/Timer"
+// Component Imports
+import TimerForm from "../../components/countdownTimer/form"
+// import TodoForm from "../../components/todoList/form"
+// import TodoList from "../../components/todoList/list"
+import TodoListApp from "../../components/todoList"
+// import Timer from "../../components/countdownTimer/timer"
 
 const NookingSetup = () => {
     const css = useStyles()
     return (
         <Card className={css.container}>
             <TodoListApp />
-            {/* <TimerApp /> */}
             <TimerForm />
-            <Timer />
+            {/* <TodoForm />
+            <TodoList /> */}
+            {/* <Timer /> */}
         </Card>
     )
 }

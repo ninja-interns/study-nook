@@ -1,9 +1,11 @@
+// ! There is an error with the material UI form control
+
 import * as React from "react"
 // Interfaces
-import { TimerFormInterface, TimerInterface } from "./interfaces"
+import { TimerInterface } from "../interfaces"
 // Material UI Imports
 import { Button, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core"
-import { useStyles } from "../../pages/nookingSetup/nookingSetupCss"
+import { useStyles } from "../../../pages/nookingSetup/nookingSetupCss"
 
 const TimerForm = () => {
     const css = useStyles()
@@ -52,17 +54,9 @@ const TimerForm = () => {
             {/* This is the form that takes in the timer input */}
             <form onSubmit={handleSubmit}>
                 <FormControl variant="outlined" className={css.formControl}>
-                    <InputLabel>Timer Duration</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-outlined-label"
-                        id="demo-simple-select-outlined"
-                        value={duration}
-                        onChange={handleChange}
-                        label="timerDuration"
-                    >
-                        <MenuItem value={0}>
-                            <em>0</em>
-                        </MenuItem>
+                    <InputLabel htmlFor="outlined-age-native-simple">Timer Duration</InputLabel>
+                    <Select value={duration} onChange={handleChange} label="Timer Duration" className={css.selectEmpty}>
+                        <MenuItem value={0}>0</MenuItem>
                         <MenuItem value={5}>5</MenuItem>
                         <MenuItem value={10}>10</MenuItem>
                         <MenuItem value={15}>15</MenuItem>

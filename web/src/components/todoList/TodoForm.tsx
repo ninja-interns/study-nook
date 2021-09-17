@@ -1,6 +1,6 @@
 import * as React from "react"
 import { TextField, Button } from "@material-ui/core"
-import { useStyles } from "./todoCss"
+import { useStyles } from "../../pages/nookingSetup/nookingSetupCss"
 import AddIcon from "@material-ui/icons/Add"
 import { TodoContent, TodoFormInterface } from "./interfaces"
 import { v4 as uuidv4 } from "uuid"
@@ -36,11 +36,18 @@ const TodoForm = (props: TodoFormInterface) => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className={css.inputForm}>
-            <TextField className={css.textField} variant="filled" label="Add a todo" inputRef={inputRef} onChange={handleInputChange} color="secondary" />
-            <Button type="submit" className={css.addTodoButton} color="secondary" variant="contained">
+        <form onSubmit={handleSubmit} className={css.todoForm}>
+            <TextField
+                variant="outlined"
+                label="Add a todo"
+                inputRef={inputRef}
+                onChange={handleInputChange}
+                color="secondary"
+                className={css.todoFormTextField}
+            />
+            {/* <Button type="submit" color="secondary" variant="contained" className={css.todoAddButton}>
                 <AddIcon />
-            </Button>
+            </Button> */}
         </form>
     )
 }
