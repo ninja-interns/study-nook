@@ -10,7 +10,7 @@ export function Logout() {
 	async function handleLogout() {
 		//hitting the backend route of /logoutUser with the body of necessary values
 		try {
-			const response = await fetch("/api/logoutUser", {
+			const response = await fetch("/api/logout_user", {
 				method: "POST",
 			});
 			//awaiting the response to comeback and turn it into readable json data

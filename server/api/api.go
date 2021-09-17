@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
@@ -9,15 +8,14 @@ import (
 	"github.com/joho/godotenv"
 	"studynook.go/auth"
 	"studynook.go/currentUser"
+	"studynook.go/db"
 	"studynook.go/emails"
-	initializeDB "studynook.go/initializedb"
 	"studynook.go/middleware"
 )
 
 func Serve(port, user, password, connection, name string) error {
-	err := initializeDB.InitDB(user, password, connection, name)
+	err := db.InitDB(user, password, connection, name)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
@@ -25,14 +23,12 @@ func Serve(port, user, password, connection, name string) error {
 
 	err = godotenv.Load(".env.local")
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
 	//setting my EMailConfigs variable equal to this Emailer struct taking in environmental variables from my ".env.local"
 	emails.EmailConfigs, err = emails.NewEmailer(os.Getenv("SMTP_USERNAME"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_SERVER"), os.Getenv("SMTP_PORT"))
 	if err != nil {
-		fmt.Println("package main email err", err)
 		return err
 	}
 
@@ -47,16 +43,16 @@ func Serve(port, user, password, connection, name string) error {
 func Routes() chi.Router {
 	r := chi.NewRouter()
 
-	r.HandleFunc("/api/createUser", auth.CreateUser)
-	r.HandleFunc("/api/loginUser", auth.LoginUser)
-	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
-	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
-	r.HandleFunc("/api/forgotPassword", auth.ForgotPassword)
-	r.HandleFunc("/api/resetPassword", auth.ResetPassword)
+	r.HandleFunc("/api/create_user", auth.CreateUser)
+	r.HandleFunc("/api/login_user", auth.LoginUser)
+	r.HandleFunc("/api/verify_email/{code}", auth.VerifyEmail)
+	r.HandleFunc("/api/logout_user", auth.LogoutUser)
+	r.HandleFunc("/api/forgot_password", auth.ForgotPassword)
+	r.HandleFunc("/api/reset_password", auth.ResetPassword)
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
-	r.HandleFunc("/api/deleteAccount", middleware.WithUser(auth.DeleteAccount))
-	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))
-	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
+	r.HandleFunc("/api/delete_account", middleware.WithUser(auth.DeleteAccount))
+	r.HandleFunc("/api/update_user", middleware.WithUser(auth.UpdateUser))
+	r.HandleFunc("/api/update_password", middleware.WithUser(auth.UpdatePassword))
 
 	return r
 }
