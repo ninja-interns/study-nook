@@ -7,50 +7,58 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"net/http"
+	"log"
 	"os"
 
-	"studynook.go/auth"
-	"studynook.go/currentUser"
-	"studynook.go/emails"
-	initializeDB "studynook.go/initializedb"
-	"studynook.go/middleware"
+	"studynook.go/api"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/joho/godotenv"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
-	initializeDB.InitDB()
+	app := &cli.App{
+		Name:    "StudyNook CLI",
+		Version: "v0.0.1",
+		Usage:   "Developer's tool for the StudyNook app.",
+		Commands: []*cli.Command{
+			{
+				Name:    "serve",
+				Usage:   "run the server on certain port [default: 8080]",
+				Aliases: []string{"s"},
+				Flags: []cli.Flag{
+					&cli.StringFlag{Name: "address", Aliases: []string{"a"}, Value: ":8080", Usage: "Set the address to use for the server"},
+					&cli.StringFlag{Name: "user", Aliases: []string{"u"}, Value: "dev", Usage: "Set the database username in the database connection string"},
+					&cli.StringFlag{Name: "password", Aliases: []string{"p"}, Value: "dev", Usage: "Set the database password in the database connection string"},
+					&cli.StringFlag{Name: "connection", Aliases: []string{"c"}, Value: "5432", Usage: "Set the database port in the database connection string"},
+					&cli.StringFlag{Name: "name", Aliases: []string{"n"}, Value: "studynook", Usage: "Set the database name in the database connection string"},
+				},
+				Action: func(c *cli.Context) error {
+					address := c.String("address")
+					user := c.String("user")
+					password := c.String("password")
+					connection := c.String("connection")
+					name := c.String("name")
 
-	auth.SessionsConfig()
+					if address == "" {
+						return errors.New("Missing Flag: address")
+					}
 
-	err := godotenv.Load(".env.local")
-	if err != nil {
-		fmt.Println(err)
-		return
+					fmt.Println("Serving on port: ", address)
+					err := api.Serve(address, user, password, connection, name)
+					if err != nil {
+						fmt.Println(err)
+						return err
+					}
+					return nil
+				},
+			},
+		},
 	}
 
-	//setting my EMailConfigs variable equal to this Emailer struct taking in environmental variables from my ".env.local"
-	emails.EmailConfigs, err = emails.NewEmailer(os.Getenv("SMTP_USERNAME"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_SERVER"), os.Getenv("SMTP_PORT"))
+	err := app.Run(os.Args)
 	if err != nil {
-		fmt.Println("package main email err", err)
-		return
+		log.Fatal(err)
 	}
-
-	r := chi.NewRouter()
-
-	r.HandleFunc("/api/createUser", auth.CreateUser)
-	r.HandleFunc("/api/loginUser", auth.LoginUser)
-	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
-	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
-	r.HandleFunc("/api/forgotPassword", auth.ForgotPassword)
-	r.HandleFunc("/api/resetPassword", auth.ResetPassword)
-	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
-	r.HandleFunc("/api/deleteAccount", middleware.WithUser(auth.DeleteAccount))
-	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))
-	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
-
-	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }

@@ -10,13 +10,15 @@ import (
 var Conn *pgxpool.Pool
 
 //initializing my database
-func InitDB() {
+func InitDB(user, password, connection, name string) error {
 	var err error
-	connectionString := "postgres://dev:dev@localhost:5432/studynook?sslmode=disable"
+	connectionString := "postgres://" + user + ":" + password + "@localhost:" + connection + "/" + name + "?sslmode=disable"
 	//ran into ALOT of errors here because I was writing: db, err := sql.... which was assigning db to a local variable, not assigning it to the global variable which it is doing now.
+	fmt.Println(connectionString)
 	Conn, err = pgxpool.Connect(context.Background(), connectionString)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		return err
 	}
-	fmt.Println("CONNECTED TO DB")
+	return nil
 }
