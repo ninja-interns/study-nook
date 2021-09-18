@@ -1,14 +1,13 @@
 // ! There is an error with the material UI form control
 
 import * as React from "react"
-// Interfaces
+
 import { TimerInterface } from "../interfaces"
-// Material UI Imports
-import { Button, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core"
-import { useStyles } from "../../../pages/nookingSetup/nookingSetupCss"
+
+import { Button, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 
 const TimerForm = () => {
-    const css = useStyles()
+    // const css = useStyles()
     const [duration, setDuration] = React.useState(0)
 
     const handleCreateTimer = (newTimer: TimerInterface) => {
@@ -45,7 +44,7 @@ const TimerForm = () => {
         handleCreateTimer(newTimer)
     }
 
-    function handleChange(event: React.ChangeEvent<{ value: unknown }>) {
+    function handleChange(event: SelectChangeEvent<number>) {
         setDuration(event.target.value as number)
     }
 
@@ -53,9 +52,9 @@ const TimerForm = () => {
         <div>
             {/* This is the form that takes in the timer input */}
             <form onSubmit={handleSubmit}>
-                <FormControl variant="outlined" className={css.formControl}>
+                <FormControl variant="outlined">
                     <InputLabel htmlFor="outlined-age-native-simple">Timer Duration</InputLabel>
-                    <Select value={duration} onChange={handleChange} label="Timer Duration" className={css.selectEmpty}>
+                    <Select value={duration} onChange={handleChange} label="Timer Duration">
                         <MenuItem value={0}>0</MenuItem>
                         <MenuItem value={5}>5</MenuItem>
                         <MenuItem value={10}>10</MenuItem>

@@ -1,8 +1,8 @@
 import React from "react"
 
 // Material UI imports
-import { Card } from "@material-ui/core"
-import { useStyles } from "./nookingSetupCss"
+import { Card } from "@mui/material"
+import { alpha } from "@mui/material/styles"
 
 // Component Imports
 import TimerForm from "../../components/countdownTimer/form"
@@ -12,14 +12,17 @@ import TodoListApp from "../../components/todoList"
 // import Timer from "../../components/countdownTimer/timer"
 
 const NookingSetup = () => {
-    const css = useStyles()
+    // const css = useStyles()
     return (
-        <Card className={css.container}>
+        <Card
+            sx={{
+                height: "100%",
+                width: "100%",
+                padding: "1rem",
+            }}
+        >
             <TodoListApp />
             <TimerForm />
-            {/* <TodoForm />
-            <TodoList /> */}
-            {/* <Timer /> */}
         </Card>
     )
 }

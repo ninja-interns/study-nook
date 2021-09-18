@@ -1,18 +1,17 @@
 import React from "react"
 import { ContextContainer } from "./contexts/ContextContainer"
 import Routes from "./routes/Routes"
-import { ThemeProvider, createTheme } from "@material-ui/core/styles"
-// import { theme } from "./contexts/themeContext"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
 
-const theme = createTheme({
+const darkTheme = createTheme({
     palette: {
-        type: "dark",
+        mode: "dark",
     },
 })
 
 function App() {
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={darkTheme}>
             <ContextContainer.Provider>
                 <Routes />
             </ContextContainer.Provider>

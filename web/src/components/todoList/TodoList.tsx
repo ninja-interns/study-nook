@@ -2,15 +2,22 @@ import React from "react"
 import { ListItemButton, IconButton, List, ListItem, ListItemIcon, Checkbox, TextField } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { TodoListInterface } from "./interfaces"
-import { useStyles } from "../../pages/nookingSetup/nookingSetupCss"
+// import { useStyles } from "../../pages/nookingSetup/nookingSetupCss"
 
 const TodoList = (props: TodoListInterface) => {
-    const css = useStyles()
+    // const css = useStyles()
 
     if (props.todos === null) return null
 
     return (
-        <List className={css.todoList}>
+        <List
+            sx={{
+                height: "15rem",
+                overflow: "auto",
+                width: "100%",
+                backgroundColor: "grey",
+            }}
+        >
             {props.todos.map((todo) => {
                 const labelId = `checkbox-list-label-${todo.todo_text}`
 
