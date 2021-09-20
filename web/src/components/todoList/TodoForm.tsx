@@ -2,6 +2,7 @@ import * as React from "react"
 import { v4 as uuidv4 } from "uuid"
 import { TodoContent, TodoFormInterface } from "./interfaces"
 import { TextField } from "@mui/material"
+import { alpha } from "@mui/material/styles"
 
 const TodoForm = (props: TodoFormInterface) => {
     // const css = useStyles()
@@ -35,6 +36,11 @@ const TodoForm = (props: TodoFormInterface) => {
     return (
         <form onSubmit={handleSubmit}>
             <TextField variant="outlined" label="Add a todo" inputRef={inputRef} onChange={handleInputChange} color="secondary" />
+            {/* sx=
+            {{
+                position: "absolute",
+                zIndex: "todoForm",
+            }} */}
             {/* <Button type="submit" color="secondary" variant="contained" className={css.todoAddButton}>
                 <AddIcon />
             </Button> */}

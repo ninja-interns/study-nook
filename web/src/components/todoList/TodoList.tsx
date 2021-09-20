@@ -5,8 +5,6 @@ import { TodoListInterface } from "./interfaces"
 // import { useStyles } from "../../pages/nookingSetup/nookingSetupCss"
 
 const TodoList = (props: TodoListInterface) => {
-    // const css = useStyles()
-
     if (props.todos === null) return null
 
     return (
