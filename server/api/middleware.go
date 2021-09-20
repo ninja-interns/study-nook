@@ -1,19 +1,20 @@
-package middleware
+package api
 
 import (
 	"fmt"
 	"net/http"
 
+	"github.com/alexedwards/scs/v2"
 	"studynook.go/auth"
 )
 
 //defining middleware that checks that a user is logged in
 type SecureHandler func(w http.ResponseWriter, r *http.Request, u *auth.User)
 
-func WithUser(next SecureHandler) http.HandlerFunc {
+func WithUser(sessions *scs.SessionManager, next SecureHandler) http.HandlerFunc {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		//getting id from the Session
-		id := auth.SessionManager.GetString(r.Context(), "id")
+		id := sessions.GetString(r.Context(), "id")
 		if id == "" {
 			http.Error(w, "You are not logged in", http.StatusForbidden)
 			return

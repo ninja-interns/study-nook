@@ -5,10 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
-	"github.com/alexedwards/scs/pgxstore"
-	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
 	"studynook.go/db"
@@ -32,16 +29,6 @@ type JsonResponse struct {
 	Message    string `json:"message"`
 	IsValid    bool   `json:"isValid"`
 	IsVerified bool   `json:"isVerified"`
-}
-
-var SessionManager *scs.SessionManager
-
-func SessionsConfig() {
-	SessionManager = scs.New()
-	SessionManager.Store = pgxstore.New(db.Conn)
-	SessionManager.Lifetime = 1000000 * time.Hour
-	SessionManager.Cookie.Persist = true
-	SessionManager.Cookie.HttpOnly = false
 }
 
 //Create token that can be added to users table, both recover password and verify email will use it.
