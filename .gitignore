@@ -3,3 +3,6 @@
 .env.test.local
 .env.production.local
 .env
+MakeFile
+
+node_modules
