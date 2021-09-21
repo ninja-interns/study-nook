@@ -11,7 +11,6 @@ import (
 	"studynook.go"
 
 	"golang.org/x/crypto/bcrypt"
-	"studynook.go/emails"
 )
 
 //creating a struct for the JSON response message
@@ -118,7 +117,7 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 	// json.NewEncoder(w).Encode(response)
 
 	//DEVELOPMENT PRINT EMAIL
-	emails.SendEmail(u.Email, "Verify your email with StudyNook", "emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
+	c.Emailer.SendEmail(u.Email, "Verify your email with StudyNook", "../emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
 	response := JsonResponse{
 		Message: "Success, Please check your email to verify your account!",
 		IsValid: true,
@@ -561,7 +560,7 @@ func (c *Controller) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//sending the email
-	emails.SendEmail(u.Email, "Recover your StudyNook password", "emails/emailTemplates/recoverPassword.html", map[string]string{"name": name, "token": token})
+	c.Emailer.SendEmail(u.Email, "Recover your StudyNook password", "emails/emailTemplates/recoverPassword.html", map[string]string{"name": name, "token": token})
 
 	//if it's all successful, this response will be written back.
 	response := JsonResponse{

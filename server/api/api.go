@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"studynook.go"
 	"studynook.go/db"
+	"studynook.go/emails"
 )
 
 // func Serve(port, user, password, connection, name string) error {
@@ -41,9 +42,10 @@ type Controller struct {
 	DB       *db.DB
 	Sessions *scs.SessionManager
 	Router   chi.Router
+	Emailer  *emails.Emailer
 }
 
-func New(db *db.DB) (*Controller, error) {
+func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	sessionManager := scs.New()
 	sessionManager.Store = pgxstore.New(db.Conn)
 	sessionManager.Lifetime = 1000000 * time.Hour
@@ -52,7 +54,7 @@ func New(db *db.DB) (*Controller, error) {
 
 	r := chi.NewRouter()
 
-	c := &Controller{db, sessionManager, r}
+	c := &Controller{db, sessionManager, r, emailer}
 
 	r.HandleFunc("/api/create_user", c.CreateUser)
 	r.HandleFunc("/api/login_user", c.LoginUser)
