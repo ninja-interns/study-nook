@@ -69,4 +69,4 @@ const LeftBar = () => {
 	)
 }
 
-export default LeftBar
+export { LeftBar }

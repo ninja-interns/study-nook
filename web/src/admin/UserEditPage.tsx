@@ -1,4 +1,4 @@
-import { Box, makeStyles } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
 import DeleteIcon from "@material-ui/icons/Delete"
 import Button from "@material-ui/core/Button"
@@ -7,13 +7,17 @@ import TextField from "@material-ui/core/TextField"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import Container from "@material-ui/core/Container"
-import LeftBar from "./LeftBar"
-import NavBar from "./NavBar"
+import { LeftBar } from "./LeftBar"
+import { NavBar } from "./NavBar"
 import { Link } from "react-router-dom"
 import React, { useState, useRef, useEffect } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import { FormLabel } from "@material-ui/core"
 import { IUser, IErrorMessage, isIErrorMessage } from "./UserCreatePage"
+import { Alert } from "@mui/material"
+import { deleteUserByID } from "./user"
+import { SimpleDialog } from "./SimpleDialog"
+import { DeleteAlertDialog } from "./DeleteAlertDialog"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -40,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	submit: {
 		margin: theme.spacing(0),
+		display: "inline",
 	},
 }))
 
@@ -52,6 +57,9 @@ const UserEditPage = () => {
 	const history = useHistory()
 	const { userID } = useParams<ParamTypes>()
 	const [user, setUser] = useState<IUser>()
+	const [open, setOpen] = useState(false)
+	const [errorOpen, setErrorOpen] = useState(false)
+	const [successOpen, setSuccessOpen] = useState(false)
 
 	const [updatePassword, setUpdatePassword] = useState(false)
 	const [response, setResponse] = useState<IUser | IErrorMessage>()
@@ -68,40 +76,69 @@ const UserEditPage = () => {
 			//Fetch User from the API endpoint
 			fetch(`/admin/users/${userID}`)
 				.then((response) => response.json())
-				.then((json) => setUser(json))
+				.then((json) => (json === undefined ? setIsError(true) : setUser(json)))
 		} catch (err) {
-			console.log(err)
+			setIsError(true)
 		}
 	}, [])
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		// Hitting the API endpoint: UPDATE /admin/users/123
 
-		try {
-			const res = await fetch(`/admin/users/${userID}`, {
-				method: "PUT",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({
-					id: user?.id,
-					username: usernameRef?.current?.value,
-					name: nameRef?.current?.value,
-					email: emailRef?.current?.value,
-					password: passwordRef?.current?.value,
-					isVerified: user?.isVerified,
-					token: user?.token,
-				}),
-			})
+		if (updatePassword) {
+			try {
+				// Hitting the API endpoint: PUT /admin/users/123
+				const res = await fetch(`/admin/users/${userID}`, {
+					method: "PUT",
+					headers: { "content-type": "application/json" },
+					body: JSON.stringify({
+						id: user?.id,
+						username: usernameRef?.current?.value,
+						name: nameRef?.current?.value,
+						email: emailRef?.current?.value,
+						password: passwordRef?.current?.value,
+						isVerified: user?.isVerified,
+						token: user?.token,
+						confirmPassword: confirmPasswordRef?.current?.value,
+					}),
+				})
 
-			const data: IUser | IErrorMessage = await res.json()
-			if (res.status === 200 && !isIErrorMessage(data)) {
-				history.push("/admin/users")
-			} else {
-				setIsError(true)
-				setResponse(data)
+				const data: IUser | IErrorMessage = await res.json()
+				if (res.status === 200 && !isIErrorMessage(data)) {
+					history.push("/admin/users")
+				} else {
+					setIsError(true)
+					setResponse(data)
+				}
+			} catch (err) {
+				setErrorOpen(true)
 			}
-		} catch (err) {
-			console.error(err)
+		} else {
+			try {
+				// Hitting the API endpoint: PUT /admin/user_details_only/123
+				const res = await fetch(`/admin/user_details_only/${userID}`, {
+					method: "PUT",
+					headers: { "content-type": "application/json" },
+					body: JSON.stringify({
+						id: user?.id,
+						username: usernameRef?.current?.value,
+						name: nameRef?.current?.value,
+						email: emailRef?.current?.value,
+						isVerified: user?.isVerified,
+						token: user?.token,
+					}),
+				})
+
+				const data: IUser | IErrorMessage = await res.json()
+				if (res.status === 200 && !isIErrorMessage(data)) {
+					history.push("/admin/users")
+				} else {
+					setIsError(true)
+					setResponse(data)
+				}
+			} catch (err) {
+				setErrorOpen(true)
+			}
 		}
 	}
 
@@ -111,16 +148,17 @@ const UserEditPage = () => {
 		setUser((prevState) => ({ ...prevState, [name]: value } as typeof user))
 	}
 
-	const handleDelete = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+	const handleDelete = async () => {
 		try {
-			const res = await fetch(`/admin/users/${userID}`, {
-				method: "DELETE",
-			})
-			const response: IErrorMessage = await res.json()
-			if (isIErrorMessage(response)) {
+			const msg = await deleteUserByID(userID)
+			console.log(msg)
+			if (msg.isValid) {
+				setSuccessOpen(true)
+			} else {
+				setErrorOpen(true)
 			}
 		} catch (err) {
-			console.log(err)
+			setErrorOpen(true)
 		}
 	}
 
@@ -139,7 +177,13 @@ const UserEditPage = () => {
 								EDIT USER
 							</Typography>
 							<div style={{ display: "flex", justifyContent: "right" }}>
-								<Button color="primary" style={{ maxHeight: "36px", marginRight: "10px" }} startIcon={<DeleteIcon />} variant="contained">
+								<Button
+									color="primary"
+									style={{ maxHeight: "36px", marginRight: "10px" }}
+									startIcon={<DeleteIcon />}
+									variant="contained"
+									onClick={() => setOpen(true)}
+								>
 									DELETE USER
 								</Button>
 								<Link to="/admin/users/create" style={{ textDecoration: "none" }}>
@@ -153,13 +197,6 @@ const UserEditPage = () => {
 						<div className={classes.main}>
 							<form className={classes.form} noValidate onSubmit={handleSubmit}>
 								<Grid container spacing={2}>
-									{isError && (
-										<Grid item xs={12}>
-											<Box component="span" display="inline" color="text.secondary">
-												{response?.message}
-											</Box>
-										</Grid>
-									)}
 									<Grid item xs={12}>
 										<FormLabel>ID</FormLabel>
 									</Grid>
@@ -243,9 +280,11 @@ const UserEditPage = () => {
 										<Grid item xs={12}>
 											<Button
 												color="primary"
+												type="button"
 												style={{ textTransform: "none" }}
 												onClick={() => {
 													setUpdatePassword(true)
+													setIsError(false)
 												}}
 											>
 												Click to update the password.
@@ -294,14 +333,23 @@ const UserEditPage = () => {
 									{updatePassword && (
 										<Grid item xs={12}>
 											<Button
+												type="button"
 												color="primary"
 												style={{ textTransform: "none" }}
 												onClick={() => {
 													setUpdatePassword(false)
+													setIsError(false)
 												}}
 											>
 												Click to not update the password.
 											</Button>
+										</Grid>
+									)}
+									{isError && (
+										<Grid item xs={12}>
+											<Alert severity="error">
+												{response?.message === undefined ? "Internal server error. Try again." : response.message}
+											</Alert>
 										</Grid>
 									)}
 									<Grid item xs={4} sm={4}>
@@ -311,6 +359,25 @@ const UserEditPage = () => {
 									</Grid>
 								</Grid>
 							</form>
+
+							<DeleteAlertDialog
+								title="Delete User?"
+								message="Are you sure you want to delete this user?"
+								open={open}
+								setOpen={setOpen}
+								onConfirm={handleDelete}
+							/>
+
+							<SimpleDialog open={errorOpen} title="Error" message="Internal server error!" setOpen={setErrorOpen} onConfirm={() => {}} />
+							<SimpleDialog
+								open={successOpen}
+								title="Success"
+								message="Successfully deleted the user."
+								setOpen={setSuccessOpen}
+								onConfirm={() => {
+									history.push("/admin/users")
+								}}
+							/>
 						</div>
 					</Container>
 				</Grid>
@@ -319,4 +386,4 @@ const UserEditPage = () => {
 	)
 }
 
-export default UserEditPage
+export { UserEditPage }

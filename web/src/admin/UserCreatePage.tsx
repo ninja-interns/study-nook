@@ -1,12 +1,13 @@
-import { Box, makeStyles } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core"
+import Alert from "@mui/material/Alert"
 import Button from "@material-ui/core/Button"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import TextField from "@material-ui/core/TextField"
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import Container from "@material-ui/core/Container"
-import LeftBar from "./LeftBar"
-import NavBar from "./NavBar"
+import { LeftBar } from "./LeftBar"
+import { NavBar } from "./NavBar"
 import { Link } from "react-router-dom"
 import React, { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
@@ -55,8 +56,8 @@ export interface IErrorMessage {
 	isValid: boolean
 }
 
-// Checks if the response is IErrorMessage or not
-export const isIErrorMessage = (response: IUser | IErrorMessage | undefined): response is IErrorMessage => {
+// isErrorMessage checks if the response is IErrorMessage or not
+const isIErrorMessage = (response: IUser | IErrorMessage | undefined): response is IErrorMessage => {
 	if (response !== undefined) {
 		return (response as IErrorMessage).message !== undefined
 	}
@@ -87,6 +88,7 @@ const UserCreatePage = () => {
 					name: nameRef?.current?.value,
 					email: emailRef?.current?.value,
 					password: passwordRef?.current?.value,
+					confirmPassword: confirmPasswordRef?.current?.value,
 				}),
 			})
 
@@ -98,7 +100,7 @@ const UserCreatePage = () => {
 				setResponse(data)
 			}
 		} catch (err) {
-			console.error(err)
+			setIsError(true)
 		}
 	}
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -128,13 +130,6 @@ const UserCreatePage = () => {
 						<div className={classes.main}>
 							<form className={classes.form} noValidate onSubmit={handleSubmit}>
 								<Grid container spacing={2}>
-									{isError && (
-										<Grid item xs={12}>
-											<Box component="span" display="inline" color="text.secondary">
-												{response?.message}
-											</Box>
-										</Grid>
-									)}
 									<Grid item xs={12}>
 										<TextField
 											variant="outlined"
@@ -203,6 +198,13 @@ const UserCreatePage = () => {
 											onChange={handleChange}
 										/>
 									</Grid>
+									{isError && (
+										<Grid item xs={12}>
+											<Alert severity="error">
+												{response?.message === undefined ? "Internal server error! Try again." : response.message}
+											</Alert>
+										</Grid>
+									)}
 									<Grid item xs={4} sm={4}>
 										<Button name="submit" type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
 											SUBMIT
@@ -217,4 +219,4 @@ const UserCreatePage = () => {
 		</div>
 	)
 }
-export default UserCreatePage
+export { UserCreatePage, isIErrorMessage }

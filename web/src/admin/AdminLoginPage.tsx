@@ -13,10 +13,11 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from "@material-ui/core/styles"
 import Container from "@material-ui/core/Container"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
+import Alert from "@mui/material/Alert"
 
-function Copyright() {
+const Copyright = () => {
 	return (
 		<Typography variant="body2" color="textSecondary" align="center">
 			{"Copyright © "}
@@ -48,32 +49,39 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(3, 0, 2),
 	},
 }))
+interface IResponse {
+	message: string
+	isValid: boolean
+}
 
 const AdminLoginPage = () => {
 	const classes = useStyles()
 	const emailRef = useRef<HTMLInputElement>()
 	const passwordRef = useRef<HTMLInputElement>()
+	const [isError, setIsError] = useState(false)
+	const [response, setResponse] = useState<IResponse>()
 
 	let history = useHistory()
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
-		// Hitting the backend with POST request
+		// Hitting the backend POST /admin/login
 		try {
-			//Fake API endpoint, responds JWT
-			// const response = await fetch("https://mocki.io/v1/551c5c52-83a6-4420-934f-cfd7c67c37f8", {
-			// 	method: "POST",
-			// 	headers: { "content-type": "application/json" },
-			// 	body: JSON.stringify({ email: emailRef?.current?.value, password: passwordRef?.current?.value }),
-			// })
-			// Awaiting the JWT
-			const response = await fetch("https://mocki.io/v1/551c5c52-83a6-4420-934f-cfd7c67c37f8") //Fake REST API, gives the exact JSON, will be replaced with original one
-			const { data } = await response.json()
+			const res = await fetch("/admin/login", {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ email: emailRef?.current?.value, password: passwordRef?.current?.value }),
+			})
+			const data: IResponse = await res.json()
 			console.log(data)
-			localStorage.setItem("token", data)
-			history.push("/admin/dashboard")
+			if (res.status === 200 && data.isValid) {
+				history.push("/admin/dashboard")
+			} else {
+				setResponse(data)
+				setIsError(true)
+			}
 		} catch (err) {
-			console.error(err)
+			setIsError(true)
 		}
 	}
 
@@ -113,9 +121,11 @@ const AdminLoginPage = () => {
 							autoComplete="current-password"
 							inputRef={passwordRef}
 						/>
+						{isError && <Alert severity="error">{response?.message === undefined ? "Internal server error! Try again." : response.message}</Alert>}
+
 						<FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
 						<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
-							Sign In
+							Log In
 						</Button>
 					</form>
 				</div>
@@ -127,4 +137,4 @@ const AdminLoginPage = () => {
 	)
 }
 
-export default AdminLoginPage
+export { AdminLoginPage }

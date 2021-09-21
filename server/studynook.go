@@ -9,19 +9,22 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"studynook.go/api"
 	"studynook.go/auth"
 	"studynook.go/currentUser"
-	"studynook.go/db"
+	"studynook.go/emails"
+	initializeDB "studynook.go/initializedb"
 	"studynook.go/middleware"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 
-	err := db.Initialize()
+	err := initializeDB.InitDB()
 	if err != nil {
 		panic(err)
 	} else {
@@ -30,18 +33,18 @@ func main() {
 
 	auth.SessionsConfig()
 
-	// err = godotenv.Load(".env.local")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	return
-	// }
+	err = godotenv.Load(".env.local")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	// //setting my EMailConfigs variable equal to this Emailer struct taking in environmental variables from my ".env.local"
-	// emails.EmailConfigs, err = emails.NewEmailer(os.Getenv("SMTP_USERNAME"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_SERVER"), os.Getenv("SMTP_PORT"))
-	// if err != nil {
-	// 	fmt.Println("package main email err", err)
-	// 	return
-	// }
+	//setting my EMailConfigs variable equal to this Emailer struct taking in environmental variables from my ".env.local"
+	emails.EmailConfigs, err = emails.NewEmailer(os.Getenv("SMTP_USERNAME"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_SERVER"), os.Getenv("SMTP_PORT"))
+	if err != nil {
+		fmt.Println("package main email err", err)
+		return
+	}
 
 	r := chi.NewRouter()
 
@@ -57,14 +60,16 @@ func main() {
 	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
 
 	// Admin API endpoints
-	r.Route("/admin/users", func(r chi.Router) {
-		r.Post("/", api.UserCreateHandler) // POST /admin/users
-		r.Get("/", api.UserGetAllHandler)  // GET /admin/users
-		r.Route("/{userID}", func(r chi.Router) {
+	r.Route("/admin", func(r chi.Router) {
+		r.Post("/login", api.AdminLoginHandler)
+		r.Post("/users", api.UserCreateHandler) // POST /admin/users
+		r.Get("/users", api.UserGetAllHandler)  // GET /admin/users
+		r.Route("/users/{userID}", func(r chi.Router) {
 			r.Get("/", api.UserGetHandler)       // GET /admin/users/123
 			r.Put("/", api.UserUpdateHandler)    // PUT /admin/users/123
 			r.Delete("/", api.UserDeleteHandler) // DELETE /admin/users/123
 		})
+		r.Put("/user_details_only/{userID}", api.UserUpdateExceptPasswordHandler)
 	})
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))

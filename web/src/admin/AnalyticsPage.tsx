@@ -1,6 +1,7 @@
 import { Grid, makeStyles, Container } from "@material-ui/core"
-import NavBar from "./NavBar"
-import LeftBar from "./LeftBar"
+import { NavBar } from "./NavBar"
+import { LeftBar } from "./LeftBar"
+import { UserListGrid } from "./UserListGrid"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -18,11 +19,13 @@ const AnalyticsPage = () => {
 					<LeftBar />
 				</Grid>
 				<Grid item sm={10} xs={10}>
-					<Container className={classes.container}>Analytics</Container>
+					<Container className={classes.container}>
+						<UserListGrid />
+					</Container>
 				</Grid>
 			</Grid>
 		</div>
 	)
 }
 
-export default AnalyticsPage
+export { AnalyticsPage }

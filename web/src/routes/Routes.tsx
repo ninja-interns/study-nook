@@ -1,4 +1,3 @@
-import React from "react"
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom"
 import {
 	HomePage,
@@ -14,13 +13,14 @@ import {
 	UpdatePassword,
 } from "../pages"
 import { PrivateRoute } from "./PrivateRoute"
-import AdminDashboard from "../admin/AdminDashboard"
+import { AdminDashboard } from "../admin/AdminDashboard"
 import { LastLocationProvider } from "react-router-last-location"
-import AdminLoginPage from "../admin/AdminLoginPage"
-import CreateUserPage from "../admin/UserCreatePage"
-import UserListPage from "../admin/UserListPage"
-import AnalyticsPage from "../admin/AnalyticsPage"
-import UserEditPage from "../admin/UserEditPage"
+import { AdminLoginPage } from "../admin/AdminLoginPage"
+import { UserCreatePage } from "../admin/UserCreatePage"
+import { UserListPage } from "../admin/UserListPage"
+import { AnalyticsPage } from "../admin/AnalyticsPage"
+import { UserEditPage } from "../admin/UserEditPage"
+
 const Routes = () => {
 	return (
 		<Router>
@@ -37,17 +37,17 @@ const Routes = () => {
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
 
-					<Route exact path="/admin">
-						<AdminLoginPage />
-					</Route>
-					<Route path="/admin/dashboard">
+					<Route exact path="/admin/dashboard">
 						<AdminDashboard />
+					</Route>
+					<Route exact path="/admin/login">
+						<AdminLoginPage />
 					</Route>
 					<Route exact path="/admin/users">
 						<UserListPage />
 					</Route>
 					<Route exact path="/admin/users/create">
-						<CreateUserPage />
+						<UserCreatePage />
 					</Route>
 					<Route path="/admin/users/:userID">
 						<UserEditPage />

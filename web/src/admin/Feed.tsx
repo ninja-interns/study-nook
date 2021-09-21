@@ -1,14 +1,7 @@
 import { Container, makeStyles } from "@material-ui/core"
 
-const useStyles = makeStyles((theme) => ({
-	container: {
-		paddingTop: theme.spacing(10),
-	},
-}))
-
 const Feed = () => {
-	const classes = useStyles()
-	return <Container className={classes.container}>Hello World</Container>
+	return <>Hello World</>
 }
 
-export default Feed
+export { Feed }

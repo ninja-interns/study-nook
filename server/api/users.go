@@ -30,7 +30,6 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id, err := uuid.NewV4()
-	user.ID = id.String()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := &ErrorResponse{
@@ -41,9 +40,9 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
+	user.ID = id.String()
 
 	token, err := uuid.NewV4()
-	user.Token = token.String()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := &ErrorResponse{
@@ -53,6 +52,7 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
+	user.Token = token.String()
 
 	user.IsVerified = true
 
@@ -61,6 +61,16 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		response := &ErrorResponse{
 			Message: err.Error(),
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	if !user.PasswordConfirmation() {
+		w.WriteHeader(http.StatusBadRequest)
+		response := &ErrorResponse{
+			Message: "Entered passwords are not same.",
 			IsValid: false,
 		}
 		json.NewEncoder(w).Encode(response)
@@ -84,7 +94,8 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If it reaches here, everything is okay, sends back the created user without the password and hashed password
-	user.Password = "" // Password set to empty string so JSON encoder can suppress the output of this field
+	user.Password = "" // Set to empty string so JSON encoder can suppress the output of this field
+	user.ConfirmPassword = ""
 	json.NewEncoder(w).Encode(user)
 
 }
@@ -95,6 +106,11 @@ func UserGetAllHandler(w http.ResponseWriter, r *http.Request) {
 	userList, err := db.GetAllUsers(context.Background())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		response := &ErrorResponse{
+			Message: "Internal server error",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -110,6 +126,11 @@ func UserGetHandler(w http.ResponseWriter, r *http.Request) {
 	user, err := db.GetUserByID(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
+		response := &ErrorResponse{
+			Message: "User not found.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -146,6 +167,16 @@ func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	if !userData.PasswordConfirmation() {
+		w.WriteHeader(http.StatusBadRequest)
+		response := &ErrorResponse{
+			Message: "Entered passwords are not same.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	hashedPassword, err := util.Hash(userData.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -170,7 +201,8 @@ func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If it reaches here, everything is okay, sends back the created user without the password and hashed password
-	userData.Password = "" // Password set to empty string so JSON encoder can suppress the output of this field
+	userData.Password = "" // Set to empty string so JSON encoder can suppress the output of this field
+	userData.ConfirmPassword = ""
 	json.NewEncoder(w).Encode(userData)
 
 }
@@ -191,6 +223,56 @@ func UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// If it reaches here, everything is okay
-	w.WriteHeader(http.StatusNoContent)
+	response := &ErrorResponse{
+		Message: "Successful deletion!",
+		IsValid: true,
+	}
+	json.NewEncoder(w).Encode(response)
+
+}
+
+// UserUpdateExceptPasswordHandler updates user details except password
+func UserUpdateExceptPasswordHandler(w http.ResponseWriter, r *http.Request) {
+	userID := chi.URLParam(r, "userID")
+	userData := &schema.User{}
+
+	err := json.NewDecoder(r.Body).Decode(userData)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := &ErrorResponse{
+			Message: "Bad request!",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	err = userData.ValidateIgnorePassword()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := &ErrorResponse{
+			Message: err.Error(),
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+
+	}
+
+	err = db.UpdateUserExceptPassword(context.Background(), userID, userData)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := &ErrorResponse{
+			Message: "Your username or email has already been used!",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	// If it reaches here, everything is okay, sends back the created user without the password and hashed password
+	userData.Password = "" // Set to empty string so JSON encoder can suppress the output of this field
+	userData.ConfirmPassword = ""
+	json.NewEncoder(w).Encode(userData)
 
 }

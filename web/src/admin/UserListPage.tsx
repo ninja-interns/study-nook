@@ -1,7 +1,7 @@
 import { Grid, Container, makeStyles } from "@material-ui/core"
-import NavBar from "./NavBar"
-import LeftBar from "./LeftBar"
-import UserListGrid from "./UserListGrid"
+import { NavBar } from "./NavBar"
+import { LeftBar } from "./LeftBar"
+import { UserListGrid } from "./UserListGrid"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -28,4 +28,4 @@ const UserListPage = () => {
 	)
 }
 
-export default UserListPage
+export { UserListPage }

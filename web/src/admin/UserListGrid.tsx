@@ -7,6 +7,10 @@ import CheckIcon from "@material-ui/icons/Check"
 import ClearIcon from "@material-ui/icons/Clear"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+import { deleteUserByID } from "./user"
+import { IUser } from "./UserCreatePage"
+import { SimpleDialog } from "./SimpleDialog"
+import { DeleteAlertDialog } from "./DeleteAlertDialog"
 
 const useStyles = makeStyles((theme) => ({
 	button: {
@@ -22,15 +26,22 @@ const useStyles = makeStyles((theme) => ({
 const UserListGrid = () => {
 	const classes = useStyles()
 	const [users, setUsers] = useState([])
+	const [open, setOpen] = useState(false)
+	const [userID, setUserID] = useState("")
+	const [errorOpen, setErrorOpen] = useState(false)
+	const [successOpen, setSuccessOpen] = useState(false)
 
 	useEffect(() => {
 		try {
 			//Fetch User list from the API endpoint
 			fetch("/admin/users")
 				.then((response) => response.json())
-				.then((json) => setUsers(json))
+				.then((json) => {
+					setUsers(json)
+					console.log(typeof users)
+				})
 		} catch (err) {
-			console.log(err)
+			setErrorOpen(true)
 		}
 	}, [])
 
@@ -92,7 +103,10 @@ const UserListGrid = () => {
 							color="secondary"
 							className={classes.button}
 							startIcon={<DeleteIcon />}
-							onClick={() => handleDelete(params.row.id)}
+							onClick={() => {
+								setUserID(params.row.id)
+								setOpen(true)
+							}}
 						>
 							Delete
 						</Button>
@@ -102,8 +116,17 @@ const UserListGrid = () => {
 		},
 	]
 
-	const handleDelete = (id: string) => {
-		setUsers(users.filter((user: any) => user.id !== id))
+	const handleDelete = async () => {
+		try {
+			const msg = await deleteUserByID(userID)
+			if (msg.isValid) {
+				setSuccessOpen(true)
+			} else {
+				setErrorOpen(true)
+			}
+		} catch (err) {
+			setErrorOpen(true)
+		}
 	}
 
 	return (
@@ -120,8 +143,25 @@ const UserListGrid = () => {
 			</div>
 
 			<DataGrid rows={users} columns={columns} pageSize={8} checkboxSelection disableSelectionOnClick />
+
+			<DeleteAlertDialog
+				title="Delete User?"
+				message="Are you sure you want to delete this user?"
+				open={open}
+				setOpen={setOpen}
+				onConfirm={handleDelete}
+			/>
+
+			<SimpleDialog open={errorOpen} title="Error" message="Internal server error!" setOpen={setErrorOpen} onConfirm={() => {}} />
+			<SimpleDialog
+				open={successOpen}
+				title="Success"
+				message="Successfully deleted the user."
+				setOpen={setSuccessOpen}
+				onConfirm={() => setUsers(users.filter((user: IUser) => user.id !== userID))}
+			/>
 		</div>
 	)
 }
 
-export default UserListGrid
+export { UserListGrid }
