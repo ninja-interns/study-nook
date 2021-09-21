@@ -205,10 +205,13 @@ func (c *Controller) LoginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Hit verify email")
 	var name string
 
 	//getting the URL parameter from the GET request and setting it in qCode
 	qCode := chi.URLParam(r, "code")
+
+	fmt.Println(qCode)
 
 	//querying my database for the code- if a row doesn't come back, queryRow will throw an error.
 	sqlStatement := `
@@ -216,6 +219,7 @@ func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 
 	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&name)
 	if err != nil {
+		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Couldn't find your account, please double check your code.",
 			IsValid: false,
@@ -560,7 +564,7 @@ func (c *Controller) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//sending the email
-	c.Emailer.SendEmail(u.Email, "Recover your StudyNook password", "emails/emailTemplates/recoverPassword.html", map[string]string{"name": name, "token": token})
+	c.Emailer.SendEmail(u.Email, "Recover your StudyNook password", "../emails/emailTemplates/recoverPassword.html", map[string]string{"name": name, "token": token})
 
 	//if it's all successful, this response will be written back.
 	response := JsonResponse{
