@@ -33,7 +33,7 @@ const TimerForm = () => {
     await fetch('/api/deleteTimer')
   }
 
-  function handleChange(event: SelectChangeEvent<number>) {
+  const handleChange = (event: SelectChangeEvent<number>) => {
     setDuration(event.target.value as number)
 
     // Prepare new timer object

@@ -18,9 +18,10 @@ CREATE INDEX IF NOT EXISTS sessions_expiry_idx ON sessions (expiry);
 
 CREATE TABLE IF NOT EXISTS timer (
     -- owner_id text REFERENCES users (id),
+    timer_duration INT,
     owner_id text NOT NULL,
-    finish_time timestamp NOT NULL,
-    is_completed boolean NOT NULL
+    finish_time timestamp,
+    is_completed boolean
 );
 
 CREATE TABLE IF NOT EXISTS todo (
