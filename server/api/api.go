@@ -9,7 +9,7 @@ import (
 	"github.com/alexedwards/scs/pgxstore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
-	"studynook.go/auth"
+	"studynook.go"
 	"studynook.go/db"
 )
 
@@ -52,18 +52,19 @@ func New(db *db.DB) (*Controller, error) {
 
 	r := chi.NewRouter()
 
-	r.HandleFunc("/api/create_user", auth.CreateUser)
-	r.HandleFunc("/api/login_user", auth.LoginUser)
-	r.HandleFunc("/api/verify_email/{code}", auth.VerifyEmail)
-	r.HandleFunc("/api/logout_user", auth.LogoutUser)
-	r.HandleFunc("/api/forgot_password", auth.ForgotPassword)
-	r.HandleFunc("/api/reset_password", auth.ResetPassword)
-	r.HandleFunc("/api/state", WithUser(sessionManager, CurrentUserState))
-	r.HandleFunc("/api/delete_account", WithUser(sessionManager, auth.DeleteAccount))
-	r.HandleFunc("/api/update_user", WithUser(sessionManager, auth.UpdateUser))
-	r.HandleFunc("/api/update_password", WithUser(sessionManager, auth.UpdatePassword))
-
 	c := &Controller{db, sessionManager, r}
+
+	r.HandleFunc("/api/create_user", c.CreateUser)
+	r.HandleFunc("/api/login_user", c.LoginUser)
+	r.HandleFunc("/api/verify_email/{code}", c.VerifyEmail)
+	r.HandleFunc("/api/logout_user", c.LogoutUser)
+	r.HandleFunc("/api/forgot_password", c.ForgotPassword)
+	r.HandleFunc("/api/reset_password", c.ResetPassword)
+	r.HandleFunc("/api/state", WithUser(sessionManager, db, CurrentUserState))
+	r.HandleFunc("/api/delete_account", WithUser(sessionManager, db, c.DeleteAccount))
+	r.HandleFunc("/api/update_user", WithUser(sessionManager, db, c.UpdateUser))
+	r.HandleFunc("/api/update_password", WithUser(sessionManager, db, c.UpdatePassword))
+
 	return c, nil
 }
 
@@ -75,7 +76,7 @@ type currentUserState struct {
 }
 
 //will hit when the API from main.go is invoked- can be called from multiple components on frontend using useGetState() from utils folder, custom hook. Backend solution to persisting data through a refresh
-func CurrentUserState(w http.ResponseWriter, r *http.Request, u *auth.User) {
+func CurrentUserState(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 	currentUser := &currentUserState{Email: u.Email,
 		Name:     u.Name,
 		Username: u.Username}

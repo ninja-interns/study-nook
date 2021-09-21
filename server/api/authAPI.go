@@ -1,4 +1,4 @@
-package auth
+package api
 
 import (
 	"context"
@@ -8,21 +8,11 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
-	"studynook.go/db"
+	"studynook.go"
 
 	"golang.org/x/crypto/bcrypt"
 	"studynook.go/emails"
 )
-
-type User struct {
-	ID        string `json:"id"`
-	Email     string `json:"email"`
-	Name      string `json:"name"`
-	Username  string `json:"username"`
-	Password  string `json:"password"`
-	IsVerfied bool   `json:"isVerified"`
-	Token     string `json:"token"`
-}
 
 //creating a struct for the JSON response message
 type JsonResponse struct {
@@ -40,21 +30,9 @@ func CreateToken() (string, error) {
 	return token.String(), nil
 }
 
-func GetUserById(id string) (*User, error) {
-	sqlStatement := `SELECT email, name, username FROM users WHERE id = $1`
-	result := &User{}
-	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&result.Email, &result.Name, &result.Username)
-	if err != nil {
-		return nil, err
-	}
-	result.ID = id
-
-	return result, nil
-}
-
 //will hit when the API from main.go is invoked
-func CreateUser(w http.ResponseWriter, r *http.Request) {
-	u := &User{}
+func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
+	u := &studynook.User{}
 	id, err := uuid.NewV4()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -119,7 +97,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
-	_, err = db.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username, false, token)
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username, false, token)
 	if err != nil {
 		response := JsonResponse{
 			Message: "Your username or email has already been used!",
@@ -149,11 +127,11 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 //will hit when the API from main.go is invoked
-func LoginUser(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) LoginUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	//creating an instance of User struct (defined in createUser.go) to be used to decode our request info into
-	u := &User{}
+	u := &studynook.User{}
 	//initializing variables w/o any value to scan in from our database
 	var id string
 	var email string
@@ -178,7 +156,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	SELECT id, email, password_hash, name, username, is_verified FROM users WHERE email = $1 OR username = $2`
 
 	//scanning the id, email and password from the DB into the created variables above
-	err = db.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerified)
+	err = c.DB.Conn.QueryRow(context.Background(), sqlStatement, u.Email, u.Username).Scan(&id, &email, &password_hash, &name, &username, &isVerified)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := JsonResponse{
@@ -214,10 +192,10 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	//if it reaches this point, the login is successful and writes back a response body to the front end
 	//creating variables in my session
-	SessionManager.Put(r.Context(), "id", id)
-	SessionManager.Put(r.Context(), "name", name)
-	SessionManager.Put(r.Context(), "username", username)
-	SessionManager.Put(r.Context(), "email", email)
+	c.Sessions.Put(r.Context(), "id", id)
+	c.Sessions.Put(r.Context(), "name", name)
+	c.Sessions.Put(r.Context(), "username", username)
+	c.Sessions.Put(r.Context(), "email", email)
 
 	response := JsonResponse{
 		Message:    "Success!",
@@ -227,7 +205,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func VerifyEmail(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	var name string
 
 	//getting the URL parameter from the GET request and setting it in qCode
@@ -237,7 +215,7 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `
 	SELECT name FROM users WHERE token = $1`
 
-	err := db.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&name)
+	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&name)
 	if err != nil {
 		response := JsonResponse{
 			Message: "Couldn't find your account, please double check your code.",
@@ -252,7 +230,7 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	sqlStatement = `
 	UPDATE users SET is_verified = true WHERE token = $1`
 
-	_, err = db.Conn.Exec(context.Background(), sqlStatement, qCode)
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, qCode)
 	if err != nil {
 		response := JsonResponse{
 			Message: "Something went wrong, please try again.",
@@ -276,8 +254,8 @@ type CurrentPassword struct {
 	CurrentPassword string `json:"currentPassword"`
 }
 
-func LogoutUser(w http.ResponseWriter, r *http.Request) {
-	err := SessionManager.Destroy(r.Context())
+func (c *Controller) LogoutUser(w http.ResponseWriter, r *http.Request) {
+	err := c.Sessions.Destroy(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -290,12 +268,12 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
-	id := SessionManager.GetString(r.Context(), "id")
-	c := &CurrentPassword{}
+func (c *Controller) DeleteAccount(w http.ResponseWriter, r *http.Request, u *studynook.User) {
+	id := c.Sessions.GetString(r.Context(), "id")
+	p := &CurrentPassword{}
 	var dbPassword []byte
 
-	err := json.NewDecoder(r.Body).Decode(c)
+	err := json.NewDecoder(r.Body).Decode(p)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
@@ -311,7 +289,7 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 	SELECT password_hash FROM users WHERE id = $1`
 
 	//scanning the id, email and password from the DB into the created variables above
-	err = db.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
+	err = c.DB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
 	if err != nil {
 		response := JsonResponse{
 			Message:    "Something went wrong, please try again.",
@@ -324,7 +302,7 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 	}
 
 	//comparing the password from the DB and from the users input. If theres an error, it writes a response body to send to the front end.
-	err = bcrypt.CompareHashAndPassword(dbPassword, []byte(c.CurrentPassword))
+	err = bcrypt.CompareHashAndPassword(dbPassword, []byte(p.CurrentPassword))
 	if err != nil {
 		fmt.Println(err)
 		response := JsonResponse{
@@ -338,7 +316,7 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 	}
 
 	sqlStatement = `DELETE FROM users WHERE id = $1`
-	_, err = db.Conn.Exec(context.Background(), sqlStatement, id)
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
@@ -349,7 +327,7 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 		return
 	}
 
-	err = SessionManager.Destroy(r.Context())
+	err = c.Sessions.Destroy(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
@@ -367,8 +345,8 @@ func DeleteAccount(w http.ResponseWriter, r *http.Request, u *User) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
-	p := &User{}
+func (c *Controller) UpdateUser(w http.ResponseWriter, r *http.Request, u *studynook.User) {
+	p := &studynook.User{}
 	j := &JsonResponse{}
 	var dbPassword []byte
 	err := json.NewDecoder(r.Body).Decode(p)
@@ -390,7 +368,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	sqlStatement := `SELECT password_hash FROM users WHERE id = $1`
 
 	//scanning the id password from the DB into the created variables above
-	err = db.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
+	err = c.DB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		j.IsValid = false
@@ -412,7 +390,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 	sqlStatement = `UPDATE users SET username = $2, name = $3 WHERE id = $1`
 
 	//scanning the id password from the DB into the created variables above
-	_, err = db.Conn.Exec(context.Background(), sqlStatement, u.ID, p.Username, p.Name)
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, u.ID, p.Username, p.Name)
 	if err != nil {
 		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -430,7 +408,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request, u *User) {
 }
 
 //this function will be used in update password and recover password. recover password will need a token check but that will be checked before this function runs
-func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation string) (response JsonResponse, err error) {
+func (c *Controller) generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation string) (response JsonResponse, err error) {
 	//declaring where our hashed password from the database will be scanned into
 	var dbPassword []byte
 	passwordLength := len(newPass)
@@ -438,7 +416,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	sqlStatement := `SELECT password_hash FROM users WHERE id = $1`
 
 	//scanning the id password from the DB into the created variables above
-	err = db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&dbPassword)
+	err = c.DB.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&dbPassword)
 	if err != nil {
 		response = JsonResponse{
 			Message: "Something went wrong, please try again.",
@@ -479,7 +457,7 @@ func generalUpdatePassword(id, currentPassword, newPass, newPassConfirmation str
 	//updating our database to the new hashed password
 	sqlStatement = `
 	UPDATE users SET password_hash = $1 WHERE id = $2`
-	_, err = db.Conn.Exec(context.Background(), sqlStatement, newHashedPassword, id)
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, newHashedPassword, id)
 	if err != nil {
 		response = JsonResponse{
 			Message: "Something went wrong, please try again.",
@@ -502,7 +480,7 @@ type updatePasswordJSON struct {
 	Confirmation    string `json:"confirmation"`
 }
 
-func UpdatePassword(w http.ResponseWriter, r *http.Request, u *User) {
+func (c *Controller) UpdatePassword(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 	p := &updatePasswordJSON{}
 
 	err := json.NewDecoder(r.Body).Decode(p)
@@ -516,7 +494,7 @@ func UpdatePassword(w http.ResponseWriter, r *http.Request, u *User) {
 		return
 	}
 
-	response, err := generalUpdatePassword(u.ID, p.CurrentPassword, p.NewPassword, p.Confirmation)
+	response, err := c.generalUpdatePassword(u.ID, p.CurrentPassword, p.NewPassword, p.Confirmation)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(response)
@@ -525,8 +503,8 @@ func UpdatePassword(w http.ResponseWriter, r *http.Request, u *User) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func ForgotPassword(w http.ResponseWriter, r *http.Request) {
-	u := &User{}
+func (c *Controller) ForgotPassword(w http.ResponseWriter, r *http.Request) {
+	u := &studynook.User{}
 	var name string
 
 	err := json.NewDecoder(r.Body).Decode(u)
@@ -544,7 +522,7 @@ func ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `
 	SELECT name FROM users WHERE email = $1`
 
-	err = db.Conn.QueryRow(context.Background(), sqlStatement, u.Email).Scan(&name)
+	err = c.DB.Conn.QueryRow(context.Background(), sqlStatement, u.Email).Scan(&name)
 	if err != nil {
 		response := JsonResponse{
 			Message: "We couldn't find your email.",
@@ -571,7 +549,7 @@ func ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	sqlStatement = `
 	UPDATE users SET token = $2 WHERE email = $1`
 
-	_, err = db.Conn.Exec(context.Background(), sqlStatement, u.Email, token)
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, u.Email, token)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
@@ -600,7 +578,7 @@ type ResetPasswordStruct struct {
 	Confirmation string `json:"confirmation"`
 }
 
-func ResetPassword(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	p := &ResetPasswordStruct{}
 	var dbToken string
 
@@ -639,7 +617,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `
 	SELECT token FROM users WHERE email = $1`
 
-	err = db.Conn.QueryRow(context.Background(), sqlStatement, p.Email).Scan(&dbToken)
+	err = c.DB.Conn.QueryRow(context.Background(), sqlStatement, p.Email).Scan(&dbToken)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := JsonResponse{
@@ -687,7 +665,7 @@ func ResetPassword(w http.ResponseWriter, r *http.Request) {
 	sqlStatement = `
 	UPDATE users SET password_hash = $2, token = $3 WHERE email = $1`
 
-	_, err = db.Conn.Exec(context.Background(), sqlStatement, p.Email, hashedPassword, token)
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, p.Email, hashedPassword, token)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
