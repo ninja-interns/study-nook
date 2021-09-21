@@ -17,7 +17,6 @@ type Emailer struct {
 
 //function that will return the Emailer struct with the parameters passed to it
 func New(username, password, server, port string) (*Emailer, error) {
-
 	return &Emailer{
 		Username: username,
 		Password: password,

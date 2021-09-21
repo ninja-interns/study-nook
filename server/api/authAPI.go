@@ -108,15 +108,6 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	//if it reaches here, everything is okay, sends back a success to the front end via a response
 
-	//PRODUCTION CODE
-	// emails.SendEmail(u.Email, "Verify your email with StudyNook", "emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
-	// response := JsonResponse{
-	// 	Message: "Success, Please check your email to verify your account!",
-	// 	IsValid: true,
-	// }
-	// json.NewEncoder(w).Encode(response)
-
-	//DEVELOPMENT PRINT EMAIL
 	c.Emailer.SendEmail(u.Email, "Verify your email with StudyNook", "../emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
 	response := JsonResponse{
 		Message: "Success, Please check your email to verify your account!",

@@ -93,6 +93,10 @@ func main() {
 						return err
 					}
 					emailer, err := emails.New(euser, epassword, eserver, eport)
+					if err != nil {
+						fmt.Println(err)
+						return err
+					}
 					controller, err := api.New(database, emailer)
 					log.Fatal(http.ListenAndServe(":8080", controller.Sessions.LoadAndSave(controller.Router)))
 					if err != nil {
