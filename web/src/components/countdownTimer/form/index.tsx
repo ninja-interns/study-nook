@@ -1,75 +1,70 @@
 // ! There is an error with the material UI form control
 
-import * as React from "react";
-import { TimerInterface } from "../interfaces";
+import * as React from 'react'
+import {TimerInterface} from '../interfaces'
 import {
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
-} from "@mui/material";
-import { Box, positions } from "@mui/system";
+} from '@mui/material'
+import {Box} from '@mui/system'
 
 const TimerForm = () => {
-  // const css = useStyles()
-  const [duration, setDuration] = React.useState(0);
+  const [duration, setDuration] = React.useState(0)
 
   const handleCreateTimer = (newTimer: TimerInterface) => {
-    deleteTimer();
-    createTimer(newTimer);
-  };
+    deleteTimer()
+    createTimer(newTimer)
+  }
 
   // Creating new timer in DB
   async function createTimer(newTimer: TimerInterface) {
     // Add timer to the database - need to add error handling
-    await fetch("/api/createTimer", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
+    await fetch('/api/createTimer', {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
       body: JSON.stringify(newTimer),
-    });
+    })
   }
 
   async function deleteTimer() {
-    await fetch("/api/deleteTimer");
+    await fetch('/api/deleteTimer')
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     // Prevent the page refreshing
-    event.preventDefault();
+    event.preventDefault()
 
     // Prepare new timer object
     const newTimer: TimerInterface = {
       isPaused: false,
-      time_left: "",
+      time_left: '',
       timer_duration: duration,
-    };
+    }
 
     // Create new timer
-    handleCreateTimer(newTimer);
+    handleCreateTimer(newTimer)
   }
 
   function handleChange(event: SelectChangeEvent<number>) {
-    setDuration(event.target.value as number);
+    setDuration(event.target.value as number)
   }
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{}}>
-      <FormControl variant="outlined">
-        <InputLabel htmlFor="outlined-age-native-simple">
-          Timer Duration
-        </InputLabel>
-        <Select value={duration} onChange={handleChange} label="Timer Duration">
-          <MenuItem value={0}>0</MenuItem>
-          <MenuItem value={5}>5</MenuItem>
-          <MenuItem value={10}>10</MenuItem>
-          <MenuItem value={15}>15</MenuItem>
-        </Select>
-      </FormControl>
-      <Button type="submit">Submit</Button>
-    </Box>
-  );
-};
+    <FormControl fullWidth>
+      <InputLabel htmlFor="outlined-age-native-simple">
+        Timer Duration
+      </InputLabel>
+      <Select value={duration} onChange={handleChange} label="Timer Duration">
+        <MenuItem value={0}>0</MenuItem>
+        <MenuItem value={5}>5</MenuItem>
+        <MenuItem value={10}>10</MenuItem>
+        <MenuItem value={15}>15</MenuItem>
+      </Select>
+    </FormControl>
+  )
+}
 
-export default TimerForm;
+export default TimerForm
