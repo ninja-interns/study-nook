@@ -73,7 +73,6 @@ const AdminLoginPage = () => {
 				body: JSON.stringify({ email: emailRef?.current?.value, password: passwordRef?.current?.value }),
 			})
 			const data: IResponse = await res.json()
-			console.log(data)
 			if (res.status === 200 && data.isValid) {
 				history.push("/admin/dashboard")
 			} else {
