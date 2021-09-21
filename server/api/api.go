@@ -14,30 +14,6 @@ import (
 	"studynook.go/emails"
 )
 
-// func Serve(port, user, password, connection, name string) error {
-// err := db.InitDB(user, password, connection, name)
-// if err != nil {
-// 	return err
-// }
-
-// auth.SessionsConfig()
-
-// err = godotenv.Load(".env.local")
-// if err != nil {
-// 	return err
-// }
-
-//setting my EMailConfigs variable equal to this Emailer struct taking in environmental variables from my ".env.local"
-// emails.EmailConfigs, err = emails.NewEmailer(os.Getenv("SMTP_USERNAME"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_SERVER"), os.Getenv("SMTP_PORT"))
-// if err != nil {
-// 	return err
-// }
-
-// r := routes()
-
-// return nil
-// }
-
 type Controller struct {
 	DB       *db.DB
 	Sessions *scs.SessionManager

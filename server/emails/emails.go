@@ -49,7 +49,6 @@ func (e *Emailer) SendEmail(emailStr string, subjectStr string, file string, dat
 	//calling the parsing function to parse a specific file
 	body, err := ParseTemplate(file, data)
 	if err != nil {
-		fmt.Println("parsing err", err)
 		return
 	}
 
@@ -67,28 +66,6 @@ func (e *Emailer) SendEmail(emailStr string, subjectStr string, file string, dat
 	//sending the email
 	err = smtp.SendMail(address, auth, e.Username, to, message)
 	if err != nil {
-		fmt.Println("emails.go smtp err", err)
 		return
 	}
 }
-
-//FOR USE IN DEVELOPMENT ONLY- set our mail to this instead to just print
-// func DEVSendEmail(emailStr string, subjectStr string, file string, data interface{}) {
-// 	body, err := ParseTemplate(file, data)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return
-// 	}
-
-// 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-// 	address := EmailConfigs.Server + ":" + EmailConfigs.Port
-// 	auth := smtp.PlainAuth("", EmailConfigs.Username, EmailConfigs.Password, EmailConfigs.Server)
-
-// 	to := []string{emailStr}
-// 	subject := "Subject:" + subjectStr + "\n"
-// 	message := []byte(subject + mime + body)
-
-// 	//printing
-// 	fmt.Println("address: ", address, "\n auth: ", auth, "\n to: ", to, "\n subject: ", subjectStr, "\n message: ", message)
-
-// }
