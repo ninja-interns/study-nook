@@ -22,7 +22,7 @@ const TimerForm = () => {
   // Creating new timer in DB
   async function createTimer(newTimer: TimerInterface) {
     // Add timer to the database - need to add error handling
-    await fetch('/api/createTimer', {
+    await fetch('/api/createTimerDuration', {
       method: 'POST',
       headers: {'content-type': 'application/json'},
       body: JSON.stringify(newTimer),
@@ -33,9 +33,8 @@ const TimerForm = () => {
     await fetch('/api/deleteTimer')
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    // Prevent the page refreshing
-    event.preventDefault()
+  function handleChange(event: SelectChangeEvent<number>) {
+    setDuration(event.target.value as number)
 
     // Prepare new timer object
     const newTimer: TimerInterface = {
@@ -46,10 +45,6 @@ const TimerForm = () => {
 
     // Create new timer
     handleCreateTimer(newTimer)
-  }
-
-  function handleChange(event: SelectChangeEvent<number>) {
-    setDuration(event.target.value as number)
   }
 
   return (
