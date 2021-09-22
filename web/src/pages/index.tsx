@@ -12,4 +12,4 @@ export * from "./updateUser";
 export * from "./deletedAccountPage";
 export * from "./forgotPassword";
 export * from "./resetPassword";
-export * from "./svgsTesting";
+export * from "./expTesting";

@@ -15,6 +15,7 @@ import (
 	"studynook.go/currentUser"
 	"studynook.go/emails"
 	initializedb "studynook.go/initializedb"
+	"studynook.go/levelExperience"
 	"studynook.go/middleware"
 	"studynook.go/report"
 
@@ -54,6 +55,8 @@ func main() {
 	r.HandleFunc("/api/delete_account", middleware.WithUser(auth.DeleteAccount))
 	r.HandleFunc("/api/update_user", middleware.WithUser(auth.UpdateUser))
 	r.HandleFunc("/api/update_password", middleware.WithUser(auth.UpdatePassword))
+	r.HandleFunc("/api/get_level", middleware.WithUser(levelExperience.GetLevelHandler))
+	r.HandleFunc("/api/calculate_exp", middleware.WithUser(levelExperience.CalculateEXPHandler))
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }
