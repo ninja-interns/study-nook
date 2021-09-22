@@ -35,7 +35,6 @@ func (c *Controller) SubmitReports(w http.ResponseWriter, r *http.Request, u *st
 	report := &Report{}
 	err := json.NewDecoder(r.Body).Decode(report)
 	if err != nil {
-		fmt.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -63,7 +62,11 @@ func (c *Controller) SubmitReports(w http.ResponseWriter, r *http.Request, u *st
 		}
 
 		// Send email to Study Nook office gmail with report ID, username, date and report content
-		emails.Send(*c.Emailer, "studynookapp@gmail.com", "Submission Report", "emails/emailTemplates/reportSubmission.html", map[string]string{"id": submission_id, "username": report.Username, "message": report.Message, "date": report.Date})
+		err = emails.Send(*c.Emailer, "studynookapp@gmail.com", "Submission Report", "../emails/emailTemplates/reportSubmission.html", map[string]string{"id": submission_id, "username": report.Username, "message": report.Message, "date": report.Date})
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		response := JsonResponse{
 			Message: "Success! Please, wait while the management team review your report. Thanks for your collaboration!",
 			IsValid: true,
