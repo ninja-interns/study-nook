@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"studynook.go/initializedb"
-
 	"github.com/georgysavva/scany/pgxscan"
+	"studynook.go/initializedb"
 	"studynook.go/schema"
 )
 

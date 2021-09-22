@@ -15,7 +15,7 @@ import (
 	"studynook.go/auth"
 	"studynook.go/currentUser"
 	"studynook.go/emails"
-	initializeDB "studynook.go/initializeDB"
+	"studynook.go/initializedb"
 	"studynook.go/middleware"
 	"studynook.go/report"
 
@@ -25,7 +25,7 @@ import (
 
 func main() {
 
-	err := initializeDB.InitDB()
+	err := initializedb.InitDB()
 	if err != nil {
 		panic(err)
 	} else {

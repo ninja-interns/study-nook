@@ -9,7 +9,7 @@ import (
 
 	"studynook.go/auth"
 	"studynook.go/emails"
-	initializeDB "studynook.go/initializeDB"
+	"studynook.go/initializedb"
 )
 
 // Struct to store report data content
@@ -99,7 +99,7 @@ func GetReportID(username string) (string, error) {
 	tempID := 0
 
 	// Execution of query
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempID)
+	err := initializedb.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempID)
 	if err != nil {
 		return "", err
 	}
@@ -114,7 +114,7 @@ func InsertToDB(report *Report) error {
 	sqlQuery := `INSERT INTO reports (username, message) VALUES ($1, $2);`
 
 	// Execution of query
-	_, err := initializeDB.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
+	_, err := initializedb.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
 	if err != nil {
 		return err
 	}
@@ -130,7 +130,7 @@ func ValidateReport(username string) bool {
 
 	tempUsername := ""
 
-	initializeDB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempUsername)
+	initializedb.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempUsername)
 
 	return tempUsername != username
 }
