@@ -53,7 +53,7 @@ const Routes = () => {
 						<UserEditPage />
 					</Route>
 
-					<Route path="/admin/analytics">
+					<Route exact path="/admin/analytics">
 						<AnalyticsPage />
 					</Route>
 

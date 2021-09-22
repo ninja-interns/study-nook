@@ -15,3 +15,10 @@ CREATE TABLE IF NOT EXISTS sessions (
 );
 
 CREATE INDEX IF NOT EXISTS sessions_expiry_idx ON sessions (expiry);
+
+CREATE TABLE IF NOT EXISTS reports (
+    submission_id SERIAL PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    date_submission TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    message TEXT NOT NULL
+);

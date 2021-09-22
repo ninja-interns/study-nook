@@ -11,7 +11,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
-	initializeDB "studynook.go/initializedb"
+	initializeDB "studynook.go/initializeDB"
 
 	"golang.org/x/crypto/bcrypt"
 	"studynook.go/emails"
@@ -134,6 +134,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	//actually inserting a record into the DB, if we get a duplicate error, it will write to the frontend what error it is
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, u.ID, u.Email, hashedPassword, u.Name, u.Username, false, token)
 	if err != nil {
+		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
