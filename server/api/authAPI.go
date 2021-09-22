@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
 	"studynook.go"
+	"studynook.go/emails"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -105,10 +106,13 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(response)
 		return
 	}
-
 	//if it reaches here, everything is okay, sends back a success to the front end via a response
 
-	c.Emailer.SendEmail(u.Email, "Verify your email with StudyNook", "../emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
+	err = emails.Send(*c.Emailer, u.Email, "Verify your email with StudyNook", "../emails/emailTemplates/verifyEmail.html", map[string]string{"name": u.Name, "token": token})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	response := JsonResponse{
 		Message: "Success, Please check your email to verify your account!",
 		IsValid: true,
@@ -551,7 +555,7 @@ func (c *Controller) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//sending the email
-	c.Emailer.SendEmail(u.Email, "Recover your StudyNook password", "../emails/emailTemplates/recoverPassword.html", map[string]string{"name": name, "token": token})
+	emails.Send(*c.Emailer, u.Email, "Recover your StudyNook password", "../emails/emailTemplates/recoverPassword.html", map[string]string{"name": name, "token": token})
 
 	//if it's all successful, this response will be written back.
 	response := JsonResponse{

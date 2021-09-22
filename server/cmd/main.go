@@ -51,6 +51,11 @@ func main() {
 						Usage:   "Set the database name in the database connection string"},
 
 					//emailer configs
+					&cli.BoolFlag{
+						Name:    "production",
+						Aliases: []string{"b"},
+						Value:   false,
+						Usage:   "sets if the emailer will use production code to send to actual email address."},
 					&cli.StringFlag{
 						Name:    "euser",
 						EnvVars: []string{"SMTP_USERNAME"},
@@ -80,6 +85,20 @@ func main() {
 					epassword := c.String("epassword")
 					eserver := c.String("eserver")
 					eport := c.String("eport")
+					production := c.Bool("production")
+
+					var emailer emails.Emailer
+					if production {
+						emailer = &emails.Email{
+							Username: euser,
+							Password: epassword,
+							Server:   eserver,
+							Port:     eport}
+					} else {
+						emailer = &emails.DevEmail{
+							Username: euser,
+						}
+					}
 
 					//initializing the database
 					conn, err := db.Connect(user, password, connection, name)
@@ -92,12 +111,11 @@ func main() {
 						fmt.Println(err)
 						return err
 					}
-					emailer, err := emails.New(euser, epassword, eserver, eport)
+					controller, err := api.New(database, &emailer)
 					if err != nil {
 						fmt.Println(err)
 						return err
 					}
-					controller, err := api.New(database, emailer)
 					log.Fatal(http.ListenAndServe(":8080", controller.Sessions.LoadAndSave(controller.Router)))
 					if err != nil {
 						return err

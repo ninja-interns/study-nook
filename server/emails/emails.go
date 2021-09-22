@@ -7,22 +7,20 @@ import (
 	"net/smtp"
 )
 
-//Emailer struct that will hold the SMTP configs
-type Emailer struct {
+//Email struct that will hold the SMTP configs
+type Email struct {
 	Username string
 	Password string
 	Server   string
 	Port     string
 }
 
-//function that will return the Emailer struct with the parameters passed to it
-func New(username, password, server, port string) (*Emailer, error) {
-	return &Emailer{
-		Username: username,
-		Password: password,
-		Server:   server,
-		Port:     port,
-	}, nil
+type DevEmail struct {
+	Username string
+}
+
+type Emailer interface {
+	SendEmail(emailStr string, subjectStr string, file string, data interface{}) error
 }
 
 //Function to parse the html template so it can be sent via the email body- it also will enter the variable data into the file
@@ -44,11 +42,12 @@ func ParseTemplate(file string, data interface{}) (string, error) {
 }
 
 //Send Email- made it reusable so that both recover password and verify email can use it.
-func (e *Emailer) SendEmail(emailStr string, subjectStr string, file string, data interface{}) {
+func (e *Email) SendEmail(emailStr string, subjectStr string, file string, data interface{}) error {
 	//calling the parsing function to parse a specific file
 	body, err := ParseTemplate(file, data)
 	if err != nil {
-		return
+		fmt.Println("parse", err)
+		return err
 	}
 
 	//necessary when sending HTML in an email
@@ -56,6 +55,7 @@ func (e *Emailer) SendEmail(emailStr string, subjectStr string, file string, dat
 
 	//necessary to be able to send the email
 	address := e.Server + ":" + e.Port
+
 	auth := smtp.PlainAuth("", e.Username, e.Password, e.Server)
 	//Filling our email with variable content
 	to := []string{emailStr}
@@ -65,6 +65,22 @@ func (e *Emailer) SendEmail(emailStr string, subjectStr string, file string, dat
 	//sending the email
 	err = smtp.SendMail(address, auth, e.Username, to, message)
 	if err != nil {
-		return
+		fmt.Println("smtp", err)
+		return err
 	}
+	return nil
+}
+
+func (e *DevEmail) SendEmail(emailStr string, subjectStr string, file string, data interface{}) error {
+	fmt.Println("App is in development mode. If you would like to actually send an email, restart this server like this: $ go run main.go serve -b true" + "\nto: " + emailStr + "\nfrom: " + e.Username + "\nsubject: " + subjectStr + "\nfile: " + file)
+	return nil
+}
+
+func Send(e Emailer, emailStr string, subjectStr string, file string, data interface{}) error {
+	err := e.SendEmail(emailStr, subjectStr, file, data)
+	if err != nil {
+		fmt.Println("Send email", err)
+		return err
+	}
+	return nil
 }
