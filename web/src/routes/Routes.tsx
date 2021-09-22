@@ -11,7 +11,11 @@ import {
 	DeletedAccount,
 	ForgotPassword,
 	ResetPassword,
+	MenuPage,
+	SupportPage,
+	AchievementsPage
 } from "../pages";
+
 import { PrivateRoute } from "./PrivateRoute";
 import { UpdatePassword } from "./../pages/updatePassword/index";
 import { LastLocationProvider } from "react-router-last-location";
@@ -31,6 +35,9 @@ const Routes = () => {
 					<PrivateRoute path="/profile" component={Profile} />
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
+					<PrivateRoute path="/menu" component={MenuPage} />
+					<PrivateRoute path="/support" component={SupportPage} />
+					<PrivateRoute path="/achievements" component={AchievementsPage} />
 					<Route path="/" component={HomePage} />
 				</Switch>
 			</LastLocationProvider>

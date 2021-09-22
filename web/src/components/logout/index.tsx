@@ -25,11 +25,12 @@ export function Logout() {
 		}
 	}
 	return (
-		<>
-			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-			<Button variant="contained" color="secondary" onClick={handleLogout}>
+		<div>
+			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
+			<p onClick={handleLogout}>
 				Logout
-			</Button>
-		</>
+			</p>
+
+		</div>
 	);
 }

@@ -43,6 +43,8 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	r.HandleFunc("/api/update_user", WithUser(sessionManager, db, c.UpdateUser))
 	r.HandleFunc("/api/update_password", WithUser(sessionManager, db, c.UpdatePassword))
 
+	r.HandleFunc("/api/report_submission", WithUser(sessionManager, db, c.SubmitReports))
+
 	return c, nil
 }
 
