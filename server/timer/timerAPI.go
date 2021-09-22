@@ -39,7 +39,6 @@ func SessionsConfig() {
 }
 
 func CreateTimer(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Start of Create Timer")
 	w.Header().Set("Content-Type", "application/json")
 
 	// Getting the logged in userId
@@ -57,11 +56,11 @@ func CreateTimer(w http.ResponseWriter, r *http.Request) {
 
 	// Find the time now and the time that the timer will finish
 	currentTime := time.Now().UTC()
-	finishTime := currentTime.Add((time.Minute * timer.TimerDuration)) // Adding minutes to the timer
+	// finishTime := currentTime.Add((time.Minute * timer.TimerDuration)) // Adding minutes to the timer
+	finishTime := currentTime.Add((time.Minute * 1))
 
 	timer.OwnerId = ownerId
 	timer.FinishTime = finishTime
-	fmt.Println(timer.TimerDuration)
 
 	// Creating an insert in our database
 	sqlStatement = `
@@ -70,7 +69,6 @@ func CreateTimer(w http.ResponseWriter, r *http.Request) {
 	WHERE owner_id=$3`
 
 	// Intserting into Database
-	fmt.Println("Updating timer in database")
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, timer.FinishTime, timer.IsComplete, timer.OwnerId)
 	if err != nil {
 		fmt.Println(err)
@@ -80,7 +78,6 @@ func CreateTimer(w http.ResponseWriter, r *http.Request) {
 
 // import the timer finish time from the user
 func GetTimeLeft(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("getting time left")
 	// Getting the logged in userId
 	ownerId := auth.SessionManager.GetString(r.Context(), "id")
 

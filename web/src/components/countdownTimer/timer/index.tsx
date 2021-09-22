@@ -1,17 +1,18 @@
+// ! If you refresh the page the old timer is deleted and a new one is made - should handle the delete in the database instead?
+
 import { Typography} from '@material-ui/core'
+import { Card, CardContent } from '@mui/material'
 import * as React from 'react'
 import {TimerInterface} from '../interfaces'
 
 const Timer = () => {
   const [mounted, setMounted] = React.useState(false)
-  const [getTimeLeft, setGetTimeLeft] = React.useState(false)
   const [timer, setTimer] = React.useState<TimerInterface>()
   const [ticker, setTicker] = React.useState<number>(0)
 
  // Creating new timer in DB - Runs only once
  React.useEffect(() => {
     async function createTimer() {
-      console.log("creating timer")
       await fetch('/api/createTimer')
     }
     createTimer()
@@ -19,15 +20,18 @@ const Timer = () => {
   }, [])
   
   React.useEffect(() => {
-    async function getTimeLeft() {
-      console.log("getting timer")
-      const response = await fetch("/api/getTimeLeft")
-      const data: TimerInterface = await response.json() // this is where the error is
-      setTimer(data)
-    }
     if (mounted) {
       getTimeLeft()
-      setGetTimeLeft(true)
+    }
+    async function getTimeLeft() {
+      const response = await fetch("/api/getTimeLeft")
+      const data: TimerInterface = await response.json() // this is where the error is
+      if (data.time_left === "0s") {
+        data.time_left = "Timer Finished"
+        setMounted(false)
+        //set is completed in database to true (call a function)
+      } 
+      setTimer(data)
     }
   }, [mounted, ticker])
   
@@ -39,49 +43,13 @@ const Timer = () => {
   }, [])
   
   
-  return <Typography>{timer?.time_left}</Typography>
+  return (
+    <Card sx={{ display: 'flex', width:"50%"}}>
+      <CardContent>
+        <Typography variant="h4">{timer?.time_left}</Typography>
+      </CardContent>
+    </Card>
+  )
 }
 
 export default Timer
-
-// function useInterval(callback, delay) {
-//   const savedCallback = React.useRef();
-
-//   // Remember the latest callback.
-//   React.useEffect(() => {
-//     savedCallback.current = callback;
-//   }, [callback]);
-
-//   // Set up the interval.
-//   React.useEffect(() => {
-//     function tick() {
-//       savedCallback.current();
-//     }
-//     if (delay !== null) {
-//       let id = setInterval(tick, delay);
-//       return () => clearInterval(id);
-//     }
-//   }, [delay]);
-// }
-
-// function Timer() {
-//   let [requestCount, setRequestCount] = React.useState(0);
-
-//   // Run every second
-//   const delay = 1000;
-
-//   useInterval(() => {
-//     // Make the request here
-//     setRequestCount(requestCount + 1);
-//   }, delay);
-
-//   return <h1>{requestCount}</h1>;
-// }
-
-// export default function App() {
-//   return (
-//     <div className="Timer">
-//       <Timer />
-//     </div>
-//   );
-// }

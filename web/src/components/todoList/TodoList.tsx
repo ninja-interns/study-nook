@@ -9,6 +9,8 @@ import {
   ListItemIcon,
   Checkbox,
   Typography,
+  Divider,
+  Card,
 } from '@mui/material'
 
 const TodoList = () => {
@@ -45,14 +47,14 @@ const TodoList = () => {
   }
 
   return (
+    <Card>
+
     <List
       sx={{
-        height: '15rem',
+        height: '10rem',
         overflow: 'auto',
-        width: '100%',
-        backgroundColor: 'grey',
       }}
-    >
+      >
       {todos.map(todo => {
         return (
           <ListItem key={todo.id}>
@@ -60,7 +62,7 @@ const TodoList = () => {
               role={undefined}
               onClick={() => handleTodoComplete(todo)}
               dense
-            >
+              >
               <ListItemIcon>
                 <Checkbox edge="start" />
               </ListItemIcon>
@@ -70,6 +72,7 @@ const TodoList = () => {
         )
       })}
     </List>
+      </Card>
   )
 }
 
