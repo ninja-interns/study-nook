@@ -14,8 +14,9 @@ import (
 	"studynook.go/auth"
 	"studynook.go/currentUser"
 	"studynook.go/emails"
-	initializeDB "studynook.go/initializedb"
+	initializeDB "studynook.go/initializeDB"
 	"studynook.go/middleware"
+	"studynook.go/report"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
@@ -41,16 +42,18 @@ func main() {
 
 	r := chi.NewRouter()
 
-	r.HandleFunc("/api/createUser", auth.CreateUser)
-	r.HandleFunc("/api/loginUser", auth.LoginUser)
-	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
-	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
-	r.HandleFunc("/api/forgotPassword", auth.ForgotPassword)
-	r.HandleFunc("/api/resetPassword", auth.ResetPassword)
+	r.HandleFunc("/api/create_user", auth.CreateUser)
+	r.HandleFunc("/api/login_user", auth.LoginUser)
+	r.HandleFunc("/api/verify_email/{code}", auth.VerifyEmail)
+	r.HandleFunc("/api/logout_user", auth.LogoutUser)
+	r.HandleFunc("/api/forgot_password", auth.ForgotPassword)
+	r.HandleFunc("/api/reset_password", auth.ResetPassword)
+
+	r.HandleFunc("/api/report_submission", middleware.WithUser(report.SubmitReports))
 	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
-	r.HandleFunc("/api/deleteAccount", middleware.WithUser(auth.DeleteAccount))
-	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))
-	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
+	r.HandleFunc("/api/delete_account", middleware.WithUser(auth.DeleteAccount))
+	r.HandleFunc("/api/update_user", middleware.WithUser(auth.UpdateUser))
+	r.HandleFunc("/api/update_password", middleware.WithUser(auth.UpdatePassword))
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }
