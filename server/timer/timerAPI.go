@@ -15,18 +15,17 @@ import (
 )
 
 type Timer struct {
-	OwnerId			string			`json:"owner_id"`
-	TimerDuration 	time.Duration	`json:"timer_duration"`
-	FinishTime 		time.Time 		`json:"finish_time"`
-	TimeLeft 		string			`json:"time_left"`
-	IsComplete 		bool 			`json:"is_completed"`
+	OwnerId       string        `json:"owner_id"`
+	TimerDuration time.Duration `json:"timer_duration"`
+	FinishTime    time.Time     `json:"finish_time"`
+	TimeLeft      string        `json:"time_left"`
+	IsComplete    bool          `json:"is_completed"`
 }
 
 // struct for the reponse message
 type Response struct {
-	Message string 	`json:"message"`
-	IsValid bool 	`json:"isValid"`
-	
+	Message string `json:"message"`
+	IsValid bool   `json:"isValid"`
 }
 
 var SessionManager *scs.SessionManager
@@ -39,54 +38,19 @@ func SessionsConfig() {
 	SessionManager.Cookie.HttpOnly = false
 }
 
-// import the timer finish time from the user
-func GetTimeLeft(w http.ResponseWriter, r *http.Request) {
-	// Getting the logged in userId
-	ownerId := auth.SessionManager.GetString(r.Context(), "id")
-	
-	// Create instance of timer
-	timer := &Timer{}
-
-	sqlStatement := `SELECT finish_time FROM timer WHERE owner_id=$1`
-
-	// Get timer from the database and read into the timer
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, ownerId).Scan(&timer.FinishTime)
-	if err != nil {
-		return
-	}
-	
-	// Find the time left until the finish time
-	// This needs to be converted into my timezone
-	fmt.Println(timer.FinishTime)
-
-
-	finishTime := timer.FinishTime
-	fmt.Println(finishTime)
-	timeUntilFinish := time.Until(finishTime)
-	fmt.Println(timeUntilFinish)
-
-	
-	timer.TimeLeft = timeUntilFinish.Round(time.Second).String()
-	
-
-	fmt.Println(timer.TimeLeft)
-	
-	json.NewEncoder(w).Encode(timer)
-}
-// save the timer on a cookie so if the page refreshes the user can still access it
-
 func CreateTimer(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Start of Create Timer")
 	w.Header().Set("Content-Type", "application/json")
 
 	// Getting the logged in userId
 	ownerId := auth.SessionManager.GetString(r.Context(), "id")
 
 	// Create instance of timer
-	timer := &Timer{}
+	timer := Timer{}
 
-	// Get timer from the database and read into the timer
-	sqlStatement := `SELECT finish_time FROM timer WHERE owner_id=$1`
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, ownerId).Scan(&timer)
+	// Get timer duration from the database and read into the timer
+	sqlStatement := `SELECT timer_duration FROM timer WHERE owner_id=$1`
+	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, ownerId).Scan(&timer.TimerDuration)
 	if err != nil {
 		return
 	}
@@ -94,22 +58,52 @@ func CreateTimer(w http.ResponseWriter, r *http.Request) {
 	// Find the time now and the time that the timer will finish
 	currentTime := time.Now().UTC()
 	finishTime := currentTime.Add((time.Minute * timer.TimerDuration)) // Adding minutes to the timer
-	
+
 	timer.OwnerId = ownerId
 	timer.FinishTime = finishTime
+	fmt.Println(timer.TimerDuration)
 
 	// Creating an insert in our database
 	sqlStatement = `
-	INSERT INTO timer (owner_id, finish_time, is_completed)
-	VALUES ($1, $2, $3)`
+	UPDATE timer 
+	SET finish_time=$1, is_completed=$2
+	WHERE owner_id=$3`
 
 	// Intserting into Database
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, timer.OwnerId, timer.FinishTime, timer.IsComplete)
+	fmt.Println("Updating timer in database")
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, timer.FinishTime, timer.IsComplete, timer.OwnerId)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 }
+
+// import the timer finish time from the user
+func GetTimeLeft(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("getting time left")
+	// Getting the logged in userId
+	ownerId := auth.SessionManager.GetString(r.Context(), "id")
+
+	// Create instance of timer
+	timer := Timer{}
+
+	// Get timer duration from the database and read into the timer
+	sqlStatement := `SELECT finish_time FROM timer WHERE owner_id=$1`
+	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, ownerId).Scan(&timer.FinishTime)
+	if err != nil {
+		return
+	}
+
+	// Calculate the time until the finish time
+	finishTime := timer.FinishTime
+	timeUntilFinish := time.Until(finishTime)
+	timer.TimeLeft = timeUntilFinish.Round(time.Second).String()
+
+	// send the timer back to the front end
+	json.NewEncoder(w).Encode(timer)
+}
+
+// save the timer on a cookie so if the page refreshes the user can still access it
 
 func DeleteTimer(w http.ResponseWriter, r *http.Request) {
 	// Getting the logged in userId
@@ -128,7 +122,7 @@ func CreateTimerDuration(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// Create instance of timer
-	timer := &Timer{}
+	timer := Timer{}
 
 	// Get the user id and set it to the timer id
 	ownerId := auth.SessionManager.GetString(r.Context(), "id")
@@ -139,10 +133,9 @@ func CreateTimerDuration(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	
+
 	// Set the Owner
 	timer.OwnerId = ownerId
-	
 
 	// TODO if there is already a timer with the same id delete the old one
 
@@ -152,7 +145,7 @@ func CreateTimerDuration(w http.ResponseWriter, r *http.Request) {
 	VALUES ($1, $2)`
 
 	// Intserting into Database
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, timer.OwnerId, timer.TimerDuration)
+	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, &timer.OwnerId, &timer.TimerDuration)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -162,9 +155,9 @@ func CreateTimerDuration(w http.ResponseWriter, r *http.Request) {
 func GetTimer(w http.ResponseWriter, r *http.Request) {
 	// Getting the logged in userId
 	ownerId := auth.SessionManager.GetString(r.Context(), "id")
-	
+
 	// Create instance of timer
-	timer := &Timer{}
+	timer := Timer{}
 
 	sqlStatement := `SELECT timer_duration FROM timer WHERE owner_id=$1`
 
@@ -173,6 +166,6 @@ func GetTimer(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	
+
 	json.NewEncoder(w).Encode(timer)
 }

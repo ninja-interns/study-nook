@@ -1,67 +1,76 @@
-import React from "react";
+// ! If you refresh the page the todos will all be set to not completed
+
+import * as React from 'react'
+import {TodoContent} from './interfaces'
 import {
   ListItemButton,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
   Checkbox,
-  TextField,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { TodoListInterface } from "./interfaces";
-// import { useStyles } from "../../pages/nookingSetup/nookingSetupCss"
+  Typography,
+} from '@mui/material'
 
-const TodoList = (props: TodoListInterface) => {
-  if (props.todos === null) return null;
+const TodoList = () => {
+  const [todos, setTodos] = React.useState<TodoContent[]>([])
+  
+  // Get Todos from database
+  React.useEffect(() => {
+    async function getTodoList() {
+      const response = await fetch('/api/getTodos')
+      const data: TodoContent[] = await response.json()
+      setTodos(data)
+      // Add error handling here
+    }
+    getTodoList()
+  })
+  if (todos === null) return null
+
+  async function handleTodoComplete(todoItem: TodoContent) {
+    // Updating todos state
+    const newTodosState: TodoContent[] = [...todos]
+    newTodosState.find(
+      (todo: TodoContent) => todo.id === todoItem.id,
+    )!.is_completed = !newTodosState.find(
+      (todo: TodoContent) => todo.id === todoItem.id,
+    )!.is_completed
+    setTodos(newTodosState)
+
+    // Updating completion status in the database
+    await fetch('/api/updateTodo', {
+      method: 'POST',
+      headers: {'content-type': 'application/json'},
+      body: JSON.stringify(todoItem),
+    })
+  }
 
   return (
     <List
       sx={{
-        height: "15rem",
-        overflow: "auto",
-        width: "100%",
-        backgroundColor: "grey",
+        height: '15rem',
+        overflow: 'auto',
+        width: '100%',
+        backgroundColor: 'grey',
       }}
     >
-      {props.todos.map((todo) => {
-        const labelId = `checkbox-list-label-${todo.todo_text}`;
-
+      {todos.map(todo => {
         return (
           <ListItem key={todo.id}>
             <ListItemButton
               role={undefined}
-              onClick={() => props.handleTodoComplete(todo)}
+              onClick={() => handleTodoComplete(todo)}
               dense
             >
               <ListItemIcon>
                 <Checkbox edge="start" />
               </ListItemIcon>
-              <TextField
-                id={labelId}
-                variant="standard"
-                // className={css.todoInput}
-                required
-                value={todo.todo_text}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  props.handleTodoUpdate(event, todo)
-                }
-                error={todo.todo_text === ""}
-                // helperText={todo.todo_text === "" ? "Empty field!" : " "}
-              />
+              <Typography>{todo.todo_text}</Typography>
             </ListItemButton>
-            <IconButton
-              edge="end"
-              aria-label="delete"
-              onClick={() => props.handleTodoRemove(todo)}
-            >
-              <DeleteIcon />
-            </IconButton>
           </ListItem>
-        );
+        )
       })}
     </List>
-  );
-};
+  )
+}
 
-export default TodoList;
+export default TodoList

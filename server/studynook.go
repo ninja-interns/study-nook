@@ -30,7 +30,7 @@ func main() {
 
 	auth.SessionsConfig()
 	todo.SessionsConfig()
-	
+
 	err := godotenv.Load(".env.local")
 	if err != nil {
 		fmt.Println(err)

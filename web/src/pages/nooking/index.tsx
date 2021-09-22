@@ -9,12 +9,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 import AppBar from '@mui/material/AppBar'
 import MenuIcon from '@mui/icons-material/Menu'
-
-// Component Imports
-import TimerForm from '../../components/countdownTimer/form'
-import TodoListApp from '../../components/todoList'
-import {useGetState} from '../../utils/getState'
-import {useHistory} from 'react-router-dom'
+import TodoList from '../../components/todoList/TodoListForm'
 
 const ColorModeContext = React.createContext({toggleColorMode: () => {}})
 
