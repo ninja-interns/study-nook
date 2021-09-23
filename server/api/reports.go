@@ -62,6 +62,7 @@ func (c *Controller) SubmitReports(w http.ResponseWriter, r *http.Request, u *st
 		}
 
 		// Send email to Study Nook office gmail with report ID, username, date and report content
+		// because we initialize the Emailer into our API Controller struct in our server/cmd, we have access to it via `c.Emailer`. this Emailer can either of struct type production Emails or DevEmails and will use the specified structs Send method to execute the function.
 		err = emails.Send(*c.Emailer, "studynookapp@gmail.com", "Submission Report", "../emails/emailTemplates/reportSubmission.html", map[string]string{"id": submission_id, "username": report.Username, "message": report.Message, "date": report.Date})
 		if err != nil {
 			fmt.Println(err)

@@ -21,6 +21,7 @@ type Controller struct {
 	Emailer  *emails.Emailer
 }
 
+//initializes our Controller, this is called in the server/cmd main.go file and makes the db, sessions, router and emailer available to all Controller methods in the API package
 func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	sessionManager := scs.New()
 	sessionManager.Store = pgxstore.New(db.Conn)

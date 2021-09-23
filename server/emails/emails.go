@@ -7,7 +7,7 @@ import (
 	"net/smtp"
 )
 
-//Email struct that will hold the SMTP configs
+//Production Email struct that will hold all of the SMTP configs
 type Email struct {
 	Username string
 	Password string
@@ -15,10 +15,12 @@ type Email struct {
 	Port     string
 }
 
+//Dev Email struct that only hold the username
 type DevEmail struct {
 	Username string
 }
 
+//this interface defined the necessary methods a struct needs to have in order to satisfy the Emailer type. This means that both Email and DevEmail are of type Emailer as they both have a method of SendEmail() defined (below). This is how we are able to set our emailer in our server/cmd main.go file with the boolean flags. Check out the Send() function below that will take in this variable Emailer and use it to execute different functions.
 type Emailer interface {
 	SendEmail(emailStr string, subjectStr string, file string, data interface{}) error
 }
@@ -76,6 +78,7 @@ func (e *DevEmail) SendEmail(emailStr string, subjectStr string, file string, da
 	return nil
 }
 
+//This function takes in the emailer that we set in our server/cmd main.go and executes the specified SendEmail function that will either actually send off the emailer or just print it out for dev purposes. Check out server/api reports.go > emails.Send() to see how it will be used
 func Send(e Emailer, emailStr string, subjectStr string, file string, data interface{}) error {
 	err := e.SendEmail(emailStr, subjectStr, file, data)
 	if err != nil {

@@ -1,5 +1,8 @@
 package studynook
 
+//run your `go run main.go` in server/cmd
+//here will hold the global structs that will need to be used across the application
+
 //User struct
 type User struct {
 	ID        string `json:"id"`

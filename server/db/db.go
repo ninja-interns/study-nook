@@ -12,7 +12,7 @@ type DB struct {
 	Conn *pgxpool.Pool
 }
 
-//initializing my database
+//initializing my database connection
 func Connect(user, password, connection, name string) (*pgxpool.Pool, error) {
 	connectionString := "postgres://" + user + ":" + password + "@localhost:" + connection + "/" + name + "?sslmode=disable"
 
@@ -24,10 +24,12 @@ func Connect(user, password, connection, name string) (*pgxpool.Pool, error) {
 	return conn, nil
 }
 
+//making the connection available to other packages
 func New(conn *pgxpool.Pool) (*DB, error) {
 	return &DB{conn}, nil
 }
 
+//this method lives on the DB struct so it is also available whereever the DB struct is passed (example in the API controller struct)
 func (db *DB) GetUserById(id string) (*studynook.User, error) {
 	sqlStatement := `SELECT email, name, username FROM users WHERE id = $1`
 	result := &studynook.User{}

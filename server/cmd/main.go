@@ -1,5 +1,6 @@
 package main
 
+//CLI command to start the server: **Make sure you are in study-nook/server/cmd first. Then run `go run main.go s` this will only print out emails for use in development. If you need to actually send an email, run `go run main.go s -b true`
 import (
 	"fmt"
 	"log"
@@ -12,6 +13,7 @@ import (
 	"studynook.go/emails"
 )
 
+//this main function is using a cli to start the server with flags for the configs so they can be easily changed if needed. It is initializing all of the package structs that we will be using so they can be used across the application
 func main() {
 	app := &cli.App{
 		Name:    "StudyNook CLI",
@@ -50,7 +52,7 @@ func main() {
 						Value:   "studynook",
 						Usage:   "Set the database name in the database connection string"},
 
-					//emailer configs
+					//emailer configs -- these are using persistent environment variables available to a single profile on the computer that must be set up on your own computer environment. LINUX: in your home directory run `nano .bashrc`, at the end of the file add `export SMTP_USERNAME=<get this username from Alyssa>` for each of the variables below, ^0 and ^X to save and reboot.
 					&cli.BoolFlag{
 						Name:    "production",
 						Aliases: []string{"b"},
@@ -74,7 +76,7 @@ func main() {
 						Usage:   "Set the port in the Emailer configs"},
 				},
 				Action: func(c *cli.Context) error {
-					// address := c.String("address")
+					address := c.String("address")
 					user := c.String("user")
 					password := c.String("password")
 					connection := c.String("connection")
@@ -87,6 +89,7 @@ func main() {
 					eport := c.String("eport")
 					production := c.Bool("production")
 
+					//if the production boolean flag (default false) is true it will initialize the emailer struct to use all the configs, or else it will just inialize the emailer as the development emailer struct only holding the username. Checkout server/emails to see how the logic works.
 					var emailer emails.Emailer
 					if production {
 						emailer = &emails.Email{
@@ -100,23 +103,26 @@ func main() {
 						}
 					}
 
-					//initializing the database
+					//initializing the database connection
 					conn, err := db.Connect(user, password, connection, name)
 					if err != nil {
 						fmt.Println(err)
 						return err
 					}
+					//initializing the db struct holding the connection allowing it to be available to other packages ex. API below
 					database, err := db.New(conn)
 					if err != nil {
 						fmt.Println(err)
 						return err
 					}
+					//passing in the database and emailer to the controller so they are available to the API package
 					controller, err := api.New(database, &emailer)
 					if err != nil {
 						fmt.Println(err)
 						return err
 					}
-					log.Fatal(http.ListenAndServe(":8080", controller.Sessions.LoadAndSave(controller.Router)))
+					//starting the server
+					log.Fatal(http.ListenAndServe(address, controller.Sessions.LoadAndSave(controller.Router)))
 					if err != nil {
 						return err
 					}
