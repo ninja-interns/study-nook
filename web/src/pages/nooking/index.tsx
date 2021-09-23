@@ -3,7 +3,7 @@ import Timer from '../../components/countdownTimer/timer/index'
 import ExamplePixi from '../../pixi/example'
 
 // Material UI imports
-import {Box, Button, Container, Toolbar, Typography} from '@mui/material'
+import {Box, Toolbar, Typography} from '@mui/material'
 import {createTheme, ThemeProvider, useTheme} from '@mui/material/styles'
 import {IconButton} from '@mui/material'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
@@ -11,7 +11,6 @@ import Brightness7Icon from '@mui/icons-material/Brightness7'
 import AppBar from '@mui/material/AppBar'
 import MenuIcon from '@mui/icons-material/Menu'
 import TodoList from '../../components/todoList/TodoList'
-import ExampleSpin from '../../pixi/exampleSpin'
 
 const ColorModeContext = React.createContext({toggleColorMode: () => {}})
 

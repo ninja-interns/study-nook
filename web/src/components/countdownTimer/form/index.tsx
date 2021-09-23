@@ -1,9 +1,6 @@
-// ! There is an error with the material UI form control
-
 import * as React from 'react'
 import {TimerInterface} from '../interfaces'
 import {
-  Box,
   FormControl,
   InputLabel,
   MenuItem,
@@ -26,7 +23,6 @@ const TimerForm = () => {
   }
   
   function handleCreateTimer(newTimer: TimerInterface) {
-    deleteTimer()
     createTimerDuration(newTimer)
   }
   
@@ -38,10 +34,6 @@ const TimerForm = () => {
       body: JSON.stringify(newTimer),
       // Add error handling
     })
-  }
-  
-  async function deleteTimer() {
-    await fetch('/api/deleteTimer')
   }
 
   return (

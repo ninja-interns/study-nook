@@ -70,6 +70,7 @@ func main() {
 	r.HandleFunc("/api/deleteTimer", timer.DeleteTimer)
 	r.HandleFunc("/api/createTimerDuration", timer.CreateTimerDuration)
 	r.HandleFunc("/api/getTimer", timer.GetTimer)
+	r.HandleFunc("/api/setCompleted", timer.SetCompleted)
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
 }

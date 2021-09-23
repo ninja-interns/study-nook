@@ -25,22 +25,27 @@ const Timer = () => {
     }
     async function getTimeLeft() {
       const response = await fetch("/api/getTimeLeft")
-      const data: TimerInterface = await response.json() // this is where the error is
+      const data: TimerInterface = await response.json()
       if (data.time_left === "0s") {
-        data.time_left = "Timer Finished"
+        data.time_left = "Finished"
         setMounted(false)
-        //set is completed in database to true (call a function)
+        setTimerCompleted()
       } 
       setTimer(data)
+    }
+    async function setTimerCompleted() {
+      await fetch('/api/setCompleted')
     }
   }, [mounted, ticker])
   
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setTicker(ticker => ticker + 1)
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [])
+    if (mounted) {
+      const interval = setInterval(() => {
+        setTicker(ticker => ticker + 1)
+      }, 1000)
+      return () => clearInterval(interval)
+    }
+  }, [mounted])
   
   
   return (
