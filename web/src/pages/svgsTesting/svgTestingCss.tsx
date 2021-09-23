@@ -19,6 +19,18 @@ export const useStyles = makeStyles({
         borderWidth: "1px",
         backgroundImage: `url(${background})`,
         backgroundSize: "350px 200px",
+
+        display: "block",
+    },
+    svgCharacter: {
+        width: "80",
+        height: "120",
+        position: "relative",
+        display: "block",
+        left: "120px",
+        top: "70px",
+        bottom: "0px",
+
     },
 
 
