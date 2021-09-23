@@ -1,11 +1,11 @@
-import { Button, Card, TextField, Typography } from "@material-ui/core";
-import React, { useRef, useState } from "react";
-import { ContextContainer } from "../../contexts/ContextContainer";
-import { useStyles } from "./updateUserCss";
-import { useGetState } from "./../../utils/getState";
-import { Snackbars } from "./../../components/snackbar/index";
+import { Button, TextField, Typography } from "@material-ui/core";
 import { Color } from "@material-ui/lab/Alert";
+import React, { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { ContextContainer } from "../../contexts/ContextContainer";
+import { Snackbars } from "./../../components/snackbar/index";
+import { useGetState } from "./../../utils/getState";
+import { useStyles } from "./updateUserCss";
 
 interface IData {
 	isValid: boolean;
