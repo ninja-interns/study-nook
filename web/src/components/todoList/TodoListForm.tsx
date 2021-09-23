@@ -1,67 +1,48 @@
-import React from "react";
-import {
-  ListItemButton,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  Checkbox,
-  TextField,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { TodoListInterface } from "./interfaces";
-// import { useStyles } from "../../pages/nookingSetup/nookingSetupCss"
+//! Explanation of component
 
-const TodoListForm = (props: TodoListInterface) => {
-  if (props.todos === null) return null;
+import React from "react"
+import { ListItemButton, IconButton, List, ListItem, TextField } from "@mui/material"
+import DeleteIcon from "@mui/icons-material/Delete"
+import { TodoListFormInterface } from "./interfaces"
 
-  return (
-    <List
-      sx={{
-        height: "15rem",
-        overflow: "auto",
-        width: "100%",
-        backgroundColor: "grey",
-      }}
-    >
-      {props.todos.map((todo) => {
-        const labelId = `checkbox-list-label-${todo.todo_text}`;
+const TodoListForm = (props: TodoListFormInterface) => {
+	// Return nothing if there are no todos
+	if (props.todos === undefined || null) return null
 
-        return (
-          <ListItem key={todo.id}>
-            <ListItemButton
-              role={undefined}
-              onClick={() => props.handleTodoComplete(todo)}
-              dense
-            >
-              <ListItemIcon>
-                <Checkbox edge="start" />
-              </ListItemIcon>
-              <TextField
-                id={labelId}
-                variant="standard"
-                // className={css.todoInput}
-                required
-                value={todo.todo_text}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  props.handleTodoUpdate(event, todo)
-                }
-                error={todo.todo_text === ""}
-                // helperText={todo.todo_text === "" ? "Empty field!" : " "}
-              />
-            </ListItemButton>
-            <IconButton
-              edge="end"
-              aria-label="delete"
-              onClick={() => props.handleTodoRemove(todo)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </ListItem>
-        );
-      })}
-    </List>
-  );
-};
+	return (
+		<List
+			sx={{
+				height: "15rem",
+				overflow: "auto",
+				width: "100%",
+				backgroundColor: "grey",
+			}}
+		>
+			{/* Itterate through the todos array and load each todo item */}
+			{props.todos.map((todo) => {
+				const labelId = `checkbox-list-label-${todo.todo_text}`
 
-export default TodoListForm;
+				return (
+					<ListItem key={todo.id}>
+						<ListItemButton role={undefined} dense>
+							<TextField
+								id={labelId}
+								variant="standard"
+								required
+								value={todo.todo_text}
+								onChange={(event: React.ChangeEvent<HTMLInputElement>) => props.handleTodoUpdate(event, todo)}
+								error={todo.todo_text === ""}
+								// helperText={todo.todo_text === "" ? "Empty field!" : " "}
+							/>
+						</ListItemButton>
+						<IconButton edge="end" aria-label="delete" onClick={() => props.handleTodoRemove(todo)}>
+							<DeleteIcon />
+						</IconButton>
+					</ListItem>
+				)
+			})}
+		</List>
+	)
+}
+
+export default TodoListForm

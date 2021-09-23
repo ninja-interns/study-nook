@@ -1,78 +1,76 @@
-// ! If you refresh the page the todos will all be set to not completed
+// TODO: Sort the todos - completed at the bottom of the list
+//! Explanation of component
 
-import * as React from 'react'
-import {TodoContent} from './interfaces'
-import {
-  ListItemButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  Checkbox,
-  Typography,
-  Card,
-} from '@mui/material'
+import * as React from "react"
+import { TodoContent } from "./interfaces"
+import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card } from "@mui/material"
 
 const TodoList = () => {
-  const [todos, setTodos] = React.useState<TodoContent[]>([])
-  
-  // Get Todos from database
-  React.useEffect(() => {
-    async function getTodoList() {
-      const response = await fetch('/api/getTodos')
-      const data: TodoContent[] = await response.json()
-      setTodos(data)
-      // Add error handling here
-    }
-    getTodoList()
-  })
-  if (todos === null) return null
+	const [todos, setTodos] = React.useState<TodoContent[]>([])
 
-  async function handleTodoComplete(todoItem: TodoContent) {
-    // Updating todos state
-    const newTodosState: TodoContent[] = [...todos]
-    newTodosState.find(
-      (todo: TodoContent) => todo.id === todoItem.id,
-    )!.is_completed = !newTodosState.find(
-      (todo: TodoContent) => todo.id === todoItem.id,
-    )!.is_completed
-    setTodos(newTodosState)
+	type JSONResponse = {
+		data: {
+			todoList: TodoContent[]
+		}
+		errors?: Array<{ message: string }>
+	}
 
-    // Updating completion status in the database
-    await fetch('/api/updateTodo', {
-      method: 'POST',
-      headers: {'content-type': 'application/json'},
-      body: JSON.stringify(todoItem),
-    })
-  }
+	// Get Todos from database - runs once on mount
+	//! Explanation of Function
+	React.useEffect(() => {
+		async function getTodoList() {
+			const response = await fetch("/api/getTodos")
+			const { data, errors }: JSONResponse = await response.json()
+			if (response.ok) {
+				setTodos(data?.todoList)
+			} else {
+				const error = new Error(errors?.map((e) => e.message).join("\n") ?? "unknown")
+				return Promise.reject(error)
+			}
+		}
+		getTodoList()
+	}, [])
+	if (todos === undefined || null) return null
 
-  return (
-    <Card>
+	//! Explanation of function
+	async function handleTodoComplete(todoItem: TodoContent) {
+		// Updating todos state
+		const newTodosState: TodoContent[] = [...todos]
+		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.is_completed = !newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!
+			.is_completed
+		setTodos(newTodosState)
 
-    <List
-      sx={{
-        height: '10rem',
-        overflow: 'auto',
-      }}
-      >
-      {todos.map(todo => {
-        return (
-          <ListItem key={todo.id}>
-            <ListItemButton
-              role={undefined}
-              onClick={() => handleTodoComplete(todo)}
-              dense
-              >
-              <ListItemIcon>
-                <Checkbox edge="start" />
-              </ListItemIcon>
-              <Typography>{todo.todo_text}</Typography>
-            </ListItemButton>
-          </ListItem>
-        )
-      })}
-    </List>
-      </Card>
-  )
+		// Updating completion status in the database
+		await fetch("/api/updateTodo", {
+			method: "POST",
+			headers: { "content-type": "application/json" },
+			body: JSON.stringify(todoItem),
+		})
+	}
+
+	return (
+		<Card>
+			<List
+				sx={{
+					height: "10rem",
+					overflow: "auto",
+				}}
+			>
+				{todos.map((todo) => {
+					return (
+						<ListItem key={todo.id}>
+							<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
+								<ListItemIcon>
+									<Checkbox checked={todo.is_completed} edge="start" />
+								</ListItemIcon>
+								<Typography>{todo.todo_text}</Typography>
+							</ListItemButton>
+						</ListItem>
+					)
+				})}
+			</List>
+		</Card>
+	)
 }
 
 export default TodoList

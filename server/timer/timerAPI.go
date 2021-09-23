@@ -24,7 +24,7 @@ type Timer struct {
 }
 
 // struct for the reponse message
-type Response struct {
+type JSONResponse struct {
 	Message string `json:"message"`
 	IsValid bool   `json:"isValid"`
 }
@@ -87,7 +87,12 @@ func GetTimeLeft(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `SELECT finish_time FROM timer WHERE owner_id=$1`
 	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, ownerId).Scan(&timer.FinishTime)
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JSONResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -122,7 +127,12 @@ func CreateTimerDuration(w http.ResponseWriter, r *http.Request) {
 	timer := Timer{}
 	err := json.NewDecoder(r.Body).Decode(&timer)
 	if err != nil {
-		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JSONResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
 		return
 	}
 
@@ -159,23 +169,4 @@ func SetCompleted(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// ! Handle the completed timer here
-}
-
-func GetTimer(w http.ResponseWriter, r *http.Request) {
-	// Getting the logged in userId
-	ownerId := auth.SessionManager.GetString(r.Context(), "id")
-
-	// Create instance of timer
-	timer := Timer{}
-
-	sqlStatement := `SELECT timer_duration FROM timer WHERE owner_id=$1`
-
-	// Get timer from the database and read into the timer
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, ownerId).Scan(&timer.TimerDuration)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	json.NewEncoder(w).Encode(timer)
 }

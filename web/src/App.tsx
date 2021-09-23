@@ -1,30 +1,11 @@
-import React from 'react'
-import {ContextContainer} from './contexts/ContextContainer'
-import Routes from './routes/Routes'
-import {createTheme, ThemeProvider} from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import CssBaseline from '@mui/material/CssBaseline'
+import { ContextContainer } from "./contexts/ContextContainer"
+import Routes from "./routes/Routes"
 
 function App() {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: prefersDarkMode ? 'dark' : 'light',
-        },
-      }),
-    [prefersDarkMode],
-  )
-
-  return (
-    <ContextContainer.Provider>
-      <ThemeProvider theme={theme}>
-        <Routes />
-        <CssBaseline />
-      </ThemeProvider>
-    </ContextContainer.Provider>
-  )
+	return (
+		<ContextContainer.Provider>
+			<Routes />
+		</ContextContainer.Provider>
+	)
 }
 export default App

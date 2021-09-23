@@ -46,7 +46,7 @@ func main() {
 
 	r := chi.NewRouter()
 
-	// AUTH
+	//* AUTH
 	r.HandleFunc("/api/createUser", auth.CreateUser)
 	r.HandleFunc("/api/loginUser", auth.LoginUser)
 	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
@@ -58,18 +58,17 @@ func main() {
 	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))
 	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
 
-	// TODO LIST
+	//* TODO LIST
 	r.HandleFunc("/api/getTodos", todo.GetTodos)
 	r.HandleFunc("/api/createTodo", todo.CreateTodo)
 	r.HandleFunc("/api/updateTodo", todo.UpdateTodo)
 	r.HandleFunc("/api/deleteTodo", todo.DeleteTodo)
 
-	// TIMER
+	//* TIMER
 	r.HandleFunc("/api/createTimer", timer.CreateTimer)
 	r.HandleFunc("/api/getTimeLeft", timer.GetTimeLeft)
 	r.HandleFunc("/api/deleteTimer", timer.DeleteTimer)
 	r.HandleFunc("/api/createTimerDuration", timer.CreateTimerDuration)
-	r.HandleFunc("/api/getTimer", timer.GetTimer)
 	r.HandleFunc("/api/setCompleted", timer.SetCompleted)
 
 	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
