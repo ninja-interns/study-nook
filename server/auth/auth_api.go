@@ -65,6 +65,21 @@ func GetUserById(id string) (*User, error) {
 	return result, nil
 }
 
+// This function inserts a new user to user stats table
+func InsertToUserStats(id string) {
+
+	//creating an insert in our database
+	sqlStatement := `
+	INSERT INTO user_stats (id, exp_amount, sessions_completed, hours_nooked, achievements_unlocked, backgrounds_unlocked)
+	VALUES ($1, $2, $3, $4, $5, $6)`
+
+	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, id, 100, 0, 0, 0, 0)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
 //will hit when the API from main.go is invoked
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	u := &User{}
@@ -242,16 +257,16 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func VerifyEmail(w http.ResponseWriter, r *http.Request) {
-	var name string
+	var name, id string
 
 	//getting the URL parameter from the GET request and setting it in qCode
 	qCode := chi.URLParam(r, "code")
 
 	//querying my database for the code- if a row doesn't come back, queryRow will throw an error.
 	sqlStatement := `
-	SELECT name FROM users WHERE token = $1`
+	SELECT name, id FROM users WHERE token = $1`
 
-	err := initializedb.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&name)
+	err := initializedb.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&name, &id)
 	if err != nil {
 		response := JsonResponse{
 			Message: "Couldn't find your account, please double check your code.",
@@ -284,6 +299,8 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 		IsValid: true,
 	}
 	json.NewEncoder(w).Encode(response)
+
+	InsertToUserStats(id)
 }
 
 type CurrentPassword struct {

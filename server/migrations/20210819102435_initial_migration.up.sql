@@ -22,3 +22,15 @@ CREATE TABLE IF NOT EXISTS reports (
     date_submission TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     message TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS user_stats (
+    id TEXT UNIQUE PRIMARY KEY NOT NULL,
+    exp_amount INT NOT NULL,
+    sessions_completed INT NOT NULL, 
+    hours_nooked INT NOT NULL,
+    achievements_unlocked INT NOT NULL,
+    backgrounds_unlocked INt NOT NULL,
+    CONSTRAINT fk_users
+        FOREIGN KEY(id)
+            REFERENCES users(id)
+);
