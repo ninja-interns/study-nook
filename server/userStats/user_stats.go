@@ -1,4 +1,4 @@
-package levelExperience
+package user_stats
 
 import (
 	"context"
@@ -24,42 +24,94 @@ type JsonResponse struct {
 }
 
 // Function to calculate session rewards after session finshes
-func CalculateSessionRewards(w http.ResponseWriter, r *http.Request, u *auth.User) {
+func CalculateSessionRewards(minutes int, id string) {
 
-	time := &Time{}
-	err := json.NewDecoder(r.Body).Decode(time)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	minutesInt, err := strconv.Atoi(time.Experience)
-	if err != nil {
-		fmt.Println(err)
-	}
+	time := minutes
 
 	sqlStatement := `SELECT exp_amount FROM user_stats WHERE id = $1`
 
 	var exp int
 
-	err = initializedb.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&exp)
+	err := initializedb.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&exp)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	expGained := CalculateEXPTime(minutesInt)
+	expGained := CalculateEXPTime(time)
 
-	currentLevel := CalculateLevelEXP(exp)
-
-	levelUp := CalculateLevelEXP(exp + expGained)
-
-	coinsGained := CalculateCoinsTime(exp, minutesInt)
+	coinsGained := CalculateCoinsTime(exp, time)
 
 	fmt.Println("You gained: ", expGained)
-	fmt.Println("This is your current level: ", currentLevel)
-	fmt.Println("This is you after levelling up from this session: ", levelUp)
 	fmt.Println("Coins earned: ", coinsGained)
 
+	//InsertToDatabase(expGained)
+
+}
+
+func UpdateCoins(coins int, id string) error {
+
+	sqlStatement := `UPDATE user_stats SET coins = coins + $1 WHERE id = $2;`
+
+	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, coins, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateEXPAmount(exp int, id string) error {
+
+	sqlStatement := `UPDATE user_stats SET exp_amount = exp_amount + $1 WHERE id = $2;`
+
+	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, exp, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateSessions(id string) error {
+
+	sqlStatement := `UPDATE user_stats SET sessions_completed = sessions_completed + 1 WHERE id = $1;`
+
+	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateHoursNooked(hours int, id string) error {
+
+	sqlStatement := `UPDATE user_stats SET hours_nooked = hours_nooked + $1 WHERE id = $2;`
+
+	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, hours, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateAchievementsUnlocked(id string) error {
+
+	sqlStatement := `UPDATE user_stats SET achievements_unlocked = achievements_unlocked + 1 WHERE id = $1;`
+
+	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateBackgroundsUnlocked(id string) error {
+
+	sqlStatement := `UPDATE user_stats SET backgrounds_unlocked = backgrounds_unlocked + 1 WHERE id = $1;`
+
+	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Function to check based on total Experience points,

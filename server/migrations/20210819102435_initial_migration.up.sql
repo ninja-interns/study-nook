@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS user_stats (
     sessions_completed INT NOT NULL, 
     hours_nooked INT NOT NULL,
     achievements_unlocked INT NOT NULL,
-    backgrounds_unlocked INt NOT NULL,
+    backgrounds_unlocked INT NOT NULL,
+    coins INT NOT NULL,
     CONSTRAINT fk_users
         FOREIGN KEY(id)
             REFERENCES users(id)

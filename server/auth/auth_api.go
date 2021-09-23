@@ -65,21 +65,6 @@ func GetUserById(id string) (*User, error) {
 	return result, nil
 }
 
-// This function inserts a new user to user stats table
-func InsertToUserStats(id string) {
-
-	//creating an insert in our database
-	sqlStatement := `
-	INSERT INTO user_stats (id, exp_amount, sessions_completed, hours_nooked, achievements_unlocked, backgrounds_unlocked)
-	VALUES ($1, $2, $3, $4, $5, $6)`
-
-	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, id, 100, 0, 0, 0, 0)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-}
-
 //will hit when the API from main.go is invoked
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	u := &User{}
@@ -300,7 +285,22 @@ func VerifyEmail(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(response)
 
-	InsertToUserStats(id)
+	InsertUserStats(id)
+}
+
+// This function inserts a new user to user stats table
+func InsertUserStats(id string) {
+
+	//creating an insert in our database
+	sqlStatement := `
+	INSERT INTO user_stats (id, exp_amount, sessions_completed, hours_nooked, achievements_unlocked, backgrounds_unlocked)
+	VALUES ($1, $2, $3, $4, $5, $6)`
+
+	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, id, 100, 0, 0, 0, 0)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
 
 type CurrentPassword struct {
