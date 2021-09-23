@@ -46,6 +46,18 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 
 	r.HandleFunc("/api/report_submission", WithUser(sessionManager, db, c.SubmitReports))
 
+	r.Route("/admin", func(r chi.Router) {
+		r.Post("/login", c.AdminLoginHandler)
+		r.Post("/users", c.UserCreateHandler) // POST /admin/users
+		r.Get("/users", c.UserGetAllHandler)  // GET /admin/users
+		r.Route("/users/{userID}", func(r chi.Router) {
+			r.Get("/", c.UserGetHandler)       // GET /admin/users/123
+			r.Put("/", c.UserUpdateHandler)    // PUT /admin/users/123
+			r.Delete("/", c.UserDeleteHandler) // DELETE /admin/users/123
+		})
+		r.Put("/user_details_only/{userID}", c.UserUpdateExceptPasswordHandler)
+	})
+
 	return c, nil
 }
 
