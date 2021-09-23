@@ -289,7 +289,7 @@ func (c *Controller) DeleteAccount(w http.ResponseWriter, r *http.Request, u *st
 		response := JsonResponse{
 			Message:    "Something went wrong, please try again.",
 			IsValid:    false,
-			IsVerified: u.IsVerfied,
+			IsVerified: u.IsVerified,
 		}
 		json.NewEncoder(w).Encode(response)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -303,7 +303,7 @@ func (c *Controller) DeleteAccount(w http.ResponseWriter, r *http.Request, u *st
 		response := JsonResponse{
 			Message:    "Your password is incorrect.",
 			IsValid:    false,
-			IsVerified: u.IsVerfied,
+			IsVerified: u.IsVerified,
 		}
 		json.NewEncoder(w).Encode(response)
 		w.WriteHeader(http.StatusBadRequest)

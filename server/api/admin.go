@@ -6,14 +6,12 @@ import (
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
-	"studynook.go/auth"
-	"studynook.go/db"
-	"studynook.go/schema"
+	"studynook.go"
 )
 
 // AdminLoginHandler verifies the admin login details
-func AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
-	admin := &schema.Admin{}
+func (c *Controller) AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
+	admin := &studynook.Admin{}
 	err := json.NewDecoder(r.Body).Decode(admin)
 	if err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -38,7 +36,7 @@ func AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	password := admin.Password
 
-	admin, err = db.GetAdminByEmail(context.Background(), admin.Email)
+	admin, err = c.DB.GetAdminByEmail(context.Background(), admin.Email)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -64,8 +62,8 @@ func AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Successful login
 	// Creating variables in the session
-	auth.SessionManager.Put(r.Context(), "id", admin.ID)
-	auth.SessionManager.Put(r.Context(), "email", admin.Email)
+	c.Sessions.Put(r.Context(), "id", admin.ID)
+	c.Sessions.Put(r.Context(), "email", admin.Email)
 
 	w.WriteHeader(http.StatusOK)
 	response := ErrorResponse{

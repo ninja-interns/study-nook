@@ -3,15 +3,14 @@ package db
 import (
 	"context"
 
-	"studynook.go/initializedb"
-	"studynook.go/schema"
+	"studynook.go"
 )
 
 // GetAdminByEmail returns a admin with given email
-func GetAdminByEmail(ctx context.Context, email string) (*schema.Admin, error) {
+func (db *DB) GetAdminByEmail(ctx context.Context, email string) (*studynook.Admin, error) {
 	query := `SELECT id, email, password_hash FROM admins WHERE email = $1`
-	admin := &schema.Admin{}
-	err := initializedb.Conn.QueryRow(ctx, query, email).Scan(&admin.ID, &admin.Email, &admin.PasswordHash)
+	admin := &studynook.Admin{}
+	err := db.Conn.QueryRow(ctx, query, email).Scan(&admin.ID, &admin.Email, &admin.PasswordHash)
 	if err != nil {
 		return admin, err
 	}

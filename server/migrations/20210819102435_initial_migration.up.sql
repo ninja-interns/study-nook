@@ -22,3 +22,10 @@ CREATE TABLE IF NOT EXISTS reports (
     date_submission TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     message TEXT NOT NULL
 );
+
+
+CREATE TABLE IF NOT EXISTS admins (
+    id TEXT PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password_hash BYTEA NOT NULL
+);

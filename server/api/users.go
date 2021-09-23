@@ -7,8 +7,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/gofrs/uuid"
-	"studynook.go/db"
-	"studynook.go/schema"
+	"studynook.go"
+
 	"studynook.go/util"
 )
 
@@ -19,9 +19,9 @@ type ErrorResponse struct {
 }
 
 // UserCreateHandler handles: POST /admin/users
-func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 
-	user := &schema.User{}
+	user := &studynook.User{}
 
 	err := json.NewDecoder(r.Body).Decode(user)
 	if err != nil {
@@ -83,7 +83,7 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = db.AddUser(context.Background(), user); err != nil {
+	if err = c.DB.AddUser(context.Background(), user); err != nil {
 		response := &ErrorResponse{
 			Message: "Your username or email has already been used!",
 			IsValid: false,
@@ -101,9 +101,9 @@ func UserCreateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // UserGetAllHandler handles: GET /admin/users
-func UserGetAllHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) UserGetAllHandler(w http.ResponseWriter, r *http.Request) {
 
-	userList, err := db.GetAllUsers(context.Background())
+	userList, err := c.DB.GetAllUsers(context.Background())
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := &ErrorResponse{
@@ -120,10 +120,10 @@ func UserGetAllHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // UserGetHandler handles: GET /admin/users/123
-func UserGetHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) UserGetHandler(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "userID")
 
-	user, err := db.GetUserByID(context.Background(), userID)
+	user, err := c.DB.GetUserByID(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		response := &ErrorResponse{
@@ -140,9 +140,9 @@ func UserGetHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // UserUpdateHandler handles: PUT /admin/users/123
-func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "userID")
-	userData := &schema.User{}
+	userData := &studynook.User{}
 
 	err := json.NewDecoder(r.Body).Decode(userData)
 	if err != nil {
@@ -189,7 +189,7 @@ func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	userData.PasswordHash = hashedPassword
 
-	err = db.UpdateUser(context.Background(), userID, userData)
+	err = c.DB.UpdateUser(context.Background(), userID, userData)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := &ErrorResponse{
@@ -208,10 +208,10 @@ func UserUpdateHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // UserDeleteHandler handles: DELETE /admin/users/123
-func UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "userID")
 
-	err := db.DeleteUser(context.Background(), userID)
+	err := c.DB.DeleteUser(context.Background(), userID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		response := &ErrorResponse{
@@ -232,9 +232,9 @@ func UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // UserUpdateExceptPasswordHandler updates user details except password
-func UserUpdateExceptPasswordHandler(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) UserUpdateExceptPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	userID := chi.URLParam(r, "userID")
-	userData := &schema.User{}
+	userData := &studynook.User{}
 
 	err := json.NewDecoder(r.Body).Decode(userData)
 	if err != nil {
@@ -259,7 +259,7 @@ func UserUpdateExceptPasswordHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	err = db.UpdateUserExceptPassword(context.Background(), userID, userData)
+	err = c.DB.UpdateUserExceptPassword(context.Background(), userID, userData)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := &ErrorResponse{

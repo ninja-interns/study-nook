@@ -9,10 +9,6 @@ import (
 
 	"studynook.go"
 	"studynook.go/emails"
-<<<<<<< HEAD
-=======
-	"studynook.go/initializedb"
->>>>>>> c1ceaeff4e35582d7e05412fa1f111191be573cd
 )
 
 // Struct to store report data content
@@ -99,11 +95,7 @@ func (c *Controller) GetReportID(username string) (string, error) {
 	tempID := 0
 
 	// Execution of query
-<<<<<<< HEAD
 	err := c.DB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempID)
-=======
-	err := initializedb.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempID)
->>>>>>> c1ceaeff4e35582d7e05412fa1f111191be573cd
 	if err != nil {
 		return "", err
 	}
@@ -118,11 +110,7 @@ func (c *Controller) InsertToDB(report *Report) error {
 	sqlQuery := `INSERT INTO reports (username, message) VALUES ($1, $2);`
 
 	// Execution of query
-<<<<<<< HEAD
 	_, err := c.DB.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
-=======
-	_, err := initializedb.Conn.Exec(context.Background(), sqlQuery, report.Username, report.Message)
->>>>>>> c1ceaeff4e35582d7e05412fa1f111191be573cd
 	if err != nil {
 		return err
 	}
@@ -138,11 +126,7 @@ func (c *Controller) ValidateReport(username string) bool {
 
 	tempUsername := ""
 
-<<<<<<< HEAD
 	c.DB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempUsername)
-=======
-	initializedb.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempUsername)
->>>>>>> c1ceaeff4e35582d7e05412fa1f111191be573cd
 
 	return tempUsername != username
 }
