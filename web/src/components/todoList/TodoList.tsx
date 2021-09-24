@@ -8,29 +8,19 @@ import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Car
 const TodoList = () => {
 	const [todos, setTodos] = React.useState<TodoContent[]>([])
 
-	type JSONResponse = {
-		data: {
-			todoList: TodoContent[]
-		}
-		errors?: Array<{ message: string }>
-	}
-
-	// Get Todos from database - runs once on mount
-	//! Explanation of Function
+	//! Explanation of function
 	React.useEffect(() => {
 		async function getTodoList() {
 			const response = await fetch("/api/getTodos")
-			const { data, errors }: JSONResponse = await response.json()
 			if (response.ok) {
-				setTodos(data?.todoList)
+				const data: TodoContent[] = await response.json()
+				setTodos(data)
 			} else {
-				const error = new Error(errors?.map((e) => e.message).join("\n") ?? "unknown")
-				return Promise.reject(error)
+				console.error("Error fetching todo list: " + response.statusText)
 			}
 		}
 		getTodoList()
 	}, [])
-	if (todos === undefined || null) return null
 
 	//! Explanation of function
 	async function handleTodoComplete(todoItem: TodoContent) {

@@ -1,4 +1,4 @@
-# MAKE FILE FOR MAC
+# MAKE FILE FOR LINUX
 .PHONY: up
 up:
 	./bin/migrate.linux-amd64 -database 'postgres://dev:dev@localhost:5432/studynook?sslmode=disable' -path ./server/migrations up
@@ -7,11 +7,4 @@ up:
 drop:
 	./bin/migrate.linux-amd64 -database 'postgres://dev:dev@localhost:5432/studynook?sslmode=disable' -path ./server/migrations drop -f
 
-# MAKE FILE FOR WINDOWS
-# .PHONY: up
-# up:
-# 	./bin/migrate -database 'postgres://dev:dev@localhost:5432/studynook?sslmode=disable' -path ./server/migrations up
-
-# .PHONY: drop
-# drop:
-# 	./bin/migrate -database 'postgres://dev:dev@localhost:5432/studynook?sslmode=disable' -path ./server/migrations drop -f
+# docker start studynook to start container
