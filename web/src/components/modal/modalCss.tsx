@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles"
 
 export const useStyles = makeStyles({
 	modal: {
@@ -14,4 +14,4 @@ export const useStyles = makeStyles({
 		backgroundColor: "rgba(255,255,255,0.95)",
 		border: "2px solid #000",
 	},
-});
+})

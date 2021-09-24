@@ -46,3 +46,16 @@ CREATE TABLE IF NOT EXISTS shopItemsOwned (
     src text
 );
 
+CREATE TABLE IF NOT EXISTS reports (
+    submission_id serial PRIMARY KEY,
+    username text UNIQUE NOT NULL,
+    date_submission timestamptz NOT NULL DEFAULT NOW(),
+    message text NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS admins (
+    id text PRIMARY KEY,
+    email text UNIQUE NOT NULL,
+    password_hash bytea NOT NULL
+);
+

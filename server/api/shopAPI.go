@@ -1,4 +1,4 @@
-package shop
+package api
 
 import (
 	"context"
@@ -6,18 +6,17 @@ import (
 	"fmt"
 	"net/http"
 
-	"studynook.go/auth"
-	initializeDB "studynook.go/initializedb"
+	"studynook.go"
 )
 
-func GetShopItems(w http.ResponseWriter, r *http.Request, u *auth.User) {
+func (c *Controller) GetShopItems(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 	var arr interface{}
 
 	fmt.Println("hit shop")
 
 	sqlStatement := `SELECT array_to_json(array_agg(row_to_json(shopItems))) FROM shopItems;`
 
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement).Scan(&arr)
+	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement).Scan(&arr)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -34,7 +33,7 @@ type shopItemID struct {
 	Src      string `json:"src"`
 }
 
-func HandleShopItemBuy(w http.ResponseWriter, r *http.Request, u *auth.User) {
+func (c *Controller) HandleShopItemBuy(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 	i := &shopItemID{}
 	err := json.NewDecoder(r.Body).Decode(i)
 	if err != nil {
@@ -45,7 +44,7 @@ func HandleShopItemBuy(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	//insert into table shopItemsOwn that has the category, name, lv, src, userid and item id
 	sqlStatement := `INSERT INTO shopItemsOwned(shopItemID, userID, category, name, level, src) VALUES($1, $2, $3, $4, $5, $6);`
 
-	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, i.ID, u.ID, i.Category, i.Name, i.Level, i.Src)
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, i.ID, u.ID, i.Category, i.Name, i.Level, i.Src)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -54,12 +53,12 @@ func HandleShopItemBuy(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	json.NewEncoder(w).Encode(http.StatusOK)
 }
 
-func GetInventoryItems(w http.ResponseWriter, r *http.Request, u *auth.User) {
+func (c *Controller) GetInventoryItems(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 	var arr interface{}
 
 	sqlStatement := `SELECT array_to_json(array_agg(row_to_json(shopItemsOwned))) FROM shopItemsOwned WHERE userid = $1;`
 
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&arr)
+	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&arr)
 	if err != nil {
 		fmt.Println(err)
 		return

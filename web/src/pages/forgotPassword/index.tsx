@@ -27,7 +27,7 @@ export function ForgotPassword() {
 		setLoading(true);
 
 		try {
-			const response = await fetch("/api/forgotPassword", {
+			const response = await fetch("/api/forgot_password", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: emailRef?.current?.value }),
