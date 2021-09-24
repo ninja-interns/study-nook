@@ -20,15 +20,6 @@ type TodoItem struct {
 	IsCompleted bool   `json:"is_completed"`
 }
 
-type UserId struct {
-	ID string `json:"id"`
-}
-
-type JSONResponse struct {
-	Message string `json:"message"`
-	IsValid bool   `json:"isValid"`
-}
-
 var SessionManager *scs.SessionManager
 
 func SessionsConfig() {
@@ -42,28 +33,34 @@ func SessionsConfig() {
 //! Explanation of function
 func GetTodos(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	// Getting the logged in userId
 
+	// Getting the logged in userId
 	userId := auth.SessionManager.GetString(r.Context(), "id")
 
 	// Get the rows from the database with the same user id
-	todoArray := []TodoItem{}
+	todoArray := []*TodoItem{}
 	sqlStatement := `
-		SELECT array_to_json(array_agg(row_to_json(todo)))
+		SELECT id, user_id, todo_text, is_completed
 		FROM todo
 		WHERE user_id=$1 AND is_completed='false'
 		`
-	err := initializeDB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&todoArray)
+	results, err := initializeDB.Conn.Query(context.Background(), sqlStatement, userId)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "Error retrieving list from database"+err.Error(), http.StatusBadRequest)
 		return
-
-	} else if todoArray == nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	} else {
-		json.NewEncoder(w).Encode(todoArray)
 	}
+
+	for results.Next() {
+		item := &TodoItem{}
+		err = results.Scan(&item.ID, &item.UserId, &item.Text, &item.IsCompleted)
+		if err != nil {
+			http.Error(w, "Error retrieving list from database"+err.Error(), http.StatusBadRequest)
+			return
+		}
+		todoArray = append(todoArray, item)
+	}
+
+	err = json.NewEncoder(w).Encode(todoArray)
 
 }
 
@@ -116,7 +113,7 @@ func UpdateTodo(w http.ResponseWriter, r *http.Request) {
 func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	// Decoding the request into the todo item
+	// Decoding request
 	todo := &TodoItem{}
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
