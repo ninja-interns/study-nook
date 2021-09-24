@@ -46,7 +46,7 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 		`
 	results, err := initializeDB.Conn.Query(context.Background(), sqlStatement, userId)
 	if err != nil {
-		http.Error(w, "Error retrieving list from database"+err.Error(), http.StatusBadRequest)
+		http.Error(w, "Error retrieving list from database: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -54,13 +54,13 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 		item := &TodoItem{}
 		err = results.Scan(&item.ID, &item.UserId, &item.Text, &item.IsCompleted)
 		if err != nil {
-			http.Error(w, "Error retrieving list from database"+err.Error(), http.StatusBadRequest)
+			http.Error(w, "Error retrieving list from database: "+err.Error(), http.StatusBadRequest)
 			return
 		}
 		todoArray = append(todoArray, item)
 	}
 
-	err = json.NewEncoder(w).Encode(todoArray)
+	json.NewEncoder(w).Encode(todoArray)
 
 }
 
@@ -75,7 +75,7 @@ func CreateTodo(w http.ResponseWriter, r *http.Request) {
 	todo := &TodoItem{}
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "Error decoding create todo request: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -83,7 +83,7 @@ func CreateTodo(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `INSERT INTO todo (id, user_id, todo_text, is_completed) VALUES ($1, $2, $3, $4)`
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, todo.ID, userId, todo.Text, todo.IsCompleted)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "Error interting todo into database: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 }
@@ -96,7 +96,7 @@ func UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	todo := &TodoItem{}
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "Error decoding todo update request: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -104,7 +104,7 @@ func UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `UPDATE todo SET todo_text=$1, is_completed=$2 WHERE id=$3`
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, todo.Text, todo.IsCompleted, todo.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "Error updating todo in database: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 }
@@ -117,7 +117,7 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	todo := &TodoItem{}
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "Error decoding delete todo request: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -125,7 +125,7 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	sqlStatement := `DELETE FROM todo WHERE id=$1`
 	_, err = initializeDB.Conn.Exec(context.Background(), sqlStatement, todo.ID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "Error deleting todo from database: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 }
