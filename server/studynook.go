@@ -1,75 +1,98 @@
-// Main file of study nook
-
-// When creating new files for your React components or pages,
-// create a subdirectory on this directory and name it with
-// whichever feature you are creating.
-
-package main
+package studynook
 
 import (
-	"fmt"
-	"net/http"
-
-	//CURRENT IMPORTS
-	"os"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/joho/godotenv"
-	"studynook.go/auth"
-	"studynook.go/currentUser"
-	"studynook.go/emails"
-	initializeDB "studynook.go/initializedb"
-	"studynook.go/middleware"
-	"studynook.go/timer"
-	"studynook.go/todo"
+	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
 )
 
-// THIS IS THE CURRENT MAIN
-func main() {
-	initializeDB.InitDB()
+//run your `go run main.go` in server/cmd
+//here will hold the global structs that will need to be used across the application
 
-	auth.SessionsConfig()
-	todo.SessionsConfig()
+//User struct
+type User struct {
+	ID              string `json:"id"`
+	Email           string `json:"email"`
+	Password        string `json:"password,omitempty"` // To tell the JSON encoder to suppress the output of this field when the field is set to the zero value
+	Name            string `json:"name"`
+	Username        string `json:"username"`
+	IsVerified      bool   `json:"isVerified"`
+	Token           string `json:"token"`
+	PasswordHash    []byte `json:"-"`                         // Skip PasswordHash JSON encode
+	ConfirmPassword string `json:"confirmPassword,omitempty"` // To tell the JSON encoder to suppress the output of this field when the field is set to the zero value
+}
 
-	err := godotenv.Load(".env.local")
-	if err != nil {
-		fmt.Println(err)
-		return
+// Validate function validates the JSON payload
+func (u User) Validate() error {
+	return validation.ValidateStruct(&u,
+		// ID cannot be empity.
+		validation.Field(&u.ID, validation.Required),
+		// Email cannot be empty and should be in a valid email format.
+		validation.Field(&u.Email, validation.Required, is.Email),
+		// Password cannot be empty.
+		validation.Field(&u.Password, validation.Required),
+		// Name cannot be empty.
+		validation.Field(&u.Name, validation.Required),
+		// Username cannot be empty.
+		validation.Field(&u.Username, validation.Required),
+		// IsVerified cannot be empty.
+		validation.Field(&u.IsVerified, validation.Required),
+		// ConfirmPassword cannot be empty.
+		validation.Field(&u.ConfirmPassword, validation.Required),
+	)
+}
+
+// ValidateIgnorePassword validates the JSON payload, ignores the password validation
+func (u User) ValidateIgnorePassword() error {
+
+	return validation.ValidateStruct(&u,
+		// ID cannot be empity.
+		validation.Field(&u.ID, validation.Required),
+		// Email cannot be empty and should be in a valid email format.
+		validation.Field(&u.Email, validation.Required, is.Email),
+		// Name cannot be empty.
+		validation.Field(&u.Name, validation.Required),
+		// Username cannot be empty.
+		validation.Field(&u.Username, validation.Required),
+		// IsVerified cannot be empty.
+		validation.Field(&u.IsVerified, validation.Required),
+	)
+
+}
+
+// PasswordConfirmation confirms the password is same
+func (u User) PasswordConfirmation() bool {
+	if u.Password == u.ConfirmPassword {
+		return true
 	}
+	return false
+}
 
-	//setting my EMailConfigs variable equal to this Emailer struct taking in environmental variables from my ".env.local"
-	emails.EmailConfigs, err = emails.NewEmailer(os.Getenv("SMTP_USERNAME"), os.Getenv("SMTP_PASSWORD"), os.Getenv("SMTP_SERVER"), os.Getenv("SMTP_PORT"))
-	if err != nil {
-		fmt.Println("package main email err", err)
-		return
-	}
+// Admin model
+type Admin struct {
+	ID           string `json:"id"`
+	Email        string `json:"email"`
+	Password     string `json:"password"`
+	PasswordHash []byte `json:"-"` // Skip PasswordHash JSON encode
+}
 
-	r := chi.NewRouter()
+// Validate function validates the Admin JSON payload
+func (a Admin) Validate() error {
+	return validation.ValidateStruct(&a,
+		// ID cannot be empity.
+		validation.Field(&a.ID, validation.Required),
+		// Email cannot be empty and should be in a valid email format.
+		validation.Field(&a.Email, validation.Required, is.Email),
+		// Password cannot be empty.
+		validation.Field(&a.Password, validation.Required),
+	)
+}
 
-	//* AUTH
-	r.HandleFunc("/api/createUser", auth.CreateUser)
-	r.HandleFunc("/api/loginUser", auth.LoginUser)
-	r.HandleFunc("/api/verifyEmail/{code}", auth.VerifyEmail)
-	r.HandleFunc("/api/logoutUser", auth.LogoutUser)
-	r.HandleFunc("/api/forgotPassword", auth.ForgotPassword)
-	r.HandleFunc("/api/resetPassword", auth.ResetPassword)
-	r.HandleFunc("/api/state", middleware.WithUser(currentUser.CurrentUserState))
-	r.HandleFunc("/api/deleteAccount", middleware.WithUser(auth.DeleteAccount))
-	r.HandleFunc("/api/updateUser", middleware.WithUser(auth.UpdateUser))
-	r.HandleFunc("/api/updatePassword", middleware.WithUser(auth.UpdatePassword))
-
-	//* TODO LIST
-	r.HandleFunc("/api/getTodos", todo.GetTodos)
-	r.HandleFunc("/api/createTodo", todo.CreateTodo)
-	r.HandleFunc("/api/updateTodo", todo.UpdateTodo)
-	r.HandleFunc("/api/deleteTodo", todo.DeleteTodo)
-
-	//* TIMER
-	r.HandleFunc("/api/createTimer", timer.CreateTimer)
-	r.HandleFunc("/api/getTimeLeft", timer.GetTimeLeft)
-	r.HandleFunc("/api/deleteTimer", timer.DeleteTimer)
-	r.HandleFunc("/api/setTimerDuration", timer.SetTimerDuration)
-	r.HandleFunc("/api/setCompleted", timer.SetCompleted)
-
-	http.ListenAndServe(":8080", auth.SessionManager.LoadAndSave(r))
+// ValidateExceptID validates the Admin JSON payload except ID
+func (a Admin) ValidateExceptID() error {
+	return validation.ValidateStruct(&a,
+		// Email cannot be empty and should be in a valid email format.
+		validation.Field(&a.Email, validation.Required, is.Email),
+		// Password cannot be empty.
+		validation.Field(&a.Password, validation.Required),
+	)
 }

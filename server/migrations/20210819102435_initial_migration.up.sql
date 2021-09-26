@@ -17,9 +17,8 @@ CREATE TABLE IF NOT EXISTS sessions (
 CREATE INDEX IF NOT EXISTS sessions_expiry_idx ON sessions (expiry);
 
 CREATE TABLE IF NOT EXISTS timer (
-    -- owner_id text REFERENCES users (id),
     timer_duration int,
-    owner_id text NOT NULL,
+    user_id text NOT NULL,
     finish_time timestamp,
     is_completed boolean
 );
@@ -29,5 +28,18 @@ CREATE TABLE IF NOT EXISTS todo (
     user_id text NOT NULL,
     todo_text text NOT NULL,
     is_completed boolean NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS reports (
+    submission_id serial PRIMARY KEY,
+    username text UNIQUE NOT NULL,
+    date_submission timestamptz NOT NULL DEFAULT NOW(),
+    message text NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS admins (
+    id text PRIMARY KEY,
+    email text UNIQUE NOT NULL,
+    password_hash bytea NOT NULL
 );
 

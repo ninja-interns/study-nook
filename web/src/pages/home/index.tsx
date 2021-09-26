@@ -1,6 +1,5 @@
-import React from "react";
-import { Home } from "../../components";
-import { Fade } from "@material-ui/core";
+import { Home } from "../../components"
+import { Fade } from "@material-ui/core"
 
 export function HomePage() {
 	return (
@@ -9,5 +8,5 @@ export function HomePage() {
 				<Home />
 			</div>
 		</Fade>
-	);
+	)
 }
