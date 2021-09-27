@@ -1,21 +1,20 @@
+// Import Dependencies
 import React from "react"
-
-// Material UI imports
-import { Box, Button, Toolbar, Typography } from "@mui/material"
-import { createTheme, ThemeProvider, useTheme } from "@mui/material/styles"
-import { IconButton } from "@mui/material"
-import Brightness4Icon from "@mui/icons-material/Brightness4"
-import Brightness7Icon from "@mui/icons-material/Brightness7"
-import AppBar from "@mui/material/AppBar"
-import MenuIcon from "@mui/icons-material/Menu"
-
-// Component Imports
-import TimerForm from "../../components/countdownTimer/form"
-import TodoListApp from "../../components/todoList"
 import { useHistory } from "react-router-dom"
+// Import Material UI
+import { Box, Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button } from "@mui/material"
+import { IconButton, AppBar } from "@mui/material"
+import { Brightness4, Brightness7, Menu } from "@mui/icons-material"
+// Import Components
+import TimerForm from "../../components/countdownTimer/form"
+import TodoListApp from "../../components/todoList/form"
 
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
-
+/**
+ * * NOOKING SETUP PAGE
+ * * This is the page of the app where the user sets up their todo list and timer duration
+ * * The timer will not be created until the user clicks the "Start Nooking" button
+ */
+const ColorModeContext = React.createContext({ toggleColorMode: () => {} }) // Toggles dark / light mode
 const NookingSetupPage = () => {
 	const history = useHistory()
 	const theme = useTheme()
@@ -34,13 +33,13 @@ const NookingSetupPage = () => {
 			<AppBar position="static">
 				<Toolbar>
 					<IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-						<MenuIcon />
+						<Menu />
 					</IconButton>
 					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
 						Nooking Setup
 					</Typography>
 					<IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit" edge="end">
-						{theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+						{theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
 					</IconButton>
 				</Toolbar>
 			</AppBar>
@@ -51,6 +50,7 @@ const NookingSetupPage = () => {
 	)
 }
 
+//* This function gives the page a light / dark mode toggle component
 export function NookingSetup() {
 	const [mode, setMode] = React.useState<"light" | "dark">("light")
 	const colorMode = React.useMemo(

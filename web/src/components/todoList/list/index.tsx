@@ -1,14 +1,20 @@
-// TODO: Sort the todos - completed at the bottom of the list
-//! Explanation of component
-
+// Import Dependencies
 import * as React from "react"
-import { TodoContent } from "./interfaces"
+// Import Interface
+import { TodoContent } from "../interfaces"
+// Import Material UI
 import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card } from "@mui/material"
 
+/**
+ * * TODO LIST COMPONENT
+ * * Renders the todo list stored in the database
+ * * Updates the todo item to completed or not completed when the user clicks the checkbox
+ * TODO: Sort the todos - completed at the bottom of the list
+ */
 const TodoList = () => {
 	const [todos, setTodos] = React.useState<TodoContent[]>([])
 
-	//! Explanation of function
+	//* Requests the API to return todos stored in the database - Runs once on render
 	React.useEffect(() => {
 		async function getTodoList() {
 			const response = await fetch("/api/getTodos")
@@ -22,15 +28,15 @@ const TodoList = () => {
 		getTodoList()
 	}, [])
 
-	//! Explanation of function
+	//* Imports a todo and updates its checkbox and the completion status in the database
 	async function handleTodoComplete(todoItem: TodoContent) {
-		// Updating todos state
+		// Updates the todo to display as completed / not completed
 		const newTodosState: TodoContent[] = [...todos]
 		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.is_completed = !newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!
 			.is_completed
 		setTodos(newTodosState)
 
-		// Updating completion status in the database
+		// Sends request to the API to update the completion status of the todo
 		await fetch("/api/updateTodo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },

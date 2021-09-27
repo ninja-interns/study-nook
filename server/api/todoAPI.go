@@ -14,19 +14,42 @@ type TodoItem struct {
 }
 
 /**
+* * CREATE TODO FUNCTION
+* * Decodes the todo from the client and inserts it into the database
+ */
+func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
+	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
+
+	// Decode the request (todo) from the client
+	todo := &TodoItem{}
+	err := json.NewDecoder(r.Body).Decode(todo)
+	if err != nil {
+		handleError(w, "Error decoding create todo request: ", err)
+	}
+
+	// Insert todo into the Database
+	sqlStatement := `INSERT INTO todo (id, user_id, todo_text, is_completed) VALUES ($1, $2, $3, $4)`
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, todo.ID, userId, todo.Text, todo.IsCompleted)
+	if err != nil {
+		handleError(w, "Error interting todo into database: ", err)
+	}
+}
+
+/**
 * * GET TODOS FUNCTION
-* *
+* * Gets all the todos from the database which is_completed variable is false and sends it to the client
  */
 func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
-	// Get the rows from the database with the same user id
+	// Get the incompleted todos from the database
 	sqlStatement := `SELECT id, user_id, todo_text, is_completed FROM todo WHERE user_id=$1 AND is_completed='false'`
 	results, err := c.DB.Conn.Query(context.Background(), sqlStatement, userId)
 	if err != nil {
 		handleError(w, "Error retrieving list from database: ", err)
 	}
 
+	// Add all the todo items from the database into the array
 	todoArray := []*TodoItem{}
 	for results.Next() {
 		item := &TodoItem{}
@@ -37,45 +60,24 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 		todoArray = append(todoArray, item)
 	}
 
+	// Send the todo list to the client
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(todoArray)
 }
 
 /**
-* * CREATE TODO FUNCTION
-* *
- */
-func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
-	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
-
-	// Decoding the request into the todo item
-	todo := &TodoItem{}
-	err := json.NewDecoder(r.Body).Decode(todo)
-	if err != nil {
-		handleError(w, "Error decoding create todo request: ", err)
-	}
-
-	// Intserting todo into Database
-	sqlStatement := `INSERT INTO todo (id, user_id, todo_text, is_completed) VALUES ($1, $2, $3, $4)`
-	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, todo.ID, userId, todo.Text, todo.IsCompleted)
-	if err != nil {
-		handleError(w, "Error interting todo into database: ", err)
-	}
-}
-
-/**
 * * UPDATE TODO FUNCTION
-* *
+* * Updates the todo in the database with the todo information from the client
  */
 func (c *Controller) UpdateTodo(w http.ResponseWriter, r *http.Request) {
-	// Decoding the request into the todo item
+	// Decode the request (todo) from the client
 	todo := &TodoItem{}
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
 		handleError(w, "Error decoding todo update request: ", err)
 	}
 
-	// Intserting todo into Database
+	// Update the todo in the Database
 	sqlStatement := `UPDATE todo SET todo_text=$1, is_completed=$2 WHERE id=$3`
 	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, todo.Text, todo.IsCompleted, todo.ID)
 	if err != nil {
@@ -85,10 +87,10 @@ func (c *Controller) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 
 /**
 * * DELETE TODO FUNCTION
-* *
+* * Deletes the todo with the matching todo ID from the database
  */
 func (c *Controller) DeleteTodo(w http.ResponseWriter, r *http.Request) {
-	// Decoding request
+	// Decode the request (todo) from the client
 	todo := &TodoItem{}
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
