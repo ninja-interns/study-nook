@@ -1,14 +1,16 @@
-//! Explanation of component
-
 import * as React from "react"
 import TodoForm from "./TodoForm"
 import TodoListForm from "./TodoListForm"
 import { TodoContent } from "./interfaces"
 
+/**
+ * * TODO LIST APP COMPONENT
+ * *
+ */
 const TodoListApp = () => {
 	const [todos, setTodos] = React.useState<TodoContent[]>([])
 
-	//! Explanation of function
+	//* Requests the API to return all todos in the database - Runs once on render
 	React.useEffect(() => {
 		async function getTodoList() {
 			const response = await fetch("/api/getTodos")
@@ -22,20 +24,12 @@ const TodoListApp = () => {
 		getTodoList()
 	}, [])
 
-	//! Explanation of function
+	/**
+	 * * Imports a todo from the TodoForm component
+	 * * Adds the new todo to the todo list then adds it to the database
+	 */
 	async function handleTodoCreate(todo: TodoContent) {
-		// Update the todos state
-		if (todos == null) {
-			const newTodosState: TodoContent[] = []
-			newTodosState.push(todo)
-			setTodos(newTodosState)
-		} else {
-			const newTodosState: TodoContent[] = [...todos]
-			newTodosState.push(todo)
-			setTodos(newTodosState)
-		}
-
-		// Add todo to the database
+		// Add the new todo to the database
 		const response = await fetch("/api/createTodo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
@@ -44,16 +38,24 @@ const TodoListApp = () => {
 		if (!response.ok) {
 			console.error("Error creating todo item: " + response.statusText)
 		}
+
+		// Update the TodoListForm to display the added todo
+		if (todos === null) {
+			// Create a new empty list then add the new todo to it
+			const newTodosState: TodoContent[] = []
+			newTodosState.push(todo)
+			setTodos(newTodosState)
+		} else {
+			// Create a new list with all the current todos then add the new todo to it
+			const newTodosState: TodoContent[] = [...todos]
+			newTodosState.push(todo)
+			setTodos(newTodosState)
+		}
 	}
 
-	//! Explanation of function
+	//* Imports a TodoItem and updates the old TodoItem with the new information
 	async function handleTodoUpdate(event: React.ChangeEvent<HTMLInputElement>, todoItem: TodoContent) {
-		// Updating the todos state
-		const newTodosState: TodoContent[] = [...todos]
-		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.todo_text = event.target.value
-		setTodos(newTodosState)
-
-		// Updating the todo in the database
+		// Update the todo in the database
 		const response = await fetch("/api/updateTodo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
@@ -62,15 +64,16 @@ const TodoListApp = () => {
 		if (!response.ok) {
 			console.error("Error creating todo item: " + response.statusText)
 		}
+
+		// Update the todoList with the new todoItems information - Updates TodoListForm
+		const newTodosState: TodoContent[] = [...todos]
+		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.todo_text = event.target.value
+		setTodos(newTodosState)
 	}
 
-	//! Explanation of function
+	//* Imports a TodoItem and deletes it
 	async function handleTodoRemove(todoItem: TodoContent) {
-		// Updating the todos state
-		const newTodosState: TodoContent[] = todos.filter((todo: TodoContent) => todo.id !== todoItem.id)
-		setTodos(newTodosState)
-
-		// Deleting todo from the database
+		// Delete todo from the database
 		const response = await fetch("/api/deleteTodo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
@@ -79,6 +82,10 @@ const TodoListApp = () => {
 		if (!response.ok) {
 			console.error("Error deleting todo item: " + response.statusText)
 		}
+
+		// Create a new todo list without the deleted todo - Updates TodoListForm
+		const newTodosState: TodoContent[] = todos.filter((todo: TodoContent) => todo.id !== todoItem.id)
+		setTodos(newTodosState)
 	}
 
 	return (

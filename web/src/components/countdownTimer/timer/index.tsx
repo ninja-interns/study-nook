@@ -1,49 +1,78 @@
-// ! If you refresh the page the old timer is deleted and a new one is made
-//! Explanation of component
+// Import Dependencies
+import * as React from "react"
+// Import Interface
+import { TimerInterface } from "../interfaces"
+// Import Material UI
 import { Typography } from "@material-ui/core"
 import { Card, CardContent } from "@mui/material"
-import * as React from "react"
-import { TimerInterface } from "../interfaces"
 
+/**
+ * * TIMER COMPONENT
+ * * Creates a new timer on render and displays the time remaining
+ * * If there is no timer in the database it will display "No Timer"
+ * * Once the timer has finished it will display "Finished"
+ */
 const Timer = () => {
-	const [mounted, setMounted] = React.useState(false)
 	const [timer, setTimer] = React.useState<TimerInterface>()
-	const [ticker, setTicker] = React.useState<number>(0)
+	const [mounted, setMounted] = React.useState(false) // Mounted runs createTimer before getTimeLeft
+	const [ticker, setTicker] = React.useState<number>(0) // The ticker increments every second
 
-	//! Explanation of function
+	//* Requests the API to create a new timer - runs once on render
 	React.useEffect(() => {
 		async function createTimer() {
+			// Sends request to the API to create the timer (Uses the duration stored in the database)
 			const response = await fetch("/api/createTimer")
-			if (!response.ok) {
+
+			// If there is no timer duration in the database display "No Timer"
+			if (response.status === 404) {
+				const newTimer: TimerInterface = {
+					time_left: "No Timer",
+					timer_duration: 0,
+					is_completed: false,
+				}
+				setTimer(newTimer)
+			} else if (!response.ok) {
 				console.error("Error creating timer: " + response.statusText)
+			} else {
+				setMounted(true)
 			}
 		}
 		createTimer()
-		setMounted(true)
 	}, [])
 
-	//! Explanation of function
+	//* Gets time remaining from API - Runs if mounted and when the ticker increments
 	React.useEffect(() => {
 		if (mounted) getTimeLeft()
 
-		//! Explanation of function
 		async function getTimeLeft() {
+			// Sends request to the API to calculate and return time remaining on the timer
 			const response = await fetch("/api/getTimeLeft")
 			if (response.ok) {
 				const data: TimerInterface = await response.json()
-				if (data.time_left === "0s") {
+				if (data.time_left === "0s" || data.is_completed === true) {
 					data.time_left = "Finished"
 					setMounted(false)
 					setCompleted()
 				}
 				setTimer(data)
+			}
+			// If there is no timer duration in the database display "No Timer"
+			else if (response.status === 404) {
+				const newTimer: TimerInterface = {
+					time_left: "No Timer",
+					timer_duration: 0,
+					is_completed: false,
+				}
+				setTimer(newTimer)
+				setMounted(false)
 			} else {
 				console.error("Error getting time left: " + response.statusText)
+				setMounted(false)
 			}
 		}
 	}, [mounted, ticker])
 
-	//! Explanation of function
+	//* Requests the API to set the timer to completed
 	async function setCompleted() {
 		const response = await fetch("/api/setCompleted")
 		if (!response.ok) {
@@ -51,7 +80,7 @@ const Timer = () => {
 		}
 	}
 
-	//! Explanation of function
+	//* Increments the ticker every second - Runs if mounted
 	React.useEffect(() => {
 		if (mounted) {
 			const interval = setInterval(() => {
