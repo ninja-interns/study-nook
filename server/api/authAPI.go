@@ -361,7 +361,6 @@ func (c *Controller) UpdateUser(w http.ResponseWriter, r *http.Request, u *study
 	}
 
 	sqlStatement := `SELECT password_hash FROM users WHERE id = $1`
-	fmt.Println(u.ID)
 
 	//scanning the id password from the DB into the created variables above
 	err = c.DB.Conn.QueryRow(context.Background(), sqlStatement, u.ID).Scan(&dbPassword)

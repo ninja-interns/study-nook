@@ -233,9 +233,7 @@ func (c *Controller) UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
 
 // UserUpdateExceptPasswordHandler updates user details except password
 func (c *Controller) UserUpdateExceptPasswordHandler(w http.ResponseWriter, r *http.Request) {
-
 	userID := chi.URLParam(r, "userID")
-
 	userData := &studynook.User{}
 
 	err := json.NewDecoder(r.Body).Decode(userData)
