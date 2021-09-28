@@ -1,58 +1,58 @@
 {
-	/**
-	 * Workbench
-	 **/
-	"breadcrumbs.enabled": true,
-	/**
-	 * Editor
-	 **/
-	"editor.suggestSelection": "first",
-	"editor.formatOnSave": true,
-	"editor.renderControlCharacters": true,
-	"editor.minimap.enabled": true,
-	/**
-	 * Prettier
-	 **/
-	"prettier.enable": true,
-	"prettier.printWidth": 160,
-	"prettier.singleQuote": false,
-	"prettier.trailingComma": "all",
-	"prettier.bracketSpacing": true,
-	"prettier.jsxBracketSameLine": false,
-	"prettier.semi": false,
-	"prettier.useTabs": true,
-	"prettier.tabWidth": 4,
-	"prettier.arrowParens": "always",
-	/**
-	 * Search
-	 **/
-	"search.exclude": {
-		"**/node_modules": true,
-		"**/bower_components": true,
-		"**/vendor": true,
-		"**/dist": true,
-		"**/db": true,
-		"**/dataloaders": true,
-		"**/mocks": true,
-		"**/bindata": true,
-		"**/*_gen.go": true
-	},
-	/**
-	 * Language-Specific
-	 **/
-	// Json
-	"[json]": {
-		"editor.defaultFormatter": "vscode.json-language-features"
-	},
-	// HTML
-	"[html]": {
-		"editor.defaultFormatter": "vscode.html-language-features"
-	},
-	// SQL
-	"[sql]": {
-		"editor.defaultFormatter": "bradymholt.pgformatter"
-	},
-	// Go
-	"go.formatTool": "goimports",
-	"go.testFlags": ["-count=1"]
+  /**
+   * Workbench
+   **/
+  "breadcrumbs.enabled": true,
+  /**
+   * Editor
+   **/
+  "editor.suggestSelection": "first",
+  "editor.formatOnSave": true,
+  "editor.renderControlCharacters": true,
+  "editor.minimap.enabled": true,
+  /**
+   * Prettier
+   **/
+  "prettier.enable": true,
+  "prettier.printWidth": 160,
+  "prettier.singleQuote": false,
+  "prettier.trailingComma": "all",
+  "prettier.bracketSpacing": true,
+  "prettier.jsxBracketSameLine": false,
+  "prettier.semi": false,
+  "prettier.useTabs": true,
+  "prettier.tabWidth": 4,
+  "prettier.arrowParens": "always",
+  /**
+   * Search
+   **/
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/vendor": true,
+    "**/dist": true,
+    "**/db": true,
+    "**/dataloaders": true,
+    "**/mocks": true,
+    "**/bindata": true,
+    "**/*_gen.go": true
+  },
+  /**
+   * Language-Specific
+   **/
+  // Json
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  // HTML
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  // SQL
+  "[sql]": {
+    "editor.defaultFormatter": "bradymholt.pgformatter"
+  },
+  // Go
+  "go.formatTool": "goimports",
+  "go.testFlags": ["-count=1"]
 }
