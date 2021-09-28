@@ -54,5 +54,7 @@
   },
   // Go
   "go.formatTool": "goimports",
-  "go.testFlags": ["-count=1"]
+  "go.testFlags": [
+    "-count=1"
+  ]
 }
