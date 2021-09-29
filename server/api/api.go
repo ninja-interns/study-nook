@@ -46,6 +46,7 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	r.HandleFunc("/api/update_password", WithUser(sessionManager, db, c.UpdatePassword))
 	r.HandleFunc("/api/report_submission", WithUser(sessionManager, db, c.SubmitReports))
 
+	//* ADMIN
 	r.Route("/admin", func(r chi.Router) {
 		r.Post("/login", c.AdminLoginHandler)
 		r.Post("/users", c.UserCreateHandler) // POST /admin/users
@@ -59,17 +60,17 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	})
 
 	//* TODO LIST
-	r.HandleFunc("/api/getTodos", c.GetTodos)
-	r.HandleFunc("/api/createTodo", c.CreateTodo)
-	r.HandleFunc("/api/updateTodo", c.UpdateTodo)
-	r.HandleFunc("/api/deleteTodo", c.DeleteTodo)
+	r.HandleFunc("/api/get_todos", c.GetTodos)
+	r.HandleFunc("/api/create_todo", c.CreateTodo)
+	r.HandleFunc("/api/update_todo", c.UpdateTodo)
+	r.HandleFunc("/api/delete_todo", c.DeleteTodo)
 
 	//* TIMER
-	r.HandleFunc("/api/createTimer", c.CreateTimer)
-	r.HandleFunc("/api/getTimeLeft", c.GetTimeLeft)
-	r.HandleFunc("/api/deleteTimer", c.DeleteTimer)
-	r.HandleFunc("/api/setTimerDuration", c.SetTimerDuration)
-	r.HandleFunc("/api/setCompleted", c.SetCompleted)
+	r.HandleFunc("/api/create_timer", c.CreateTimer)
+	r.HandleFunc("/api/get_time_left", c.GetTimeLeft)
+	r.HandleFunc("/api/delete_timer", c.DeleteTimer)
+	r.HandleFunc("/api/set_timer_duration", c.SetTimerDuration)
+	r.HandleFunc("/api/set_completed", c.SetCompleted)
 
 	return c, nil
 }

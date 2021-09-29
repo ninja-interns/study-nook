@@ -8,9 +8,9 @@ import (
 
 type TodoItem struct {
 	ID          string `json:"id"`
-	UserId      string `json:"user_id"`
-	Text        string `json:"todo_text"`
-	IsCompleted bool   `json:"is_completed"`
+	UserId      string `json:"userId"`
+	Text        string `json:"todoText"`
+	IsCompleted bool   `json:"isCompleted"`
 }
 
 /**
@@ -25,6 +25,7 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
 		handleError(w, "Error decoding create todo request: ", err)
+		return
 	}
 
 	// Insert todo into the Database
@@ -32,6 +33,7 @@ func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
 	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, todo.ID, userId, todo.Text, todo.IsCompleted)
 	if err != nil {
 		handleError(w, "Error interting todo into database: ", err)
+		return
 	}
 }
 
@@ -47,6 +49,7 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 	results, err := c.DB.Conn.Query(context.Background(), sqlStatement, userId)
 	if err != nil {
 		handleError(w, "Error retrieving list from database: ", err)
+		return
 	}
 
 	// Add all the todo items from the database into the array
@@ -56,6 +59,7 @@ func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
 		err = results.Scan(&item.ID, &item.UserId, &item.Text, &item.IsCompleted)
 		if err != nil {
 			handleError(w, "Error scanning results into todo list: ", err)
+			return
 		}
 		todoArray = append(todoArray, item)
 	}
@@ -75,6 +79,7 @@ func (c *Controller) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
 		handleError(w, "Error decoding todo update request: ", err)
+		return
 	}
 
 	// Update the todo in the Database
@@ -82,6 +87,7 @@ func (c *Controller) UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, todo.Text, todo.IsCompleted, todo.ID)
 	if err != nil {
 		handleError(w, "Error updating todo in database: ", err)
+		return
 	}
 }
 
@@ -95,6 +101,7 @@ func (c *Controller) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
 		handleError(w, "Error decoding delete todo request: ", err)
+		return
 	}
 
 	// Deleting todo from the database
@@ -102,5 +109,6 @@ func (c *Controller) DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, todo.ID)
 	if err != nil {
 		handleError(w, "Error deleting todo from database: ", err)
+		return
 	}
 }

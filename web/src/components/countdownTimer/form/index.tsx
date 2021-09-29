@@ -1,5 +1,5 @@
 // Import Dependencies
-import React from "react"
+import * as React from "react"
 // Import Interface
 import { TimerInterface } from "../interfaces"
 // Import Material UI

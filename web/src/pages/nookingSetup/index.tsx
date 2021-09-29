@@ -1,13 +1,11 @@
-// Import Dependencies
 import React from "react"
+import TimerForm from "../../components/countdownTimer/form"
+import TodoListApp from "../../components/todoList/form"
 import { useHistory } from "react-router-dom"
 // Import Material UI
 import { Box, Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button } from "@mui/material"
 import { IconButton, AppBar } from "@mui/material"
 import { Brightness4, Brightness7, Menu } from "@mui/icons-material"
-// Import Components
-import TimerForm from "../../components/countdownTimer/form"
-import TodoListApp from "../../components/todoList/form"
 
 /**
  * * NOOKING SETUP PAGE
@@ -16,7 +14,7 @@ import TodoListApp from "../../components/todoList/form"
  */
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} }) // Toggles dark / light mode
 const NookingSetupPage = () => {
-	const history = useHistory()
+	const history = useHistory() // routes history
 	const theme = useTheme()
 	const colorMode = React.useContext(ColorModeContext)
 
@@ -51,6 +49,7 @@ const NookingSetupPage = () => {
 }
 
 //* This function gives the page a light / dark mode toggle component
+//? I am sure there is an easier / better way to implement light / dark theme
 export function NookingSetup() {
 	const [mode, setMode] = React.useState<"light" | "dark">("light")
 	const colorMode = React.useMemo(
