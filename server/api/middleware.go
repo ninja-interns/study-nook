@@ -30,3 +30,15 @@ func WithUser(sessions *scs.SessionManager, database *db.DB, next SecureHandler)
 	}
 	return fn
 }
+
+// AdminOnly middleware checks that the admin is logged in
+func (c *Controller) AdminOnly(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		adminID := c.Sessions.GetString(r.Context(), "id")
+		if adminID == "" {
+			http.Error(w, "You are not logged in", http.StatusForbidden)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}

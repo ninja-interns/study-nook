@@ -91,7 +91,7 @@ const UserListGrid = () => {
 			renderCell: (params: any) => {
 				return (
 					<>
-						<Link to={"/admin/users/" + params.row.id} style={{ textDecoration: "none" }}>
+						<Link to={"/admin-users-edit/" + params.row.id} style={{ textDecoration: "none" }}>
 							<Button variant="contained" size="small" color="primary" className={classes.button} startIcon={<EditIcon />}>
 								Edit
 							</Button>
@@ -135,7 +135,7 @@ const UserListGrid = () => {
 				<Typography variant="h6" color="primary" gutterBottom>
 					RECENT USERS
 				</Typography>
-				<Link to="/admin/users/create" style={{ textDecoration: "none" }}>
+				<Link to="/admin-users-create" style={{ textDecoration: "none" }}>
 					<Button color="primary" size="medium" startIcon={<AddIcon />} variant="contained">
 						CREATE USER
 					</Button>
