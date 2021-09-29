@@ -1,9 +1,9 @@
-import { Typography, Button } from "@material-ui/core";
-import React, { useState } from "react";
-import { Redirect, Route } from "react-router-dom";
-import { ContextContainer } from "../../contexts/ContextContainer";
-import { useStyles } from "./homeCss";
-import { useHistory } from "react-router";
+import { Typography, Button } from "@material-ui/core"
+import React, { useState } from "react"
+import { Redirect, Route } from "react-router-dom"
+import { ContextContainer } from "../../contexts/ContextContainer"
+import { useStyles } from "./homeCss"
+import { useHistory } from "react-router"
 
 export function Home() {
 	const css = useStyles();
@@ -12,7 +12,7 @@ export function Home() {
 	const history = useHistory();
 
 	if (isLoggedIn) {
-		history.push("/dashboard");
+		history.push("/dashboard")
 	}
 
 	return (
@@ -27,7 +27,7 @@ export function Home() {
 						variant="contained"
 						color="primary"
 						onClick={() => {
-							setRedirect("/login");
+							setRedirect("/login")
 						}}
 					>
 						Login
@@ -35,7 +35,7 @@ export function Home() {
 					<Button
 						className={css.button}
 						onClick={() => {
-							setRedirect("/registration");
+							setRedirect("/registration")
 						}}
 						variant="contained"
 						color="primary"
@@ -45,5 +45,5 @@ export function Home() {
 				</div>
 			</div>
 		</>
-	);
+	)
 }

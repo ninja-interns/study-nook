@@ -11,6 +11,7 @@ function App() {
 					<Routes />
 				</ContextContainer.Provider>
 		</ThemeProvider>
-	);
+	)
 }
-export default App;
+
+export default App

@@ -17,7 +17,7 @@ const Routes = () => {
 				<Route path="/" component={HomePage} />
 			</Switch>
 		</Router>
-	);
-};
+	)
+}
 
-export default Routes;
+export default Routes
