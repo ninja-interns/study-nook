@@ -36,7 +36,7 @@ export function ResetPassword() {
 		}
 
 		try {
-			const response = await fetch("/api/resetPassword", {
+			const response = await fetch("/api/reset_password", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({

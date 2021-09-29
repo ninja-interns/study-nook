@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS users(
 
 
 CREATE TABLE IF NOT EXISTS userimages (
-    id INT UNIQUE NOT NULL,
+    id PRIMARY KEY,
     imagedata BYTEA,
     PRIMARY KEY(id),
     CONSTRAINT fk_user
         FOREIGN KEY(id)
             REFERENCES users(id)
+            ON UPDATE CASCADE
             ON DELETE CASCADE
 );
-
 
