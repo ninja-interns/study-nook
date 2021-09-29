@@ -3,7 +3,6 @@ import { Stage, Sprite, Container } from "@inlet/react-pixi"
 /**
  * This is an example pixi component - used on the Nooking page where the avatar will be in the future
  */
-
 const ExamplePixi = () => {
 	return (
 		<Stage width={350} height={200} options={{ backgroundColor: 0xeef1f5 }}>

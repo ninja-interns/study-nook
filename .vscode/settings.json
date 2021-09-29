@@ -9,7 +9,7 @@
 	"editor.suggestSelection": "first",
 	"editor.formatOnSave": true,
 	"editor.renderControlCharacters": true,
-	"editor.minimap.enabled": true,
+	// "editor.minimap.enabled": true,
 	/**
 	 * Prettier
 	 **/
