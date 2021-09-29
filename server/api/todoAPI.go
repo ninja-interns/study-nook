@@ -1,114 +1,111 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
+
+	"studynook.go"
 )
 
-type TodoItem struct {
-	ID          string `json:"id"`
-	UserId      string `json:"userId"`
-	Text        string `json:"todoText"`
-	IsCompleted bool   `json:"isCompleted"`
-}
-
 /**
-* * CREATE TODO FUNCTION
+* * CREATE TODO HANDLER
 * * Decodes the todo from the client and inserts it into the database
- */
-func (c *Controller) CreateTodo(w http.ResponseWriter, r *http.Request) {
+**/
+func (c *Controller) CreateTodoHandler(w http.ResponseWriter, r *http.Request) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
 	// Decode the request (todo) from the client
-	todo := &TodoItem{}
+	todo := &studynook.Todo{}
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
-		handleError(w, "Error decoding create todo request: ", err)
+		handleError(w, "Error decoding create todo request: ", err) //! Handle with middleware
 		return
 	}
 
 	// Insert todo into the Database
-	sqlStatement := `INSERT INTO todo (id, user_id, todo_text, is_completed) VALUES ($1, $2, $3, $4)`
-	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, todo.ID, userId, todo.Text, todo.IsCompleted)
+	err = c.DB.CreateTodo(todo.ID, userId, todo.Text, false)
 	if err != nil {
-		handleError(w, "Error interting todo into database: ", err)
+		handleError(w, "Error interting todo into the database: ", err) //! Handle with middleware
 		return
 	}
 }
 
 /**
-* * GET TODOS FUNCTION
+* * GET TODOS HANDLER
 * * Gets all the todos from the database which is_completed variable is false and sends it to the client
- */
-func (c *Controller) GetTodos(w http.ResponseWriter, r *http.Request) {
+**/
+func (c *Controller) GetTodosHandler(w http.ResponseWriter, r *http.Request) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
 	// Get the incompleted todos from the database
-	sqlStatement := `SELECT id, user_id, todo_text, is_completed FROM todo WHERE user_id=$1 AND is_completed='false'`
-	results, err := c.DB.Conn.Query(context.Background(), sqlStatement, userId)
+	results, err := c.DB.GetAllTodos(userId)
 	if err != nil {
-		handleError(w, "Error retrieving list from database: ", err)
+		handleError(w, "Error retrieving list from database: ", err) //! Handle with middleware
 		return
 	}
 
 	// Add all the todo items from the database into the array
-	todoArray := []*TodoItem{}
+	todoList := []*studynook.Todo{}
 	for results.Next() {
-		item := &TodoItem{}
+		item := &studynook.Todo{}
 		err = results.Scan(&item.ID, &item.UserId, &item.Text, &item.IsCompleted)
 		if err != nil {
-			handleError(w, "Error scanning results into todo list: ", err)
+			handleError(w, "Error scanning results into todo list: ", err) //! Handle with middleware
 			return
 		}
-		todoArray = append(todoArray, item)
+		todoList = append(todoList, item)
 	}
 
 	// Send the todo list to the client
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(todoArray)
+	json.NewEncoder(w).Encode(todoList)
 }
 
 /**
-* * UPDATE TODO FUNCTION
+* * UPDATE TODO HANDLER
 * * Updates the todo in the database with the todo information from the client
- */
-func (c *Controller) UpdateTodo(w http.ResponseWriter, r *http.Request) {
+**/
+func (c *Controller) UpdateTodoHandler(w http.ResponseWriter, r *http.Request) {
 	// Decode the request (todo) from the client
-	todo := &TodoItem{}
+	todo := &studynook.Todo{}
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
-		handleError(w, "Error decoding todo update request: ", err)
+		handleError(w, "Error decoding todo update request: ", err) //! Handle with middleware
 		return
 	}
 
-	// Update the todo in the Database
-	sqlStatement := `UPDATE todo SET todo_text=$1, is_completed=$2 WHERE id=$3`
-	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, todo.Text, todo.IsCompleted, todo.ID)
+	// Update the todo text in the Database
+	err = c.DB.SetTodoText(todo.ID, todo.Text)
 	if err != nil {
-		handleError(w, "Error updating todo in database: ", err)
+		handleError(w, "Error updating todos' text in database: ", err) //! Handle with middleware
+		return
+	}
+
+	// Update the todo completion in the Database
+	err = c.DB.SetTodoIsCompleted(todo.ID, todo.IsCompleted)
+	if err != nil {
+		handleError(w, "Error updating todos' text in database: ", err) //! Handle with middleware
 		return
 	}
 }
 
 /**
-* * DELETE TODO FUNCTION
+* * DELETE TODO HANDLER
 * * Deletes the todo with the matching todo ID from the database
- */
-func (c *Controller) DeleteTodo(w http.ResponseWriter, r *http.Request) {
+**/
+func (c *Controller) DeleteTodoHandler(w http.ResponseWriter, r *http.Request) {
 	// Decode the request (todo) from the client
-	todo := &TodoItem{}
+	todo := &studynook.Todo{}
 	err := json.NewDecoder(r.Body).Decode(todo)
 	if err != nil {
-		handleError(w, "Error decoding delete todo request: ", err)
+		handleError(w, "Error decoding delete todo request: ", err) //! Handle with middleware
 		return
 	}
 
-	// Deleting todo from the database
-	sqlStatement := `DELETE FROM todo WHERE id=$1`
-	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, todo.ID)
+	// Delete todo from the database
+	err = c.DB.DeleteTodo(todo.ID)
 	if err != nil {
-		handleError(w, "Error deleting todo from database: ", err)
+		handleError(w, "Error deleting todo from database: ", err) //! Handle with middleware
 		return
 	}
 }

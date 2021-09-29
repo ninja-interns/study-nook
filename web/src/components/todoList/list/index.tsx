@@ -1,8 +1,5 @@
-// Import Dependencies
 import * as React from "react"
-// Import Interface
 import { TodoContent } from "../interfaces"
-// Import Material UI
 import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card } from "@mui/material"
 
 /**
@@ -17,7 +14,7 @@ const TodoList = () => {
 	//* Requests the API to return todos stored in the database - Runs once on render
 	React.useEffect(() => {
 		async function getTodoList() {
-			const response = await fetch("/api/getTodos")
+			const response = await fetch("/api/get_todos")
 			if (response.ok) {
 				const data: TodoContent[] = await response.json()
 				setTodos(data)
@@ -37,7 +34,7 @@ const TodoList = () => {
 		setTodos(newTodosState)
 
 		// Sends request to the API to update the completion status of the todo
-		await fetch("/api/updateTodo", {
+		await fetch("/api/update_todo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(todoItem),

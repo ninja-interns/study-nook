@@ -1,6 +1,8 @@
 package studynook
 
 import (
+	"time"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 )
@@ -95,4 +97,24 @@ func (a Admin) ValidateExceptID() error {
 		// Password cannot be empty.
 		validation.Field(&a.Password, validation.Required),
 	)
+}
+
+/**
+* * TODO LIST STRUCT
+**/
+type Todo struct {
+	ID          string `json:"id"`
+	UserId      string `json:"userId"`
+	Text        string `json:"todoText"`
+	IsCompleted bool   `json:"isCompleted"`
+}
+
+/**
+* * TIMER STRUCT
+**/
+type Timer struct {
+	TimerDuration time.Duration `json:"timerDuration"`
+	FinishTime    time.Time     `json:"finishTime"`
+	TimeLeft      string        `json:"timeLeft"`
+	IsCompleted    bool          `json:"isCompleted"`
 }

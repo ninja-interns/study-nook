@@ -1,43 +1,41 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"time"
 
 	"github.com/jackc/pgx/v4"
+	"studynook.go"
 )
-
-type Timer struct {
-	TimerDuration time.Duration `json:"timerDuration"`
-	FinishTime    time.Time     `json:"finishTime"`
-	TimeLeft      string        `json:"timeLeft"`
-	IsComplete    bool          `json:"isCompleted"`
-}
 
 /**
 * * SET TIMER DURATION FUNCTION
 * * Recieves a timer duration from the client and inserts a null finish time and duration to the database
  */
-func (c *Controller) SetTimerDuration(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) SetTimerDurationHandler(w http.ResponseWriter, r *http.Request) {
 	// Decode request (timer duration) from the client
-	timer := Timer{}
+	timer := &studynook.Timer{}
 	err := json.NewDecoder(r.Body).Decode(&timer)
 	if err != nil {
-		handleError(w, "Error decoding create timer request: ", err)
+		handleError(w, "Error decoding create timer request: ", err) //! Handle with middleware
 		return
 	}
 
-	c.DeleteTimer(w, r) // Deletes old timers' from the database
+	c.DeleteTimerHandler(w, r) // Delete old timer/s from the database
 
-	// Initialise values and intsert into Database
-	var nullFinishTime time.Time
+	// Set timer duration in database
 	userId := c.Sessions.GetString(r.Context(), "id")
-	sqlStatement := `INSERT INTO timer (user_id, timer_duration, finish_time) VALUES ($1, $2, $3)`
-	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, userId, &timer.TimerDuration, nullFinishTime)
+	err = c.DB.SetTimerDuration(userId, timer.TimerDuration)
 	if err != nil {
-		handleError(w, "Error inserting timer duration into database: ", err)
+		handleError(w, "Error inserting timer duration into database: ", err) //! Handle with middleware
+		return
+	}
+
+	// Set null finish time in database
+	err = c.DB.SetNullFinishTime(userId)
+	if err != nil {
+		handleError(w, "Error inserting finish time into database: ", err) //! Handle with middleware
 		return
 	}
 }
@@ -46,25 +44,22 @@ func (c *Controller) SetTimerDuration(w http.ResponseWriter, r *http.Request) {
 * * CREATE TIMER FUNCTION
 * * This function selects the timer duration from the database and uses it to calculate the timers' finish time.
  */
-func (c *Controller) CreateTimer(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) CreateTimerHandler(w http.ResponseWriter, r *http.Request) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
-	// Retrieve finish time from the database
-	timer := &Timer{}
-	sqlStatement := `SELECT finish_time FROM timer WHERE user_id=$1`
-	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&timer.FinishTime)
+	// Get finish time from the database
+	timer, err := c.DB.GetFinishTime(userId)
 	if err != nil {
-		handleError(w, "Error retrieving finish time from database: ", err)
+		handleError(w, "Error getting finish time from database: ", err) //! Handle with middleware
 		return
 	}
 
 	// If the finishtime is zero create a new timer (it is initialised as zero when the duration is added)
 	if timer.FinishTime.UTC().IsZero() {
 		// Get timer duration from the database
-		sqlStatement = `SELECT timer_duration FROM timer WHERE user_id=$1`
-		err = c.DB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&timer.TimerDuration)
+		timer, err := c.DB.GetTimerDuration(userId)
 		if err != nil {
-			handleError(w, "Error retrieving timer duration from the database: ", err)
+			handleError(w, "Error getting timer duration from the database: ", err) //! Handle with middleware
 			return
 		}
 
@@ -72,11 +67,17 @@ func (c *Controller) CreateTimer(w http.ResponseWriter, r *http.Request) {
 		currentTime := time.Now().UTC()
 		finishTime := currentTime.Add((time.Minute * timer.TimerDuration))
 
-		// Insert finish time into the database
-		sqlStatement = `UPDATE timer SET finish_time=$1, is_completed=$2 WHERE user_id=$3`
-		_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, finishTime, timer.IsComplete, userId)
+		// Set finish time into the database
+		err = c.DB.SetTimerFinishTime(userId, finishTime)
 		if err != nil {
-			handleError(w, "Error creating new timer in database: ", err)
+			handleError(w, "Error setting finish time in database: ", err) //! Handle with middleware
+			return
+		}
+
+		// Set is_completed into the database
+		err = c.DB.SetTimerIsCompleted(userId, false)
+		if err != nil {
+			handleError(w, "Error setting is completed in database: ", err) //! Handle with middleware
 			return
 		}
 	}
@@ -86,31 +87,29 @@ func (c *Controller) CreateTimer(w http.ResponseWriter, r *http.Request) {
 * * GET TIME LEFT FUNCTION
 * * Calculates the time remaining and sends it to the client
  */
-func (c *Controller) GetTimeLeft(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) GetTimeLeftHandler(w http.ResponseWriter, r *http.Request) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
 	// Get the finish time from the database
-	timer := Timer{}
-	sqlStatement := `SELECT finish_time FROM timer WHERE user_id=$1`
-	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, userId).Scan(&timer.FinishTime)
+	timer, err := c.DB.GetFinishTime(userId)
 	if err != nil {
-		handleError(w, "Error retrieving finish time from the database: ", err)
+		handleError(w, "Error retrieving finish time from the database: ", err) //! Handle with middleware
 		return
 	}
 
 	// Add 1 second to the finish time - otherwise the timer is deleted before it has finished
 	validFinishTime := timer.FinishTime.Add(time.Second * 1)
 
-	// If the finish time is valid (in the future) calculate time left
+	// If the finish time is valid (in the future) calculate the time left
 	if validFinishTime.After(time.Now()) {
 		finishTime := timer.FinishTime
 		timeUntilFinish := time.Until(finishTime)
 		timer.TimeLeft = timeUntilFinish.Round(time.Second).String()
 	} else if validFinishTime.Before(time.Now()) { // If the timer is finished
-		timer.IsComplete = true
-		c.SetCompleted(w, r) // Set to complete in database
+		timer.IsCompleted = true
+		c.SetIsCompletedHandler(w, r) //! Set to complete in database -DB Call?
 	} else {
-		c.DeleteTimer(w, r)
+		c.DeleteTimerHandler(w, r) //! DB call?
 	}
 
 	// Timer response
@@ -122,15 +121,13 @@ func (c *Controller) GetTimeLeft(w http.ResponseWriter, r *http.Request) {
 * * SET COMPLETED FUNCTION
 * * Updates the timer in the database to completed
  */
-func (c *Controller) SetCompleted(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) SetIsCompletedHandler(w http.ResponseWriter, r *http.Request) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
 	// Update the completion status of the timer in database
-	isComplete := true
-	sqlStatement := `UPDATE timer SET is_completed=$1 WHERE user_id=$2`
-	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, isComplete, userId)
+	err := c.DB.SetTimerIsCompleted(userId, true)
 	if err != nil {
-		handleError(w, "Error updating timer is_completed in database: ", err)
+		handleError(w, "Error updating timer is_completed in database: ", err) //! Handle with middleware
 		return
 	}
 
@@ -141,14 +138,13 @@ func (c *Controller) SetCompleted(w http.ResponseWriter, r *http.Request) {
 * * DELETE TIMER FUNCTION
 * * Deletes all timers with the current users ID
  */
-func (c *Controller) DeleteTimer(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) DeleteTimerHandler(w http.ResponseWriter, r *http.Request) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
 	// Delete timer from the database
-	sqlStatement := `DELETE FROM timer WHERE user_id=$1`
-	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, userId)
+	err := c.DB.DeleteTimer(userId)
 	if err != nil {
-		handleError(w, "Error deleting the timer from the database: ", err)
+		handleError(w, "Error deleting the timer from the database: ", err) //! Handle with middleware
 		return
 	}
 }
@@ -157,7 +153,7 @@ func (c *Controller) DeleteTimer(w http.ResponseWriter, r *http.Request) {
 * * HANDLE ERROR FUNCTION
 * * Returns two types of errors: No rows in database & all other errors
 * ? Could add more types of errors?
-* ? Move this function to an error API?
+* ! This will be handled with a middleware instead of API
  */
 func handleError(w http.ResponseWriter, text string, err error) {
 	// If the database returns no rows

@@ -1,8 +1,5 @@
-// Import Dependencies
 import * as React from "react"
-// Import Interfaces
 import { TodoContent } from "../interfaces"
-// Import Components
 import TodoForm from "./TodoForm"
 import TodoList from "./TodoList"
 
@@ -17,7 +14,7 @@ const TodoListApp = () => {
 	//* Requests the API to return all todos in the database - Runs once on render
 	React.useEffect(() => {
 		async function getTodoList() {
-			const response = await fetch("/api/getTodos")
+			const response = await fetch("/api/get_todos")
 			if (response.ok) {
 				const data: TodoContent[] = await response.json()
 				setTodos(data)
@@ -34,7 +31,7 @@ const TodoListApp = () => {
 	 */
 	async function handleTodoCreate(todo: TodoContent) {
 		// Add the new todo to the database
-		const response = await fetch("/api/createTodo", {
+		const response = await fetch("/api/create_todo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(todo),
@@ -65,7 +62,7 @@ const TodoListApp = () => {
 		setTodos(newTodosState)
 
 		// Update the todo in the database
-		const response = await fetch("/api/updateTodo", {
+		const response = await fetch("/api/update_todo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(todoItem),
@@ -78,7 +75,7 @@ const TodoListApp = () => {
 	//* Imports a TodoItem and deletes it
 	async function handleTodoRemove(todoItem: TodoContent) {
 		// Delete todo from the database
-		const response = await fetch("/api/deleteTodo", {
+		const response = await fetch("/api/delete_todo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(todoItem),

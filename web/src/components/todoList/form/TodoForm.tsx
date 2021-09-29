@@ -1,9 +1,6 @@
-// Import Dependencies
 import * as React from "react"
 import { v4 as uuidv4 } from "uuid"
-// Import Interfaces
 import { TodoContent, TodoFormInterface } from "../interfaces"
-// Import Material UI
 import { TextField } from "@mui/material"
 import { Box } from "@mui/system"
 

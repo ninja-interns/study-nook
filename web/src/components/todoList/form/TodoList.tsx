@@ -1,8 +1,5 @@
-// Import Dependencies
 import React from "react"
-// Import Interface
 import { TodoListInterface } from "../interfaces"
-// Import Material UI
 import { IconButton, List, ListItem, TextField } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 

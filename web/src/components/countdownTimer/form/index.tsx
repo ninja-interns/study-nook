@@ -1,8 +1,5 @@
-// Import Dependencies
 import * as React from "react"
-// Import Interface
 import { TimerInterface } from "../interfaces"
-// Import Material UI
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Box } from "@mui/material"
 
 /**
@@ -31,7 +28,7 @@ const TimerForm = () => {
 	//* Posts the new timer duration to the database
 	async function createTimerDuration(newTimer: TimerInterface) {
 		// Sends request to the API to create a new timer duration
-		const response = await fetch("/api/setTimerDuration", {
+		const response = await fetch("/api/set_timer_duration", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(newTimer),
