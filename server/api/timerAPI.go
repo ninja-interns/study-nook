@@ -21,7 +21,6 @@ func (c *Controller) SetTimerDurationHandler(w http.ResponseWriter, r *http.Requ
 	err := json.NewDecoder(r.Body).Decode(&timer)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error decoding create timer request")
-		// handleError(w, "Error decoding create timer request: ", err)
 	}
 
 	c.DeleteTimerHandler(w, r) // Delete old timer/s from the database
@@ -31,14 +30,12 @@ func (c *Controller) SetTimerDurationHandler(w http.ResponseWriter, r *http.Requ
 	err = c.DB.SetTimerId(userId)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error creating new timer in database")
-		// handleError(w, "Error creating new timer in database: ", err)
 	}
 
 	// Set timer duration to null in database
 	err = c.DB.SetTimerDuration(userId, timer.TimerDuration)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error inserting timer duration into database")
-		// handleError(w, "Error inserting timer duration into database: ", err)
 	}
 
 	// Set null finish time to null in database
@@ -63,14 +60,13 @@ func (c *Controller) SetTimerDurationHandler(w http.ResponseWriter, r *http.Requ
 func (c *Controller) CreateTimerHandler(w http.ResponseWriter, r *http.Request) (int, error) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
-	//! Get finish time from the database - do I set the error status here?
+	// Get finish time from the database
 	timer, err := c.DB.GetFinishTime(userId)
 	if err != nil {
 		if err == pgx.ErrNoRows {
 			return http.StatusNotFound, errors.New("error getting finish time: no results in database")
-		} else {
-			return http.StatusBadRequest, errors.New("error getting finish time from database")
 		}
+		return http.StatusBadRequest, errors.New("error getting finish time from database")
 	}
 
 	// If the finishtime is zero create a new timer (it is initialised as zero when the duration is added)
@@ -78,6 +74,9 @@ func (c *Controller) CreateTimerHandler(w http.ResponseWriter, r *http.Request) 
 		// Get timer duration from the database
 		timer, err := c.DB.GetTimerDuration(userId)
 		if err != nil {
+			if err == pgx.ErrNoRows {
+				return http.StatusNotFound, errors.New("error getting timer duration from the database: no results in database")
+			}
 			return http.StatusBadRequest, errors.New("error getting timer duration from the database")
 		}
 
@@ -111,8 +110,11 @@ func (c *Controller) GetTimeLeftHandler(w http.ResponseWriter, r *http.Request) 
 	// Get the finish time from the database
 	timer, err := c.DB.GetFinishTime(userId)
 	if err != nil {
-		return http.StatusBadRequest, errors.New("error retrieving finish time from the database")
-	}
+			if err == pgx.ErrNoRows {
+				return http.StatusNotFound, errors.New("error getting finish time from the database: no results in database")
+			}
+			return http.StatusBadRequest, errors.New("error getting finish time from the database")
+		}
 
 	// Add 1 second to the finish time - otherwise the timer is deleted before it has finished
 	validFinishTime := timer.FinishTime.Add(time.Second * 1)
@@ -123,10 +125,18 @@ func (c *Controller) GetTimeLeftHandler(w http.ResponseWriter, r *http.Request) 
 		timeUntilFinish := time.Until(finishTime)
 		timer.TimeLeft = timeUntilFinish.Round(time.Second).String()
 	} else if validFinishTime.Before(time.Now()) { // If the timer is finished
+		// Update the completion status of the timer in database
 		timer.IsCompleted = true
-		c.SetIsCompletedHandler(w, r) //! Set to complete in database -DB Call?
+		err := c.DB.SetTimerIsCompleted(userId, timer.IsCompleted)
+		if err != nil {
+			return http.StatusBadRequest, errors.New("error updating timer is_completed in database")
+		}
 	} else {
-		c.DeleteTimerHandler(w, r) //! DB call?
+		// Delete timer from the database
+		err := c.DB.DeleteTimer(userId)
+		if err != nil {
+			return http.StatusBadRequest, errors.New("error deleting the timer from the database")
+		}
 	}
 
 	// Timer response
@@ -147,7 +157,6 @@ func (c *Controller) SetIsCompletedHandler(w http.ResponseWriter, r *http.Reques
 	err := c.DB.SetTimerIsCompleted(userId, true)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error updating timer is_completed in database")
-		// handleError(w, "Error updating timer is_completed in database: ", err)
 	}
 
 	// ! JOHN Handle the completed timer here?
@@ -166,7 +175,6 @@ func (c *Controller) DeleteTimerHandler(w http.ResponseWriter, r *http.Request) 
 	err := c.DB.DeleteTimer(userId)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error deleting the timer from the database")
-		// handleError(w, "Error deleting the timer from the database: ", err)
 	}
 
 	return http.StatusOK, nil
