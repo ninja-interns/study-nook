@@ -47,7 +47,7 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	r.HandleFunc("/api/report_submission", WithUser(sessionManager, db, c.SubmitReports))
 
 	r.Post("/api/login_admin", c.AdminLoginHandler)   //POST /api/login_admin
-	r.Post("/api/logout_admin", c.AdminLogoutHandler) //POST /admin/logout_admin
+	r.Post("/api/logout_admin", c.AdminLogoutHandler) //POST /api/logout_admin
 
 	// Mount the admin sub-router
 	r.Mount("/admin", c.adminRouter())

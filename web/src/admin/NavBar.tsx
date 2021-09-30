@@ -1,4 +1,4 @@
-import { makeStyles, AppBar, Toolbar, Typography, Badge, Avatar, Button } from "@material-ui/core"
+import { makeStyles, AppBar, Toolbar, Typography, Badge, Avatar } from "@material-ui/core"
 import { Mail, Notifications } from "@material-ui/icons"
 import LogoutIcon from "@mui/icons-material/Logout"
 import { ContextContainer } from "../contexts/ContextContainer"

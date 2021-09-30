@@ -44,7 +44,7 @@ const Routes = () => {
 					<AdminPrivateRoute path="/admin-users-edit/:userID" component={UserEditPage} />
 					<AdminPrivateRoute path="/admin-users" component={UserListPage} />
 
-					<Route path="/" component={HomePage} />
+					<Route exact path="/" component={HomePage} />
 				</Switch>
 			</LastLocationProvider>
 		</Router>
