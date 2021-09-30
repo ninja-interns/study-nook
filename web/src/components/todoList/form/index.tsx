@@ -17,7 +17,6 @@ const TodoListApp = () => {
 			const response = await fetch("/api/get_todos")
 			if (response.ok) {
 				const data: TodoContent[] = await response.json()
-				console.log(data)
 				setTodos(data)
 			} else {
 				console.error("Error fetching todo list: " + response.statusText)

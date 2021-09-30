@@ -60,17 +60,17 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	})
 
 	//* TODO LIST
-	r.HandleFunc("/api/get_todos", c.GetTodosHandler)
-	r.HandleFunc("/api/create_todo", c.CreateTodoHandler)
-	r.HandleFunc("/api/update_todo", c.UpdateTodoHandler)
-	r.HandleFunc("/api/delete_todo", c.DeleteTodoHandler)
+	r.HandleFunc("/api/get_todos", WithError(c.GetTodosHandler))
+	r.HandleFunc("/api/create_todo", WithError(c.CreateTodoHandler))
+	r.HandleFunc("/api/update_todo", WithError(c.UpdateTodoHandler))
+	r.HandleFunc("/api/delete_todo", WithError(c.DeleteTodoHandler))
 
 	//* TIMER
-	r.HandleFunc("/api/create_timer", c.CreateTimerHandler)
-	r.HandleFunc("/api/get_time_left", c.GetTimeLeftHandler)
-	r.HandleFunc("/api/delete_timer", c.DeleteTimerHandler)
-	r.HandleFunc("/api/set_timer_duration", c.SetTimerDurationHandler)
-	r.HandleFunc("/api/set_completed", c.SetIsCompletedHandler)
+	r.HandleFunc("/api/create_timer", WithError(c.CreateTimerHandler))
+	r.HandleFunc("/api/get_time_left", WithError(c.GetTimeLeftHandler))
+	r.HandleFunc("/api/delete_timer", WithError(c.DeleteTimerHandler))
+	r.HandleFunc("/api/set_timer_duration", WithError(c.SetTimerDurationHandler))
+	r.HandleFunc("/api/set_completed", WithError(c.SetIsCompletedHandler))
 
 	return c, nil
 }
