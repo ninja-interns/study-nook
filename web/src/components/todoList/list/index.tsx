@@ -29,8 +29,8 @@ const TodoList = () => {
 	async function handleTodoComplete(todoItem: TodoContent) {
 		// Updates the todo to display as completed / not completed
 		const newTodosState: TodoContent[] = [...todos]
-		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.is_completed = !newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!
-			.is_completed
+		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.isCompleted = !newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!
+			.isCompleted
 		setTodos(newTodosState)
 
 		// Sends request to the API to update the completion status of the todo
@@ -54,9 +54,9 @@ const TodoList = () => {
 						<ListItem key={todo.id}>
 							<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
 								<ListItemIcon>
-									<Checkbox checked={todo.is_completed} edge="start" />
+									<Checkbox checked={todo.isCompleted} edge="start" />
 								</ListItemIcon>
-								<Typography>{todo.todo_text}</Typography>
+								<Typography>{todo.todoText}</Typography>
 							</ListItemButton>
 						</ListItem>
 					)

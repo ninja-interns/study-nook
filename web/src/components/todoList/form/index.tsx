@@ -17,6 +17,7 @@ const TodoListApp = () => {
 			const response = await fetch("/api/get_todos")
 			if (response.ok) {
 				const data: TodoContent[] = await response.json()
+				console.log(data)
 				setTodos(data)
 			} else {
 				console.error("Error fetching todo list: " + response.statusText)
@@ -58,7 +59,7 @@ const TodoListApp = () => {
 	async function handleTodoUpdate(event: React.ChangeEvent<HTMLInputElement>, todoItem: TodoContent) {
 		// Update the todoList with the new todoItems information - Updates TodoListForm
 		const newTodosState: TodoContent[] = [...todos]
-		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.todo_text = event.target.value
+		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.todoText = event.target.value
 		setTodos(newTodosState)
 
 		// Update the todo in the database

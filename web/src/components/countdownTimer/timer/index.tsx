@@ -23,9 +23,9 @@ const Timer = () => {
 			// If there is no timer duration in the database display "No Timer"
 			if (response.status === 404) {
 				const newTimer: TimerInterface = {
-					time_left: "No Timer",
-					timer_duration: 0,
-					is_completed: false,
+					timeLeft: "No Timer",
+					timerDuration: 0,
+					isCompleted: false,
 				}
 				setTimer(newTimer)
 			} else if (!response.ok) {
@@ -46,8 +46,8 @@ const Timer = () => {
 			const response = await fetch("/api/get_time_left")
 			if (response.ok) {
 				const data: TimerInterface = await response.json()
-				if (data.time_left === "0s" || data.is_completed === true) {
-					data.time_left = "Finished"
+				if (data.timeLeft === "0s" || data.isCompleted === true) {
+					data.timeLeft = "Finished"
 					setMounted(false)
 					setCompleted()
 				}
@@ -56,9 +56,9 @@ const Timer = () => {
 			// If there is no timer duration in the database display "No Timer"
 			else if (response.status === 404) {
 				const newTimer: TimerInterface = {
-					time_left: "No Timer",
-					timer_duration: 0,
-					is_completed: false,
+					timeLeft: "No Timer",
+					timerDuration: 0,
+					isCompleted: false,
 				}
 				setTimer(newTimer)
 				setMounted(false)
@@ -90,7 +90,7 @@ const Timer = () => {
 	return (
 		<Card sx={{ display: "flex", width: "50%" }}>
 			<CardContent>
-				<Typography variant="h4">{timer?.time_left}</Typography>
+				<Typography variant="h4">{timer?.timeLeft}</Typography>
 			</CardContent>
 		</Card>
 	)

@@ -10,6 +10,7 @@ import (
 )
 
 /**
+* ! CREATING A NEW TIMER WILL NULL COMPONENTS AND USER ID - should rename
 * * SET TIMER DURATION FUNCTION
 * * Recieves a timer duration from the client and inserts a null finish time and duration to the database
  */
@@ -24,18 +25,32 @@ func (c *Controller) SetTimerDurationHandler(w http.ResponseWriter, r *http.Requ
 
 	c.DeleteTimerHandler(w, r) // Delete old timer/s from the database
 
-	// Set timer duration in database
+	// Create new empty timer with an ID in database
 	userId := c.Sessions.GetString(r.Context(), "id")
+	err = c.DB.SetTimerId(userId)
+	if err != nil {
+		handleError(w, "Error creating new timer in database: ", err) //! Handle with middleware
+		return
+	}
+
+	// Set timer duration to null in database
 	err = c.DB.SetTimerDuration(userId, timer.TimerDuration)
 	if err != nil {
 		handleError(w, "Error inserting timer duration into database: ", err) //! Handle with middleware
 		return
 	}
 
-	// Set null finish time in database
+	// Set null finish time to null in database
 	err = c.DB.SetNullFinishTime(userId)
 	if err != nil {
-		handleError(w, "Error inserting finish time into database: ", err) //! Handle with middleware
+		handleError(w, "Error inserting null finish time into database: ", err) //! Handle with middleware
+		return
+	}
+
+	// Set is completed to false
+	err = c.DB.SetTimerIsCompleted(userId, false)
+	if err != nil {
+		handleError(w, "Error inserting null finish time into database: ", err) //! Handle with middleware
 		return
 	}
 }
@@ -47,7 +62,7 @@ func (c *Controller) SetTimerDurationHandler(w http.ResponseWriter, r *http.Requ
 func (c *Controller) CreateTimerHandler(w http.ResponseWriter, r *http.Request) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
-	// Get finish time from the database
+	//! Get finish time from the database
 	timer, err := c.DB.GetFinishTime(userId)
 	if err != nil {
 		handleError(w, "Error getting finish time from database: ", err) //! Handle with middleware

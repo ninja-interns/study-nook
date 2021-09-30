@@ -95,7 +95,7 @@ func (db *DB) GetAllTodos(userId string) (pgx.Rows, error) {
 func (db *DB) GetTodoText(todoId string) (*studynook.Todo, error) {
 	todo := &studynook.Todo{}
 	query := `SELECT todo_text FROM todo WHERE id=$1`
-	err := db.Conn.QueryRow(context.Background(), query, todoId).Scan(todo.Text)
+	err := db.Conn.QueryRow(context.Background(), query, todoId).Scan(&todo.Text)
 	if err != nil {
 		return todo, err
 	}
@@ -109,7 +109,7 @@ func (db *DB) GetTodoText(todoId string) (*studynook.Todo, error) {
 func (db *DB) GetTodoIsCompleted(todoId string) (*studynook.Todo, error) {
 	todo := &studynook.Todo{}
 	query := `SELECT is_completed FROM todo WHERE id=$1`
-	err := db.Conn.QueryRow(context.Background(), query, todoId).Scan(todo.IsCompleted)
+	err := db.Conn.QueryRow(context.Background(), query, todoId).Scan(&todo.IsCompleted)
 	if err != nil {
 		return todo, err
 	}

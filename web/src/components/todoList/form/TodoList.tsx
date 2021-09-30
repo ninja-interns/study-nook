@@ -21,16 +21,16 @@ const TodoListForm = (props: TodoListInterface) => {
 		>
 			{/* Itterate through the todos array and load each todo item */}
 			{props.todos.map((todo) => {
-				const labelId = `checkbox-list-label-${todo.todo_text}`
+				const labelId = `checkbox-list-label-${todo.todoText}`
 				return (
 					<ListItem key={todo.id} dense>
 						<TextField
 							fullWidth
 							id={labelId}
 							// variant="standard"
-							defaultValue={todo.todo_text}
+							defaultValue={todo.todoText}
 							onChange={(event: React.ChangeEvent<HTMLInputElement>) => props.handleTodoUpdate(event, todo)}
-							error={todo.todo_text === ""}
+							error={todo.todoText === ""}
 						/>
 						<IconButton edge="end" aria-label="delete" onClick={() => props.handleTodoRemove(todo)}>
 							<DeleteIcon />

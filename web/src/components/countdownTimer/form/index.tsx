@@ -18,9 +18,9 @@ const TimerForm = () => {
 
 		// Create new timer duration
 		const newTimer: TimerInterface = {
-			time_left: "",
-			timer_duration: Number(event.target.value),
-			is_completed: false,
+			timeLeft: "",
+			timerDuration: Number(event.target.value),
+			isCompleted: false,
 		}
 		createTimerDuration(newTimer)
 	}

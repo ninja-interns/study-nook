@@ -1,8 +1,8 @@
 export interface TodoContent {
 	id: string
-	user_id: string
-	todo_text: string
-	is_completed: boolean
+	isCompleted: boolean
+	todoText: string
+	userId: string
 }
 
 export interface TodoFormInterface {

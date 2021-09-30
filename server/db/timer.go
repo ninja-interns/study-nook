@@ -66,7 +66,7 @@ func (db *DB) SetNullFinishTime(userId string) error {
 * * SET TIMER FINISH TIME -
 **/
 func (db *DB) SetTimerFinishTime(userId string, finishTime time.Time) error {
-	query := `UPDATE timer SET finish_time=$1 WHERE user_id=$3`
+	query := `UPDATE timer SET finish_time=$1 WHERE user_id=$2`
 		_, err := db.Conn.Exec(context.Background(), query, finishTime, userId)
 	if err != nil {
 		return err
@@ -96,7 +96,7 @@ func (db *DB) SetTimerIsCompleted(userId string, isCompleted bool) error {
 func (db *DB) GetFinishTime(userId string) (*studynook.Timer, error) {
 	timer := &studynook.Timer{}
 	query := `SELECT finish_time FROM timer WHERE user_id=$1`
-	err := db.Conn.QueryRow(context.Background(), query, userId).Scan(timer.FinishTime)
+	err := db.Conn.QueryRow(context.Background(), query, userId).Scan(&timer.FinishTime)
 	if err != nil {
 		return timer, err
 	}
@@ -110,7 +110,7 @@ func (db *DB) GetFinishTime(userId string) (*studynook.Timer, error) {
 func (db *DB) GetTimerDuration(userId string) (*studynook.Timer, error) {
 	timer := &studynook.Timer{}
 	query := `SELECT timer_duration FROM timer WHERE user_id=$1`
-	err := db.Conn.QueryRow(context.Background(), query, userId).Scan(timer.TimerDuration)
+	err := db.Conn.QueryRow(context.Background(), query, userId).Scan(&timer.TimerDuration)
 	if err != nil {
 		return timer, err
 	}
@@ -124,7 +124,7 @@ func (db *DB) GetTimerDuration(userId string) (*studynook.Timer, error) {
 func (db *DB) GetIsCompleted(userId string) (*studynook.Timer, error) {
 	timer := &studynook.Timer{}
 	query := `SELECT is_completed FROM timer WHERE user_id=$1`
-	err := db.Conn.QueryRow(context.Background(), query, userId).Scan(timer.IsCompleted)
+	err := db.Conn.QueryRow(context.Background(), query, userId).Scan(&timer.IsCompleted)
 	if err != nil {
 		return timer, err
 	}

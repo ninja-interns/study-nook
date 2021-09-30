@@ -116,5 +116,5 @@ type Timer struct {
 	TimerDuration time.Duration `json:"timerDuration"`
 	FinishTime    time.Time     `json:"finishTime"`
 	TimeLeft      string        `json:"timeLeft"`
-	IsCompleted    bool          `json:"isCompleted"`
+	IsCompleted    bool         `json:"isCompleted"`
 }
