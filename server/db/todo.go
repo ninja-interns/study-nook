@@ -62,7 +62,7 @@ func (db *DB) SetTodoIsCompleted(todoId string, isCompleted bool) error {
 }
 
 /**
-* * SET TODO USER ID - Update the todos' id in the Database
+* * SET TODO USER ID - Update the todos' user ID in the Database
 **/
 func (db *DB) SetTodoUserId(todoId, userId string) error {
 	query := `UPDATE todo SET user_id=$1 WHERE id=$2`
@@ -90,7 +90,7 @@ func (db *DB) GetAllTodos(userId string) (pgx.Rows, error) {
 }
 
 /**
-* * GET TODO TEXT -
+* * GET TODO TEXT - Get the todos text from the database
 **/
 func (db *DB) GetTodoText(todoId string) (*studynook.Todo, error) {
 	todo := &studynook.Todo{}
@@ -104,7 +104,7 @@ func (db *DB) GetTodoText(todoId string) (*studynook.Todo, error) {
 }
 
 /**
-* * GET TODO IS COMPLETED -
+* * GET TODO IS COMPLETED - Get the todos completion from the database
 **/
 func (db *DB) GetTodoIsCompleted(todoId string) (*studynook.Todo, error) {
 	todo := &studynook.Todo{}

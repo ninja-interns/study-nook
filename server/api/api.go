@@ -66,10 +66,10 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	r.HandleFunc("/api/delete_todo", WithError(c.DeleteTodoHandler))
 
 	//* TIMER
+	r.HandleFunc("/api/init_timer", WithError(c.InitTimerHandler))
 	r.HandleFunc("/api/create_timer", WithError(c.CreateTimerHandler))
 	r.HandleFunc("/api/get_time_left", WithError(c.GetTimeLeftHandler))
 	r.HandleFunc("/api/delete_timer", WithError(c.DeleteTimerHandler))
-	r.HandleFunc("/api/set_timer_duration", WithError(c.SetTimerDurationHandler))
 	r.HandleFunc("/api/set_completed", WithError(c.SetIsCompletedHandler))
 
 	return c, nil

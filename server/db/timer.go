@@ -8,7 +8,7 @@ import (
 )
 
 /**
-* * DELETE TIMER -
+* * DELETE TIMER - Deletes all users timers' from the database
 **/
 func (db *DB) DeleteTimer(userId string) error {
 	sqlStatement := `DELETE FROM timer WHERE user_id=$1`
@@ -23,7 +23,7 @@ func (db *DB) DeleteTimer(userId string) error {
 //* SETTERS -------------------------------------------------------------------------
 
 /**
-* * SET TIMER ID - Set the timers' ID in the database
+* * SET TIMER ID - Create a new timer in the database with the users ID
 **/
 func (db *DB) SetTimerId(userId string) error {
 	query := `INSERT INTO timer (user_id) VALUES ($1)`
@@ -63,7 +63,7 @@ func (db *DB) SetNullFinishTime(userId string) error {
 }
 
 /**
-* * SET TIMER FINISH TIME -
+* * SET TIMER FINISH TIME - Set the timers' finish time
 **/
 func (db *DB) SetTimerFinishTime(userId string, finishTime time.Time) error {
 	query := `UPDATE timer SET finish_time=$1 WHERE user_id=$2`
@@ -76,7 +76,7 @@ func (db *DB) SetTimerFinishTime(userId string, finishTime time.Time) error {
 }
 
 /**
-* * SET IS COMPLETED -
+* * SET IS COMPLETED - Set timers' completion status
 **/
 func (db *DB) SetTimerIsCompleted(userId string, isCompleted bool) error {
 	query := `UPDATE timer SET is_completed=$1 WHERE user_id=$2`
@@ -91,7 +91,7 @@ func (db *DB) SetTimerIsCompleted(userId string, isCompleted bool) error {
 //* GETTERS -------------------------------------------------------------------------
 
 /**
-* * GET FINISH TIME -
+* * GET FINISH TIME - Get the timers' finish time form the database
 **/
 func (db *DB) GetFinishTime(userId string) (*studynook.Timer, error) {
 	timer := &studynook.Timer{}
@@ -105,7 +105,7 @@ func (db *DB) GetFinishTime(userId string) (*studynook.Timer, error) {
 }
 
 /**
-* * GET TIMER DURATION -
+* * GET TIMER DURATION - Get the timer duration from the database
 **/
 func (db *DB) GetTimerDuration(userId string) (*studynook.Timer, error) {
 	timer := &studynook.Timer{}
@@ -119,7 +119,7 @@ func (db *DB) GetTimerDuration(userId string) (*studynook.Timer, error) {
 }
 
 /**
-* * GET IS COMPLETED -
+* * GET IS COMPLETED - Get the completion status of the timer
 **/
 func (db *DB) GetIsCompleted(userId string) (*studynook.Timer, error) {
 	timer := &studynook.Timer{}

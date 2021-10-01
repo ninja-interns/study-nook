@@ -11,11 +11,10 @@ import (
 )
 
 /**
-* ! CREATING A NEW TIMER WILL NULL COMPONENTS AND USER ID - should rename
-* * SET TIMER DURATION FUNCTION
+* * INITIALISE TIMER HANDLER
 * * Recieves a timer duration from the client and inserts a null finish time and duration to the database
- */
-func (c *Controller) SetTimerDurationHandler(w http.ResponseWriter, r *http.Request) (int, error) {
+**/
+func (c *Controller) InitTimerHandler(w http.ResponseWriter, r *http.Request) (int, error) {
 	// Decode request (timer duration) from the client
 	timer := &studynook.Timer{}
 	err := json.NewDecoder(r.Body).Decode(&timer)
@@ -32,13 +31,13 @@ func (c *Controller) SetTimerDurationHandler(w http.ResponseWriter, r *http.Requ
 		return http.StatusBadRequest, errors.New("error creating new timer in database")
 	}
 
-	// Set timer duration to null in database
+	// Set timer duration in database
 	err = c.DB.SetTimerDuration(userId, timer.TimerDuration)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error inserting timer duration into database")
 	}
 
-	// Set null finish time to null in database
+	// Set finish time to null in database
 	err = c.DB.SetNullFinishTime(userId)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error inserting null finish time into database")
@@ -56,7 +55,7 @@ func (c *Controller) SetTimerDurationHandler(w http.ResponseWriter, r *http.Requ
 /**
 * * CREATE TIMER FUNCTION
 * * This function selects the timer duration from the database and uses it to calculate the timers' finish time.
- */
+**/
 func (c *Controller) CreateTimerHandler(w http.ResponseWriter, r *http.Request) (int, error) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
@@ -69,7 +68,7 @@ func (c *Controller) CreateTimerHandler(w http.ResponseWriter, r *http.Request) 
 		return http.StatusBadRequest, errors.New("error getting finish time from database")
 	}
 
-	// If the finishtime is zero create a new timer (it is initialised as zero when the duration is added)
+	// If the finishtime is zero set the timers' finish time (it is initialised as zero when the duration is added)
 	if timer.FinishTime.UTC().IsZero() {
 		// Get timer duration from the database
 		timer, err := c.DB.GetTimerDuration(userId)
@@ -84,13 +83,13 @@ func (c *Controller) CreateTimerHandler(w http.ResponseWriter, r *http.Request) 
 		currentTime := time.Now().UTC()
 		finishTime := currentTime.Add((time.Minute * timer.TimerDuration))
 
-		// Set finish time into the database
+		// Set finish time in the database
 		err = c.DB.SetTimerFinishTime(userId, finishTime)
 		if err != nil {
 			return http.StatusBadRequest, errors.New("error setting finish time in database")
 		}
 
-		// Set is_completed into the database
+		// Set is_completed to false in the database
 		err = c.DB.SetTimerIsCompleted(userId, false)
 		if err != nil {
 			return http.StatusBadRequest, errors.New("error setting is completed in database")
@@ -103,7 +102,7 @@ func (c *Controller) CreateTimerHandler(w http.ResponseWriter, r *http.Request) 
 /**
 * * GET TIME LEFT FUNCTION
 * * Calculates the time remaining and sends it to the client
- */
+**/
 func (c *Controller) GetTimeLeftHandler(w http.ResponseWriter, r *http.Request) (int, error) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
@@ -149,11 +148,11 @@ func (c *Controller) GetTimeLeftHandler(w http.ResponseWriter, r *http.Request) 
 /**
 * * SET COMPLETED FUNCTION
 * * Updates the timer in the database to completed
- */
+**/
 func (c *Controller) SetIsCompletedHandler(w http.ResponseWriter, r *http.Request) (int, error) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
-	// Update the completion status of the timer in database
+	// Update the completion status of the timer in database to true
 	err := c.DB.SetTimerIsCompleted(userId, true)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error updating timer is_completed in database")
@@ -167,7 +166,7 @@ func (c *Controller) SetIsCompletedHandler(w http.ResponseWriter, r *http.Reques
 /**
 * * DELETE TIMER FUNCTION
 * * Deletes all timers with the current users ID
- */
+**/
 func (c *Controller) DeleteTimerHandler(w http.ResponseWriter, r *http.Request) (int, error) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 

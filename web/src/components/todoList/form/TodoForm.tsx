@@ -19,8 +19,7 @@ const TodoForm = (props: TodoFormInterface) => {
 
 	//* Creates a new todo item and resets the input field to blank - Runs when the user hits enter to add a new todo
 	function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-		// Prevent the page from reloading
-		event.preventDefault()
+		event.preventDefault() // Prevent the page from reloading
 
 		// Create new todo item
 		const newTodo: TodoContent = {
@@ -51,4 +50,4 @@ const TodoForm = (props: TodoFormInterface) => {
 	)
 }
 
-export {TodoForm}
+export { TodoForm }

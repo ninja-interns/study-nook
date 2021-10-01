@@ -39,7 +39,7 @@ func (c *Controller) CreateTodoHandler(w http.ResponseWriter, r *http.Request) (
 func (c *Controller) GetTodosHandler(w http.ResponseWriter, r *http.Request) (int, error) {
 	userId := c.Sessions.GetString(r.Context(), "id") // Logged in user ID
 
-	// Get the incompleted todos from the database
+	// Gets the incompleted todos from the database
 	results, err := c.DB.GetAllTodos(userId)
 	if err != nil {
 		if err == pgx.ErrNoRows {
