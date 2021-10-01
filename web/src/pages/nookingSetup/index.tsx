@@ -5,17 +5,20 @@ import { useHistory } from "react-router-dom"
 import { Box, Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button } from "@mui/material"
 import { IconButton, AppBar } from "@mui/material"
 import { Brightness4, Brightness7, Menu } from "@mui/icons-material"
+import getDesignTokens from "../../theme/getDesignTokens"
+
+//* GLOBAL VARIABLE - Toggles dark / light mode
+const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
 
 /**
  * * NOOKING SETUP PAGE
  * * This is the page of the app where the user sets up their todo list and timer duration
  * * The timer will not be created until the user clicks the "Start Nooking" button
  **/
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} }) // Toggles dark / light mode
 const NookingSetupPage = () => {
-	const history = useHistory() // routes history
 	const theme = useTheme()
-	const colorMode = React.useContext(ColorModeContext)
+	const colorMode = React.useContext(ColorModeContext) // Toggles colour mode
+	const history = useHistory() // routes history
 
 	return (
 		<Box
@@ -51,6 +54,8 @@ const NookingSetupPage = () => {
 //? I am sure there is an easier / better way to implement light / dark theme
 export function NookingSetup() {
 	const [mode, setMode] = React.useState<"light" | "dark">("light")
+
+	// The darkmode switch invokes this method
 	const colorMode = React.useMemo(
 		() => ({
 			toggleColorMode: () => {
@@ -60,15 +65,8 @@ export function NookingSetup() {
 		[],
 	)
 
-	const theme = React.useMemo(
-		() =>
-			createTheme({
-				palette: {
-					mode,
-				},
-			}),
-		[mode],
-	)
+	// Update the theme only if the mode changes
+	const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode])
 
 	return (
 		<ColorModeContext.Provider value={colorMode}>

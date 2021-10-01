@@ -39,7 +39,7 @@ const TimerForm = () => {
 	}
 
 	return (
-		<Box>
+		<>
 			<FormControl fullWidth variant="outlined">
 				<InputLabel htmlFor="outlined-age-native-simple">Timer Duration</InputLabel>
 				<Select value={duration} label="Timer Duration" onChange={handleChange}>
@@ -58,7 +58,7 @@ const TimerForm = () => {
 					<MenuItem value={60}>60</MenuItem>
 				</Select>
 			</FormControl>
-		</Box>
+		</>
 	)
 }
 

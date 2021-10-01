@@ -90,10 +90,10 @@ const TodoListApp = () => {
 	}
 
 	return (
-		<div>
+		<>
 			<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
 			<TodoListForm todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} />
-		</div>
+		</>
 	)
 }
 
