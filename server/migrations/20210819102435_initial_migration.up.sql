@@ -41,3 +41,22 @@ CREATE TABLE IF NOT EXISTS admins (
     email TEXT UNIQUE NOT NULL,
     password_hash BYTEA NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS user_achievements (
+    id TEXT NOT NULL PRIMARY KEY,
+    level_medal_1 BOOLEAN NOT NULL,
+    level_medal_2 BOOLEAN NOT NULL,
+    level_medal_3 BOOLEAN NOT NULL,
+    sessions_medal_1 BOOLEAN NOT NULL,
+    sessions_medal_2 BOOLEAN NOT NULL,
+    sessions_medal_3 BOOLEAN NOT NULL,
+    hours_medal_1 BOOLEAN NOT NULL,
+    hours_medal_2 BOOLEAN NOT NULL,
+    hours_medal_3 BOOLEAN NOT NULL,
+    backgrounds_medal_1 BOOLEAN NOT NULL,
+    backgrounds_medal_2 BOOLEAN NOT NULL,
+    backgrounds_medal_3 BOOLEAN NOT NULL,
+    CONSTRAINT fk_users
+        FOREIGN KEY(id)
+            REFERENCES users(id)
+);

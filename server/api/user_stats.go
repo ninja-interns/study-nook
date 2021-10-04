@@ -1,4 +1,4 @@
-package user_stats
+package api
 
 import (
 	"context"
@@ -7,8 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"studynook.go/auth"
-	"studynook.go/initializedb"
+	"studynook.go"
 )
 
 type Level struct {
@@ -19,12 +18,12 @@ type Time struct {
 	Experience string `json:"experience"`
 }
 
-type JsonResponse struct {
+type LevelResponse struct {
 	Level int `json:"level"`
 }
 
 // Function to calculate session rewards after session finshes
-func CalculateSessionRewards(minutes int, id string) {
+func (c *Controller) CalculateSessionRewards(minutes int, id string) {
 
 	time := minutes
 
@@ -32,82 +31,79 @@ func CalculateSessionRewards(minutes int, id string) {
 
 	var exp int
 
-	err := initializedb.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&exp)
+	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&exp)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	expGained := CalculateEXPTime(time)
-
 	coinsGained := CalculateCoinsTime(exp, time)
 
-	fmt.Println("You gained: ", expGained)
-	fmt.Println("Coins earned: ", coinsGained)
-
-	//InsertToDatabase(expGained)
+	c.UpdateEXPAmount(expGained, id)
+	c.UpdateCoins(coinsGained, id)
 
 }
 
-func UpdateCoins(coins int, id string) error {
+func (c *Controller) UpdateCoins(coins int, id string) error {
 
 	sqlStatement := `UPDATE user_stats SET coins = coins + $1 WHERE id = $2;`
 
-	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, coins, id)
+	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, coins, id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func UpdateEXPAmount(exp int, id string) error {
+func (c *Controller) UpdateEXPAmount(exp int, id string) error {
 
 	sqlStatement := `UPDATE user_stats SET exp_amount = exp_amount + $1 WHERE id = $2;`
 
-	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, exp, id)
+	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, exp, id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func UpdateSessions(id string) error {
+func (c *Controller) UpdateSessions(id string) error {
 
 	sqlStatement := `UPDATE user_stats SET sessions_completed = sessions_completed + 1 WHERE id = $1;`
 
-	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, id)
+	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func UpdateHoursNooked(hours int, id string) error {
+func (c *Controller) UpdateHoursNooked(hours int, id string) error {
 
 	sqlStatement := `UPDATE user_stats SET hours_nooked = hours_nooked + $1 WHERE id = $2;`
 
-	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, hours, id)
+	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, hours, id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func UpdateAchievementsUnlocked(id string) error {
+func (c *Controller) UpdateAchievementsUnlocked(id string) error {
 
 	sqlStatement := `UPDATE user_stats SET achievements_unlocked = achievements_unlocked + 1 WHERE id = $1;`
 
-	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, id)
+	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func UpdateBackgroundsUnlocked(id string) error {
+func (c *Controller) UpdateBackgroundsUnlocked(id string) error {
 
 	sqlStatement := `UPDATE user_stats SET backgrounds_unlocked = backgrounds_unlocked + 1 WHERE id = $1;`
 
-	_, err := initializedb.Conn.Exec(context.Background(), sqlStatement, id)
+	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
 		return err
 	}
@@ -200,7 +196,7 @@ func CalculateEXPTime(minutes int) int {
 	return minutes * 50
 }
 
-func CalculateEXPHandler(w http.ResponseWriter, r *http.Request, u *auth.User) {
+func CalculateEXPHandler(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 
 	time := &Time{}
 	err := json.NewDecoder(r.Body).Decode(time)
@@ -219,7 +215,7 @@ func CalculateEXPHandler(w http.ResponseWriter, r *http.Request, u *auth.User) {
 	fmt.Println("EXP gained is: ", expGained)
 }
 
-func GetLevelHandler(w http.ResponseWriter, r *http.Request, u *auth.User) {
+func GetLevelHandler(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 
 	level := &Level{}
 

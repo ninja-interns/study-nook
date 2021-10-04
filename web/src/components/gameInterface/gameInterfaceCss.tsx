@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/styles";
+
 import background from "../../assets/Bedrooms/gaming-room.jpg";
 
 export const useStyles = makeStyles({

@@ -4,7 +4,6 @@ import {
 	RegisterPage,
 	LoginPage,
 	Dashboard,
-	Profile,
 	EmailVerificationPage,
 	DeletedAccount,
 	ForgotPassword,
@@ -36,7 +35,6 @@ const Routes = () => {
 					<Route path="/forgotPassword" component={ForgotPassword} />
 					<Route path="/resetPassword" component={ResetPassword} />
 					<PrivateRoute path="/dashboard" component={Dashboard} />
-					<PrivateRoute path="/profile" component={Profile} />
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
 					<PrivateRoute path="/menu" component={MenuPage} />
