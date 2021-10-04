@@ -129,5 +129,5 @@ func (c *Controller) ValidateReport(username string) bool {
 
 	c.DB.Conn.QueryRow(context.Background(), sqlQuery, username).Scan(&tempUsername)
 
-	return tempUsername != username, nil
+	return tempUsername != username
 }
