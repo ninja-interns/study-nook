@@ -1,3 +1,4 @@
+import { Container, CssBaseline } from "@mui/material"
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./App"
@@ -5,7 +6,17 @@ import reportWebVitals from "./reportWebVitals"
 
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<Container
+			fixed={true}
+			disableGutters={true}
+			sx={{
+				width: 380,
+				height: 560,
+				border: 1,
+			}}
+		>
+			<App />
+		</Container>
 	</React.StrictMode>,
 
 	document.getElementById("root"),

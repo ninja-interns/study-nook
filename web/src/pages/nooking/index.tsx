@@ -1,10 +1,16 @@
+import { Global } from "@emotion/react"
+import { Brightness4 as Brightness4Icon, Brightness7 as Brightness7Icon, Menu as MenuIcon } from "@mui/icons-material"
+import { AppBar, Box, createTheme, CssBaseline, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Toolbar, Typography, useTheme } from "@mui/material"
+import Button from "@mui/material/Button"
+import { grey } from "@mui/material/colors"
+import Skeleton from "@mui/material/Skeleton"
+import { styled } from "@mui/material/styles"
+import SwipeableDrawer from "@mui/material/SwipeableDrawer"
 import * as React from "react"
+import { useHistory } from "react-router-dom"
 import { Timer } from "../../components/countdownTimer/timer/index"
 import { TodoList } from "../../components/todoList/list"
-import ExamplePixi from "../../pixi/example"
-import { useHistory } from "react-router-dom"
-import { Box, Toolbar, Typography, createTheme, ThemeProvider, useTheme, IconButton, AppBar, Menu, MenuItem } from "@mui/material"
-import { Brightness4 as Brightness4Icon, Brightness7 as Brightness7Icon, Menu as MenuIcon } from "@mui/icons-material"
+import getDesignTokens from "../../theme/getDesignTokens"
 
 /**
  * * NOOKING PAGE
@@ -19,6 +25,15 @@ const NookingPage = () => {
 	const theme = useTheme()
 	const colorMode = React.useContext(ColorModeContext)
 
+	//* Delete the timer and route the user to the dashboard
+	async function handleStopNooking() {
+		const response = await fetch("/api/delete_timer")
+		if (!response.ok) {
+			console.error("Error deleting timer: " + response.statusText)
+		}
+		history.push("/dashboard")
+	}
+
 	//* MUI Dropdown menu
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 	const open = Boolean(anchorEl)
@@ -29,25 +44,15 @@ const NookingPage = () => {
 		setAnchorEl(null)
 	}
 
-	//* Delete the timer and route the user to the dashboard
-	async function handleStopNooking() {
-		const response = await fetch("/api/delete_timer")
-		if (!response.ok) {
-			console.error("Error deleting timer: " + response.statusText)
-		}
-		history.push("/dashboard")
+	//* MUI Drawer
+	const [openDrawer, setOpenDrawer] = React.useState(false)
+
+	const toggleDrawer = (newOpen: boolean) => () => {
+		setOpenDrawer(newOpen)
 	}
 
 	return (
-		<Box
-			sx={{
-				height: "100%",
-				width: "100%",
-				padding: 1,
-				bgcolor: "background.default",
-				color: "text.primary",
-			}}
-		>
+		<>
 			<AppBar position="static">
 				<Toolbar>
 					<IconButton
@@ -82,12 +87,39 @@ const NookingPage = () => {
 					</IconButton>
 				</Toolbar>
 			</AppBar>
-			<Box>
-				<ExamplePixi />
-			</Box>
+			<Skeleton
+				variant="rectangular"
+				height="40%"
+				sx={{
+					m: 1,
+				}}
+			/>
+			<Button onClick={toggleDrawer(true)}>Open</Button>
 			<Timer />
-			<TodoList />
-		</Box>
+			<Box width="100%" height="20%" id="drawer-container" position="relative" component="div">
+				<Drawer
+					// anchor="bottom"
+					open={openDrawer}
+					onClose={toggleDrawer(false)}
+					PaperProps={{ style: { position: "absolute", width: "100%" } }}
+					// BackdropProps={{ style: { position: "absolute" } }}
+					ModalProps={{
+						container: document.getElementById("drawer-container"),
+						style: { position: "absolute" },
+						keepMounted: true,
+					}}
+					SlideProps={{
+						onExiting: (node) => {
+							// node.style.webkitTransform = "scaleX(0)"
+							node.style.transform = "scaleX(0)"
+							node.style.transformOrigin = "bottom"
+						},
+					}}
+				>
+					<TodoList />
+				</Drawer>
+			</Box>
+		</>
 	)
 }
 
@@ -96,6 +128,7 @@ const NookingPage = () => {
 export function Nooking() {
 	const [mode, setMode] = React.useState<"light" | "dark">("light")
 	const colorMode = React.useMemo(
+		// The darkmode switch invokes this method
 		() => ({
 			toggleColorMode: () => {
 				setMode((prevMode) => (prevMode === "light" ? "dark" : "light"))
@@ -104,19 +137,13 @@ export function Nooking() {
 		[],
 	)
 
-	const theme = React.useMemo(
-		() =>
-			createTheme({
-				palette: {
-					mode,
-				},
-			}),
-		[mode],
-	)
+	// Update the theme only if the mode changes
+	const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode])
 
 	return (
 		<ColorModeContext.Provider value={colorMode}>
 			<ThemeProvider theme={theme}>
+				<CssBaseline />
 				<NookingPage />
 			</ThemeProvider>
 		</ColorModeContext.Provider>

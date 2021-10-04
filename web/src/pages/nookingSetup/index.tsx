@@ -6,7 +6,6 @@ import { Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button, Cont
 import { IconButton, AppBar } from "@mui/material"
 import { Brightness4, Brightness7, Menu } from "@mui/icons-material"
 import getDesignTokens from "../../theme/getDesignTokens"
-import theme from "../../theme/theme"
 
 //* GLOBAL VARIABLE - Toggles dark / light mode
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
@@ -17,13 +16,13 @@ const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
  * * The timer will not be created until the user clicks the "Start Nooking" button
  **/
 const NookingSetupPage = () => {
-	const colorTheme = useTheme()
+	const theme = useTheme()
 	const colorMode = React.useContext(ColorModeContext) // Toggles colour mode
 	const history = useHistory() // routes history
 
 	return (
 		<>
-			<AppBar>
+			<AppBar position="static">
 				<Toolbar>
 					<IconButton size="large" edge="start" color="inherit" aria-label="menu">
 						<Menu />
@@ -32,7 +31,7 @@ const NookingSetupPage = () => {
 						Nooking Setup
 					</Typography>
 					<IconButton onClick={colorMode.toggleColorMode} color="inherit" edge="end">
-						{colorTheme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+						{theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
 					</IconButton>
 				</Toolbar>
 			</AppBar>
@@ -44,12 +43,10 @@ const NookingSetupPage = () => {
 }
 
 //* This function gives the page a light / dark mode toggle component
-//? I am sure there is an easier / better way to implement light / dark theme
 export function NookingSetup() {
 	const [mode, setMode] = React.useState<"light" | "dark">("light")
-
-	// The darkmode switch invokes this method
 	const colorMode = React.useMemo(
+		// The darkmode switch invokes this method
 		() => ({
 			toggleColorMode: () => {
 				setMode((prevMode) => (prevMode === "light" ? "dark" : "light"))
@@ -61,5 +58,12 @@ export function NookingSetup() {
 	// Update the theme only if the mode changes
 	const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode])
 
-	return <NookingSetupPage />
+	return (
+		<ColorModeContext.Provider value={colorMode}>
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				<NookingSetupPage />
+			</ThemeProvider>
+		</ColorModeContext.Provider>
+	)
 }
