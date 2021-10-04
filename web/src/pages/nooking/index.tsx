@@ -46,7 +46,6 @@ const NookingPage = () => {
 
 	//* MUI Drawer
 	const [openDrawer, setOpenDrawer] = React.useState(false)
-
 	const toggleDrawer = (newOpen: boolean) => () => {
 		setOpenDrawer(newOpen)
 	}
@@ -96,29 +95,17 @@ const NookingPage = () => {
 			/>
 			<Button onClick={toggleDrawer(true)}>Open</Button>
 			<Timer />
-			<Box width="100%" height="20%" id="drawer-container" position="relative" component="div">
-				<Drawer
-					// anchor="bottom"
-					open={openDrawer}
-					onClose={toggleDrawer(false)}
-					PaperProps={{ style: { position: "absolute", width: "100%" } }}
-					// BackdropProps={{ style: { position: "absolute" } }}
-					ModalProps={{
-						container: document.getElementById("drawer-container"),
-						style: { position: "absolute" },
-						keepMounted: true,
-					}}
-					SlideProps={{
-						onExiting: (node) => {
-							// node.style.webkitTransform = "scaleX(0)"
-							node.style.transform = "scaleX(0)"
-							node.style.transformOrigin = "bottom"
-						},
-					}}
-				>
-					<TodoList />
-				</Drawer>
-			</Box>
+			<Drawer
+				anchor="bottom"
+				open={openDrawer}
+				onClose={toggleDrawer(false)}
+				ModalProps={{
+					keepMounted: true,
+					// style: { position: "relative" },
+				}}
+			>
+				<TodoList />
+			</Drawer>
 		</>
 	)
 }

@@ -2,6 +2,7 @@ import { Container, CssBaseline } from "@mui/material"
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./App"
+import { Nooking } from "./pages/nooking"
 import reportWebVitals from "./reportWebVitals"
 
 ReactDOM.render(
@@ -10,9 +11,8 @@ ReactDOM.render(
 			fixed={true}
 			disableGutters={true}
 			sx={{
-				width: 380,
+				width: 340,
 				height: 560,
-				border: 1,
 			}}
 		>
 			<App />
