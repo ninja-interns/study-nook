@@ -1,5 +1,5 @@
-import { makeStyles } from "@material-ui/styles";
-import pastelBookShelf from "../../assets/pastelBookShelf.jpg";
+import { makeStyles } from "@material-ui/styles"
+import pastelBookShelf from "../../assets/pastelBookShelf.jpg"
 
 export const useStyles = makeStyles({
 	container: {
@@ -24,4 +24,4 @@ export const useStyles = makeStyles({
 		margin: "1rem",
 		width: "75%",
 	},
-});
+})

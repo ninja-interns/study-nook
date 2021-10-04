@@ -35,3 +35,9 @@ CREATE TABLE IF NOT EXISTS user_stats (
         FOREIGN KEY(id)
             REFERENCES users(id)
 );
+
+CREATE TABLE IF NOT EXISTS admins (
+    id TEXT PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password_hash BYTEA NOT NULL
+);

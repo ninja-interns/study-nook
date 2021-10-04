@@ -1,5 +1,4 @@
-import React from "react";
-import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import { Route, Switch, BrowserRouter as Router } from "react-router-dom"
 import {
 	HomePage,
 	RegisterPage,
@@ -7,19 +6,23 @@ import {
 	Dashboard,
 	Profile,
 	EmailVerificationPage,
-	UpdateUser,
 	DeletedAccount,
 	ForgotPassword,
 	ResetPassword,
+	UpdateUser,
+	UpdatePassword,
 	MenuPage,
 	SupportPage,
-	AchievementsPage,
-	EXPTesting
-} from "../pages";
-
-import { PrivateRoute } from "./PrivateRoute";
-import { UpdatePassword } from "./../pages/updatePassword/index";
-import { LastLocationProvider } from "react-router-last-location";
+	AchievementsPage
+} from "../pages"
+import { PrivateRoute } from "./PrivateRoute"
+import { AdminDashboard } from "../admin/AdminDashboard"
+import { LastLocationProvider } from "react-router-last-location"
+import { AdminLoginPage } from "../admin/AdminLoginPage"
+import { UserCreatePage } from "../admin/UserCreatePage"
+import { UserListPage } from "../admin/UserListPage"
+import { AnalyticsPage } from "../admin/AnalyticsPage"
+import { UserEditPage } from "../admin/UserEditPage"
 
 const Routes = () => {
 	return (
@@ -39,12 +42,33 @@ const Routes = () => {
 					<PrivateRoute path="/menu" component={MenuPage} />
 					<PrivateRoute path="/support" component={SupportPage} />
 					<PrivateRoute path="/achievements" component={AchievementsPage} />
-					<PrivateRoute path="/testing" component={EXPTesting} />
 					<Route path="/" component={HomePage} />
+
+					<Route exact path="/admin/dashboard">
+						<AdminDashboard />
+					</Route>
+					<Route exact path="/admin/login">
+						<AdminLoginPage />
+					</Route>
+					<Route exact path="/admin/users">
+						<UserListPage />
+					</Route>
+					<Route exact path="/admin/users/create">
+						<UserCreatePage />
+					</Route>
+					<Route path="/admin/users/:userID">
+						<UserEditPage />
+					</Route>
+
+					<Route exact path="/admin/analytics">
+						<AnalyticsPage />
+					</Route>
+
+					<Route exact path="/" component={HomePage} />
 				</Switch>
 			</LastLocationProvider>
 		</Router>
-	);
-};
+	)
+}
 
-export default Routes;
+export default Routes
