@@ -13,7 +13,7 @@ import {
 	UpdatePassword,
 	MenuPage,
 	SupportPage,
-	AchievementsPage
+	AchievementsPage,
 } from "../pages"
 import { PrivateRoute } from "./PrivateRoute"
 import { AdminDashboard } from "../admin/AdminDashboard"
