@@ -44,6 +44,19 @@ func (c *Controller) CalculateSessionRewards(minutes int, id string) {
 
 }
 
+func (c *Controller) GetCoins(selectItem string, id string) (int, error) {
+
+	sqlStatement := `SELECT $1 FROM user_stats WHERE id = $2;`
+
+	returnItem := 0
+
+	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, selectItem, id).Scan(returnItem)
+	if err != nil {
+		return returnItem, err
+	}
+	return returnItem, nil
+}
+
 func (c *Controller) UpdateCoins(coins int, id string) error {
 
 	sqlStatement := `UPDATE user_stats SET coins = coins + $1 WHERE id = $2;`
