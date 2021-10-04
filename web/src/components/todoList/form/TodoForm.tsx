@@ -41,8 +41,8 @@ const TodoForm = (props: TodoFormInterface) => {
 			component="form"
 			onSubmit={handleSubmit}
 			sx={{
-				width: 200,
-				maxWidth: "50%",
+				width: "50%",
+				mt: 1,
 			}}
 		>
 			<TextField variant="outlined" label="Add a todo" inputRef={inputRef} onChange={handleInputChange} color="secondary" />

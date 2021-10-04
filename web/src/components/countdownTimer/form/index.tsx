@@ -1,6 +1,6 @@
 import * as React from "react"
 import { TimerInterface } from "../interfaces"
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Box } from "@mui/material"
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material"
 
 /**
  * * TIMER FORM COMPONENT
@@ -40,7 +40,13 @@ const TimerForm = () => {
 
 	return (
 		<>
-			<FormControl fullWidth variant="outlined">
+			<FormControl
+				fullWidth
+				variant="outlined"
+				sx={{
+					mt: 1,
+				}}
+			>
 				<InputLabel htmlFor="outlined-age-native-simple">Timer Duration</InputLabel>
 				<Select value={duration} label="Timer Duration" onChange={handleChange}>
 					<MenuItem value={0}>0</MenuItem>

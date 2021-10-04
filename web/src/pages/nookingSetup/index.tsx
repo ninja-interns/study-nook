@@ -2,10 +2,11 @@ import React from "react"
 import { TimerForm } from "../../components/countdownTimer/form"
 import { TodoListApp } from "../../components/todoList/form"
 import { useHistory } from "react-router-dom"
-import { Box, Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button } from "@mui/material"
+import { Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button, Container, CssBaseline } from "@mui/material"
 import { IconButton, AppBar } from "@mui/material"
 import { Brightness4, Brightness7, Menu } from "@mui/icons-material"
 import getDesignTokens from "../../theme/getDesignTokens"
+import theme from "../../theme/theme"
 
 //* GLOBAL VARIABLE - Toggles dark / light mode
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
@@ -16,37 +17,29 @@ const ColorModeContext = React.createContext({ toggleColorMode: () => {} })
  * * The timer will not be created until the user clicks the "Start Nooking" button
  **/
 const NookingSetupPage = () => {
-	const theme = useTheme()
+	const colorTheme = useTheme()
 	const colorMode = React.useContext(ColorModeContext) // Toggles colour mode
 	const history = useHistory() // routes history
 
 	return (
-		<Box
-			sx={{
-				height: "100%",
-				width: "100%",
-				padding: 1,
-				bgcolor: "background.default",
-				color: "text.primary",
-			}}
-		>
-			<AppBar position="static">
+		<>
+			<AppBar>
 				<Toolbar>
-					<IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+					<IconButton size="large" edge="start" color="inherit" aria-label="menu">
 						<Menu />
 					</IconButton>
-					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+					<Typography variant="h6" sx={{ flexGrow: 1 }}>
 						Nooking Setup
 					</Typography>
-					<IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit" edge="end">
-						{theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
+					<IconButton onClick={colorMode.toggleColorMode} color="inherit" edge="end">
+						{colorTheme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
 					</IconButton>
 				</Toolbar>
 			</AppBar>
 			<TimerForm />
 			<TodoListApp />
 			<Button onClick={() => history.push("/nooking")}>Start Nooking</Button>
-		</Box>
+		</>
 	)
 }
 
@@ -68,11 +61,5 @@ export function NookingSetup() {
 	// Update the theme only if the mode changes
 	const theme = React.useMemo(() => createTheme(getDesignTokens(mode)), [mode])
 
-	return (
-		<ColorModeContext.Provider value={colorMode}>
-			<ThemeProvider theme={theme}>
-				<NookingSetupPage />
-			</ThemeProvider>
-		</ColorModeContext.Provider>
-	)
+	return <NookingSetupPage />
 }

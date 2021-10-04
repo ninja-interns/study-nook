@@ -6,8 +6,16 @@ const theme = createTheme({
 		MuiContainer: {
 			styleOverrides: {
 				root: {
-					width: 420,
+					width: 380,
 					height: 560,
+					border: 1,
+				},
+			},
+		},
+		MuiAppBar: {
+			styleOverrides: {
+				root: {
+					position: "static",
 				},
 			},
 		},

@@ -2,18 +2,12 @@ import React from "react"
 import ReactDOM from "react-dom"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
-import { ThemeProvider } from "@mui/material/styles"
-import { Container } from "@mui/material"
-import theme from "./theme/theme"
 
 ReactDOM.render(
 	<React.StrictMode>
-		<ThemeProvider theme={theme}>
-			<Container>
-				<App />
-			</Container>
-		</ThemeProvider>
+		<App />
 	</React.StrictMode>,
+
 	document.getElementById("root"),
 )
 
