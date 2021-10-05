@@ -1,11 +1,7 @@
-import { Global } from "@emotion/react"
 import { Brightness4 as Brightness4Icon, Brightness7 as Brightness7Icon, Menu as MenuIcon } from "@mui/icons-material"
-import { AppBar, Box, createTheme, CssBaseline, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Toolbar, Typography, useTheme } from "@mui/material"
+import { AppBar, Box, createTheme, CssBaseline, Divider, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Toolbar, Typography, useTheme } from "@mui/material"
 import Button from "@mui/material/Button"
-import { grey } from "@mui/material/colors"
 import Skeleton from "@mui/material/Skeleton"
-import { styled } from "@mui/material/styles"
-import SwipeableDrawer from "@mui/material/SwipeableDrawer"
 import * as React from "react"
 import { useHistory } from "react-router-dom"
 import { Timer } from "../../components/countdownTimer/timer/index"
@@ -27,7 +23,7 @@ const NookingPage = () => {
 
 	//* Delete the timer and route the user to the dashboard
 	async function handleStopNooking() {
-		const response = await fetch("/api/delete_timer")
+		const response = await fetch("http://localhost:8080/api/delete_timer")
 		if (!response.ok) {
 			console.error("Error deleting timer: " + response.statusText)
 		}
@@ -52,60 +48,70 @@ const NookingPage = () => {
 
 	return (
 		<>
-			<AppBar position="static">
-				<Toolbar>
-					<IconButton
-						size="large"
-						edge="start"
-						color="inherit"
-						id="menu-button"
-						aria-controls="basic-menu"
-						aria-haspopup="true"
-						aria-expanded={open ? "true" : undefined}
-						onClick={handleClick}
-						sx={{ mr: 2 }}
-					>
-						<MenuIcon />
-					</IconButton>
-					<Menu
-						id="basic-menu"
-						anchorEl={anchorEl}
-						open={open}
-						onClose={handleClose}
-						MenuListProps={{
-							"aria-labelledby": "menu-button",
-						}}
-					>
-						<MenuItem onClick={handleStopNooking}>Stop Nooking</MenuItem>
-					</Menu>
-					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-						Nooking
-					</Typography>
-					<IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit" edge="end">
-						{theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
-					</IconButton>
-				</Toolbar>
-			</AppBar>
-			<Skeleton
-				variant="rectangular"
-				height="40%"
-				sx={{
-					m: 1,
-				}}
-			/>
-			<Button onClick={toggleDrawer(true)}>Open</Button>
-			<Timer />
-			<Drawer
-				anchor="bottom"
-				open={openDrawer}
-				onClose={toggleDrawer(false)}
-				ModalProps={{
-					keepMounted: true,
-					// style: { position: "relative" },
-				}}
-			>
-				<TodoList />
-			</Drawer>
+			<ThemeProvider theme={theme}>
+				<Box
+					sx={{
+						height: "2%",
+						backgroundColor: theme.palette.primary.dark,
+					}}
+				></Box>
+				<AppBar position="static">
+					<Toolbar>
+						<IconButton
+							size="large"
+							edge="start"
+							color="inherit"
+							id="menu-button"
+							aria-controls="basic-menu"
+							aria-haspopup="true"
+							aria-expanded={open ? "true" : undefined}
+							onClick={handleClick}
+							sx={{ mr: 2 }}
+						>
+							<MenuIcon />
+						</IconButton>
+						<Menu
+							id="basic-menu"
+							anchorEl={anchorEl}
+							open={open}
+							onClose={handleClose}
+							MenuListProps={{
+								"aria-labelledby": "menu-button",
+							}}
+						>
+							<MenuItem onClick={handleStopNooking}>Stop Nooking</MenuItem>
+						</Menu>
+						<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+							Nooking
+						</Typography>
+						<IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit" edge="end">
+							{theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+						</IconButton>
+					</Toolbar>
+				</AppBar>
+				<Skeleton
+					variant="rectangular"
+					height="40%"
+					sx={{
+						m: 1,
+					}}
+				/>
+				<Button onClick={toggleDrawer(true)} variant="contained" color="secondary">
+					Open
+				</Button>
+				<Timer />
+				<Drawer
+					anchor="bottom"
+					open={openDrawer}
+					onClose={toggleDrawer(false)}
+					ModalProps={{
+						keepMounted: true,
+						// style: { position: "relative" },
+					}}
+				>
+					<TodoList />
+				</Drawer>
+			</ThemeProvider>
 		</>
 	)
 }

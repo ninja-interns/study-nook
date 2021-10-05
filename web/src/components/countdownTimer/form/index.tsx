@@ -28,7 +28,7 @@ const TimerForm = () => {
 	//* Posts the new timer duration to the database
 	async function createTimerDuration(newTimer: TimerInterface) {
 		// Sends request to the API to initialise a new timer with the timer duration
-		const response = await fetch("/api/init_timer", {
+		const response = await fetch("http://localhost:8080/api/init_timer", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(newTimer),

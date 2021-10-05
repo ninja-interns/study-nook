@@ -18,7 +18,7 @@ const Timer = () => {
 	React.useEffect(() => {
 		async function createTimer() {
 			// Sends request to the API to create the timer (Uses the duration stored in the database)
-			const response = await fetch("/api/create_timer")
+			const response = await fetch("http://localhost:8080/api/create_timer")
 
 			// If there is no timer duration in the database display "No Timer"
 			if (response.status === 404) {
@@ -43,7 +43,7 @@ const Timer = () => {
 
 		async function getTimeLeft() {
 			// Sends request to the API to calculate and return time remaining on the timer
-			const response = await fetch("/api/get_time_left")
+			const response = await fetch("http://localhost:8080/api/get_time_left")
 			if (response.ok) {
 				const data: TimerInterface = await response.json()
 				if (data.timeLeft === "0s" || data.isCompleted === true) {
@@ -71,7 +71,7 @@ const Timer = () => {
 
 	//* Requests the API to set the timer to completed
 	async function setCompleted() {
-		const response = await fetch("/api/set_completed")
+		const response = await fetch("http://localhost:8080/api/set_completed")
 		if (!response.ok) {
 			console.error("Error setting timer isCompleted: " + response.statusText)
 		}

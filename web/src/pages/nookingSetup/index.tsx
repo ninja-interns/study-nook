@@ -2,7 +2,7 @@ import React from "react"
 import { TimerForm } from "../../components/countdownTimer/form"
 import { TodoListApp } from "../../components/todoList/form"
 import { useHistory } from "react-router-dom"
-import { Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button, Container, CssBaseline } from "@mui/material"
+import { Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button, CssBaseline, Box } from "@mui/material"
 import { IconButton, AppBar } from "@mui/material"
 import { Brightness4, Brightness7, Menu } from "@mui/icons-material"
 import getDesignTokens from "../../theme/getDesignTokens"
@@ -22,6 +22,12 @@ const NookingSetupPage = () => {
 
 	return (
 		<>
+			<Box
+				sx={{
+					height: "2%",
+					backgroundColor: theme.palette.primary.dark,
+				}}
+			></Box>
 			<AppBar position="static">
 				<Toolbar>
 					<IconButton size="large" edge="start" color="inherit" aria-label="menu">

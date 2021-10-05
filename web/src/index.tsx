@@ -1,8 +1,7 @@
-import { Container, CssBaseline } from "@mui/material"
+import { Container } from "@mui/material"
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./App"
-import { Nooking } from "./pages/nooking"
 import reportWebVitals from "./reportWebVitals"
 
 ReactDOM.render(
