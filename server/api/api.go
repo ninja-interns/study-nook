@@ -46,19 +46,14 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 
 	r.HandleFunc("/api/report_submission", WithUser(sessionManager, db, c.SubmitReports))
 
-	r.Route("/admin", func(r chi.Router) {
-		r.Post("/login", c.AdminLoginHandler)
-		r.Post("/users", c.UserCreateHandler) // POST /admin/users
-		r.Get("/users", c.UserGetAllHandler)  // GET /admin/users
-		r.Route("/users/{userID}", func(r chi.Router) {
-			r.Get("/", c.UserGetHandler)       // GET /admin/users/123
-			r.Put("/", c.UserUpdateHandler)    // PUT /admin/users/123
-			r.Delete("/", c.UserDeleteHandler) // DELETE /admin/users/123
-		})
-		r.Put("/user_details_only/{userID}", c.UserUpdateExceptPasswordHandler)
-	})
+	r.Post("/api/login_admin", c.AdminLoginHandler)   //POST /api/login_admin
+	r.Post("/api/logout_admin", c.AdminLogoutHandler) //POST /api/logout_admin
+
+	// Mount the admin sub-router
+	r.Mount("/admin", c.adminRouter())
 
 	return c, nil
+
 }
 
 //creating a new struct for a more extensible currentUser. Here we can add tasks and other states
@@ -80,4 +75,22 @@ func CurrentUserState(w http.ResponseWriter, r *http.Request, u *studynook.User)
 		fmt.Println(err)
 		return
 	}
+}
+
+// A completely separate router for administrator routes
+func (c *Controller) adminRouter() http.Handler {
+	r := chi.NewRouter()
+	r.Route("/", func(r chi.Router) {
+		r.Use(c.AdminOnly)
+		r.Post("/users", c.UserCreateHandler) // POST /admin/users
+		r.Get("/users", c.UserGetAllHandler)  // GET /admin/users
+		r.Route("/users/{userID}", func(r chi.Router) {
+			r.Get("/", c.UserGetHandler)       // GET /admin/users/123
+			r.Put("/", c.UserUpdateHandler)    // PUT /admin/users/123
+			r.Delete("/", c.UserDeleteHandler) // DELETE /admin/users/123
+		})
+		r.Put("/user_details_only/{userID}", c.UserUpdateExceptPasswordHandler)
+	})
+	return r
+
 }
