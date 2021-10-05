@@ -1,6 +1,6 @@
+import { Card, Checkbox, Divider, List, ListItem, ListItemButton, ListItemIcon, Typography } from "@mui/material"
 import * as React from "react"
 import { TodoContent } from "../interfaces"
-import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card, Paper, Box, useTheme, Divider } from "@mui/material"
 
 /**
  * * TODO LIST COMPONENT
@@ -9,7 +9,6 @@ import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Car
  * TODO: Sort the todos - completed at the bottom of the list
  */
 const TodoList = () => {
-	const theme = useTheme()
 	const [todos, setTodos] = React.useState<TodoContent[]>([])
 
 	//* Requests the API to return todos stored in the database - Runs once on render

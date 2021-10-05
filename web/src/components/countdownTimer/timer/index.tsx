@@ -1,7 +1,7 @@
 import * as React from "react"
 import { TimerInterface } from "../interfaces"
 import { Typography } from "@material-ui/core"
-import { Card, CardContent } from "@mui/material"
+import { Box, Card, CardContent, CircularProgress, Paper } from "@mui/material"
 
 /**
  * * TIMER COMPONENT
@@ -87,12 +87,25 @@ const Timer = () => {
 		}
 	}, [mounted])
 
+	// return <Typography variant="h2">{timer?.timeLeft}</Typography>
 	return (
-		<Card sx={{ display: "flex", width: "50%" }}>
-			<CardContent>
-				<Typography variant="h4">{timer?.timeLeft}</Typography>
-			</CardContent>
-		</Card>
+		<Box sx={{ position: "relative", display: "inline-flex" }}>
+			<CircularProgress variant="determinate" value={100} size="10rem" />
+			<Box
+				sx={{
+					top: 0,
+					left: 0,
+					bottom: 0,
+					right: 0,
+					position: "absolute",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<Typography variant="h5">{timer?.timeLeft}</Typography>
+			</Box>
+		</Box>
 	)
 }
 
