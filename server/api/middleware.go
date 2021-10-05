@@ -31,6 +31,21 @@ func WithUser(sessions *scs.SessionManager, database *db.DB, next SecureHandler)
 	return fn
 }
 
+type ErrorHandler func(w http.ResponseWriter, r *http.Request) (int, error)
+
+func WithError(next ErrorHandler) http.HandlerFunc {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		code, err := next(w, r)
+		if err != nil {
+				http.Error(w, err.Error(), code)
+				fmt.Println(err)
+				return
+		}
+		w.WriteHeader(code)
+	}
+	return fn
+}
+
 // AdminOnly middleware checks that the admin is logged in
 func (c *Controller) AdminOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

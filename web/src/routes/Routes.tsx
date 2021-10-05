@@ -11,6 +11,8 @@ import {
 	ResetPassword,
 	UpdateUser,
 	UpdatePassword,
+	NookingSetup,
+	Nooking,
 } from "../pages"
 import { PrivateRoute, AdminPrivateRoute } from "./PrivateRoute"
 import { AdminDashboard } from "../admin/AdminDashboard"
@@ -36,6 +38,8 @@ const Routes = () => {
 					<PrivateRoute path="/profile" component={Profile} />
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
+					<PrivateRoute path="/nookingSetup" component={NookingSetup} />
+					<PrivateRoute path="/nooking" component={Nooking} />
 
 					<Route path="/admin-login" component={AdminLoginPage} />
 					<AdminPrivateRoute path="/admin-dashboard" component={AdminDashboard} />
