@@ -105,7 +105,7 @@ const UserEditPage = () => {
 
 				const data: IUser | IErrorMessage = await res.json()
 				if (res.status === 200 && !isIErrorMessage(data)) {
-					history.push("/admin/users")
+					history.push("/admin-users")
 				} else {
 					setIsError(true)
 					setResponse(data)
@@ -131,7 +131,7 @@ const UserEditPage = () => {
 
 				const data: IUser | IErrorMessage = await res.json()
 				if (res.status === 200 && !isIErrorMessage(data)) {
-					history.push("/admin/users")
+					history.push("/admin-users")
 				} else {
 					setIsError(true)
 					setResponse(data)
@@ -186,7 +186,7 @@ const UserEditPage = () => {
 								>
 									DELETE USER
 								</Button>
-								<Link to="/admin/users/create" style={{ textDecoration: "none" }}>
+								<Link to="/admin-users-create" style={{ textDecoration: "none" }}>
 									<Button color="primary" size="medium" startIcon={<AddIcon />} variant="contained">
 										CREATE USER
 									</Button>
@@ -375,7 +375,7 @@ const UserEditPage = () => {
 								message="Successfully deleted the user."
 								setOpen={setSuccessOpen}
 								onConfirm={() => {
-									history.push("/admin/users")
+									history.push("/admin-users")
 								}}
 							/>
 						</div>
