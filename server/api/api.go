@@ -45,6 +45,7 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	r.HandleFunc("/api/update_password", WithUser(sessionManager, db, c.UpdatePassword))
 
 	r.HandleFunc("/api/report_submission", WithUser(sessionManager, db, c.SubmitReports))
+	r.HandleFunc("/api/achievement_check", WithUser(sessionManager, db, c.AchievementCheck))
 
 	r.Route("/admin", func(r chi.Router) {
 		r.Post("/login", c.AdminLoginHandler)

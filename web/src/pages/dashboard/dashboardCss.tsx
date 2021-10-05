@@ -14,4 +14,10 @@ export const useStyles = makeStyles({
         bottom: "0px",
         right: "0px",
     },
+    startNookingButton: {
+        position: "absolute",
+        margin: "20px",
+        top: "0px",
+        left: "0px",
+    },
 });

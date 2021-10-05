@@ -8,14 +8,14 @@ import (
 )
 
 type Check struct {
-	BadgeID string `json:'id'`
+	BadgeID string `json:"id"`
 }
 
 func (c *Controller) AchievementCheck(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 
 	// Creates instance of report struct and decode fatched data to it
-	report := &Report{}
-	err := json.NewDecoder(r.Body).Decode(report)
+	check := &Check{}
+	err := json.NewDecoder(r.Body).Decode(check)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

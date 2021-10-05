@@ -23,6 +23,7 @@ export function Dashboard() {
 
 					<GameInterface />
 
+					<Button className={css.startNookingButton} variant="contained" color="primary" onClick={() => history.push("/menu")}>Start Nooking</Button>
 					<Button className={css.menuButton} variant="contained" color="primary" onClick={() => history.push("/menu")}>Menu</Button>
 				</div>
 			</Fade>
