@@ -1,28 +1,15 @@
 import { Button, Fade, Typography, LinearProgress, styled } from "@material-ui/core"
-import { linearProgressClasses } from "@mui/material"
 import { useHistory, Route, Redirect } from "react-router-dom"
 import { useState } from "react"
 
 import { ContextContainer } from "../../contexts/ContextContainer"
 import { useGetState } from "./../../utils/getState"
+
 import { GameInterface } from "../../components/gameInterface"
+import { Level } from "../../components/level"
 import { useStyles } from "./dashboardCss"
 
-import levelIcon from "../../assets/star.png"
 import coinsIcon from "../../assets/coins.png"
-
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-	height: 10,
-	width: 150,
-	borderRadius: 5,
-	[`&.${linearProgressClasses.colorPrimary}`]: {
-		backgroundColor: theme.palette.grey[theme.palette.type === "light" ? 200 : 800],
-	},
-	[`& .${linearProgressClasses.bar}`]: {
-		borderRadius: 5,
-		backgroundColor: theme.palette.type === "light" ? "#1a90ff" : "#308fe8",
-	},
-}))
 
 export function Dashboard() {
 	useGetState()
@@ -40,15 +27,7 @@ export function Dashboard() {
 
 					<Typography className={css.username}>{currentUser.username}</Typography>
 
-					<div className={css.levelItems}>
-						<div className={css.levelWrapper}>
-							<div className={css.levelIcon}>
-								<img className={css.star} src={levelIcon} alt="level-star" id={levelIcon} />
-								<p className={css.levelNumber}>{currentUser.level}</p>
-							</div>
-							<BorderLinearProgress className={css.levelBar} variant="determinate" value={currentUser.experience} />
-						</div>
-					</div>
+					<Level />
 
 					<div className={css.coinsWrapper}>
 						<img className={css.coinsIcon} src={coinsIcon} alt="coins" id={coinsIcon} />

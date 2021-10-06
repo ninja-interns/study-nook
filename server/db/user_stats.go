@@ -5,20 +5,22 @@ import (
 )
 
 type User_Stats struct {
-	ID			string `json:"id"`
-	EXP 		string `json:"exp_amount"`
-	Sessions 	int `json:"sessions_completed"`
-	HoursNooked int `json:"hours_nooked"`
-	Achievements int `json:"achievements_unlocked"`
-	Backgrounds	int `json:"backgrounds_unlocked"`
-	Coins		int `json:"coins"`
+	ID			 	string `json:"id"`
+	EXP 		 	string `json:"exp_amount"`
+	Sessions 	 	int `json:"sessions_completed"`
+	HoursNooked  	int `json:"hours_nooked"`
+	Achievements 	int `json:"achievements_unlocked"`
+	Backgrounds	 	int `json:"backgrounds_unlocked"`
+	Coins		 	int `json:"coins"`
 }
 
 /*
  * Insert methods
  */
+
+ // Creates a new row for user
 func (db *DB) CreateUserStats(id string) error {
-	sqlStatement := `INSERT INTO user_stats VALUES ($1, 0, 0, 0, 0, 0, 50);`
+	sqlStatement := `INSERT INTO user_stats VALUES ($1, 50, 0, 0, 0, 0, 50);`
 
 	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {

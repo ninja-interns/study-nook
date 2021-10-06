@@ -2,25 +2,8 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"net/http"
-	"strconv"
-
-	"studynook.go"
 )
-
-type Level struct {
-	Experience string `json:"experience"`
-}
-
-type Time struct {
-	Experience string `json:"experience"`
-}
-
-type LevelResponse struct {
-	Level int `json:"level"`
-}
 
 // Function to calculate session rewards after session finshes
 func (c *Controller) CalculateSessionRewards(minutes int, id string) error{
@@ -113,16 +96,13 @@ func CalculateCoinsTime(exp int, minutesInt int) int {
 	return groupCoins * minutesInt
 }
 
-// Function to calculate in which level user is determined by how much EXP user has
+// Function to calculate in which level user is and how far on EXP that user is
+// this function returns users current level and how far the user is in that level
 func GetLevelEXP(passedLevels int, passedEXP int, necessaryEXP int, currentEXP int) (int, int) {
 	currentEXP -= passedEXP
 	currentLevel := currentEXP / necessaryEXP
 	oldLevel := currentLevel
 	currentLevel += passedLevels
-
-	fmt.Println(currentEXP)
-	fmt.Println(oldLevel)
-	fmt.Println(necessaryEXP)
 
 	var percentage float32
 
@@ -167,23 +147,4 @@ func CalculateLevelEXP(currentExp int) (int, int) {
 // Calculate EXP over time
 func CalculateEXPTime(minutes int) int {
 	return minutes * 50
-}
-
-func CalculateEXPHandler(w http.ResponseWriter, r *http.Request, u *studynook.User) {
-
-	time := &Time{}
-	err := json.NewDecoder(r.Body).Decode(time)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	minutesInt, err := strconv.Atoi(time.Experience)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	expGained := CalculateEXPTime(minutesInt)
-
-	fmt.Println("EXP gained is: ", expGained)
 }

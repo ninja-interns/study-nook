@@ -11,9 +11,9 @@ type Check struct {
 	BadgeID string `json:"id"`
 }
 
+// Function that checks if user has achievement or not
 func (c *Controller) AchievementCheck(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 
-	// Creates instance of report struct and decode fatched data to it
 	check := &Check{}
 	err := json.NewDecoder(r.Body).Decode(check)
 	if err != nil {
