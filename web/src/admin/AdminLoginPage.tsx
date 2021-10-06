@@ -1,11 +1,22 @@
 // Inspired from https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/sign-in/SignIn.js
 // Thanks Sebastian Silbermann - https://github.com/eps1lon
 
-import { Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Box, Typography, Container, Alert } from "@mui/material";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { makeStyles } from "@material-ui/core/styles";
-import { useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import Avatar from "@material-ui/core/Avatar"
+import Button from "@material-ui/core/Button"
+import CssBaseline from "@material-ui/core/CssBaseline"
+import TextField from "@material-ui/core/TextField"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
+import Checkbox from "@material-ui/core/Checkbox"
+import Link from "@material-ui/core/Link"
+import Box from "@material-ui/core/Box"
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined"
+import Typography from "@material-ui/core/Typography"
+import { makeStyles } from "@material-ui/core/styles"
+import Container from "@material-ui/core/Container"
+import { useRef, useState } from "react"
+import { useHistory } from "react-router-dom"
+import Alert from "@mui/material/Alert"
+import { ContextContainer } from "../contexts/ContextContainer"
 
 const Copyright = () => {
 	return (
@@ -45,11 +56,12 @@ interface IResponse {
 }
 
 const AdminLoginPage = () => {
-	const classes = useStyles();
-	const emailRef = useRef<HTMLInputElement>();
-	const passwordRef = useRef<HTMLInputElement>();
-	const [isError, setIsError] = useState(false);
-	const [response, setResponse] = useState<IResponse>();
+	const { setIsLoggedIn } = ContextContainer.useContainer()
+	const classes = useStyles()
+	const emailRef = useRef<HTMLInputElement>()
+	const passwordRef = useRef<HTMLInputElement>()
+	const [isError, setIsError] = useState(false)
+	const [response, setResponse] = useState<IResponse>()
 
 	let history = useHistory();
 
@@ -57,14 +69,15 @@ const AdminLoginPage = () => {
 		e.preventDefault();
 		// Hitting the backend POST /admin/login
 		try {
-			const res = await fetch("/admin/login", {
+			const res = await fetch("/api/login_admin", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: emailRef?.current?.value, password: passwordRef?.current?.value }),
 			});
 			const data: IResponse = await res.json();
 			if (res.status === 200 && data.isValid) {
-				history.push("/admin/dashboard");
+				setIsLoggedIn(true)
+				history.push("/admin-dashboard")
 			} else {
 				setResponse(data);
 				setIsError(true);

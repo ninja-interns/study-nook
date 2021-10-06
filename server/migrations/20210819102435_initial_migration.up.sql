@@ -46,6 +46,20 @@ CREATE TABLE IF NOT EXISTS shopItemsOwned (
     src text
 );
 
+CREATE TABLE IF NOT EXISTS timer (
+    timer_duration int,
+    user_id text NOT NULL,
+    finish_time timestamp,
+    is_completed boolean
+);
+
+CREATE TABLE IF NOT EXISTS todo (
+    id text PRIMARY KEY,
+    user_id text NOT NULL,
+    todo_text text NOT NULL,
+    is_completed boolean NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS reports (
     submission_id serial PRIMARY KEY,
     username text UNIQUE NOT NULL,

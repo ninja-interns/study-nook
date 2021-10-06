@@ -88,7 +88,7 @@ const UserCreatePage = () => {
 
 			const data: IUser | IErrorMessage = await res.json();
 			if (res.status === 200 && !isIErrorMessage(data)) {
-				history.push("/admin/users");
+				history.push("/admin-users")
 			} else {
 				setIsError(true);
 				setResponse(data);
@@ -115,7 +115,7 @@ const UserCreatePage = () => {
 							<Typography variant="h6" color="primary" gutterBottom>
 								CREATE USER
 							</Typography>
-							<Link to="/admin/users" style={{ textDecoration: "none" }}>
+							<Link to="/admin-users" style={{ textDecoration: "none" }}>
 								<Button color="primary" variant="contained" size="medium">
 									VIEW USERS
 								</Button>

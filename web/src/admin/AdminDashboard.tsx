@@ -1,7 +1,8 @@
-import { Container, Grid, makeStyles } from "@material-ui/core";
-import { LeftBar } from "./LeftBar";
-import { NavBar } from "./NavBar";
-import { UserListGrid } from "./UserListGrid";
+import { Grid } from "@material-ui/core"
+import { NavBar } from "./NavBar"
+import { LeftBar } from "./LeftBar"
+import { makeStyles, Container, CssBaseline } from "@material-ui/core"
+import { UserListGrid } from "./UserListGrid"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -13,6 +14,7 @@ const AdminDashboard = () => {
 	const classes = useStyles();
 	return (
 		<div>
+			<CssBaseline />
 			<NavBar />
 			<Grid container>
 				<Grid item sm={2} xs={2}>

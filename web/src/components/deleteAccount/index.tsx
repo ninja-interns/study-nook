@@ -1,59 +1,59 @@
-import React, { useRef, useState } from "react";
-import { Button, TextField, Typography } from "@material-ui/core";
-import { SimpleModal } from "./../modal";
-import { Redirect, Route } from "react-router";
-import { Snackbars } from "..";
-import { Color } from "@material-ui/lab/Alert";
-import { useStyles } from "./deleteAccountCss";
+import React, { useRef, useState } from "react"
+import { Button, TextField, Typography } from "@material-ui/core"
+import { SimpleModal } from "./../modal"
+import { Redirect, Route } from "react-router"
+import { Snackbars } from ".."
+import { Color } from "@material-ui/lab/Alert"
+import { useStyles } from "./deleteAccountCss"
 
 interface IData {
-	isValid: boolean;
-	message: string;
+	isValid: boolean
+	message: string
 }
 
 export function DeleteAccount() {
-	const css = useStyles();
-	const [redirect, setRedirect] = useState<string | null>(null);
-	const currentPasswordRef = useRef<HTMLInputElement>();
-	const [loading, setLoading] = useState<boolean>(false);
-	const [message, setMessage] = useState<string>("");
-	const [severity, setSeverity] = useState<Color | undefined>(undefined);
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const css = useStyles()
+	const [redirect, setRedirect] = useState<string | null>(null)
+	const currentPasswordRef = useRef<HTMLInputElement>()
+	const [loading, setLoading] = useState<boolean>(false)
+	const [message, setMessage] = useState<string>("")
+	const [severity, setSeverity] = useState<Color | undefined>(undefined)
+	const [isOpen, setIsOpen] = useState<boolean>(false)
 
 	async function handleDeleteAccount(e: React.FormEvent<HTMLFormElement>): Promise<void> {
-		e.preventDefault();
-		setLoading(true);
+		e.preventDefault()
+		setLoading(true)
 		try {
 			const response = await fetch("/api/delete_account", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ currentPassword: currentPasswordRef?.current?.value }),
-			});
-			const data: IData = await response.json();
+			})
+			const data: IData = await response.json()
 
 			if (data.isValid) {
-				setRedirect("/deletedAccount");
-				setMessage(data.message);
-				setIsOpen(true);
-				setSeverity("success");
+				setRedirect("/deletedAccount")
+				setMessage(data.message)
+				setIsOpen(true)
+				setSeverity("success")
 			} else {
-				setMessage(data.message);
-				setIsOpen(true);
-				setSeverity("error");
+				setMessage(data.message)
+				setIsOpen(true)
+				setSeverity("error")
 			}
 		} catch (err) {
-			console.log(err);
+			console.log(err)
 		}
-		setLoading(false);
+		setLoading(false)
 	}
 
 	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
 		if (reason === "clickaway") {
-			return;
+			return
 		}
 
-		setIsOpen(false);
-	};
+		setIsOpen(false)
+	}
 
 	return (
 		<>
@@ -74,5 +74,5 @@ export function DeleteAccount() {
 				</div>
 			</SimpleModal>
 		</>
-	);
+	)
 }
