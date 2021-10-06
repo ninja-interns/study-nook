@@ -48,7 +48,7 @@ const Timer = () => {
 			if (response.ok) {
 				const data: TimerInterface = await response.json()
 				if (data.timeLeft === 0 || data.isCompleted === true) {
-					//! data.timeLeft = "Finished"
+					data.timeLeft = 0
 					setMounted(false)
 					setCompleted()
 				} else if (data.timeLeft) {
@@ -92,23 +92,22 @@ const Timer = () => {
 		}
 	}, [mounted])
 
-	//! Circular Progress Circle
+	//* Circular Progress Circle - Calculates the per
 	const [progress, setProgress] = React.useState(0)
-	//? Could put this in with the ticker?
 	React.useEffect(() => {
-		const timerProgress = timer.setProgress(timerProgress)
+		if (timer?.timerDuration && timer?.timeLeft) {
+			const timeLeft = timer?.timeLeft // seconds
+			const timerDuration = timer?.timerDuration * 60 // minutes
 
-		const timer = setInterval(() => {
-			setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10))
-		}, 800)
-		return () => {
-			clearInterval(timer)
+			// Calculate percentage of time remaining
+			const percentTimeLeft = (timeLeft / timerDuration) * 100
+			setProgress(percentTimeLeft)
 		}
-	}, [ticker])
+	}, [timer?.timeLeft, timer?.timerDuration])
 
 	return (
 		<Box sx={{ position: "relative", display: "inline-flex" }}>
-			<CircularProgress variant="determinate" value={progress} />
+			<CircularProgress variant="determinate" value={progress} size={120} />
 			<Box
 				sx={{
 					top: 0,
@@ -121,7 +120,7 @@ const Timer = () => {
 					justifyContent: "center",
 				}}
 			>
-				<Typography variant="caption" component="div">
+				<Typography variant="h5" component="div">
 					{timeLeft}
 				</Typography>
 			</Box>

@@ -135,7 +135,7 @@ func (c *Controller) GetTimeLeftHandler(w http.ResponseWriter, r *http.Request) 
 		finishTime := timer.FinishTime
 		timeUntilFinish := time.Until(finishTime)
 		timeLeft := timeUntilFinish.Round(time.Second)
-		timer.TimeLeft = timeLeft / 1000000000 // Remove the extra zeros on the end of the duration
+		timer.TimeLeft = timeLeft / 1000000000 // Remove the extra zeros on the end of the duration (there is always 9 zeros following the seconds)
 
 	} else if validFinishTime.Before(time.Now()) { // If the timer is finished
 		// Update the completion status of the timer in database
