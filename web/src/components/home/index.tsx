@@ -1,4 +1,4 @@
-import { Typography, Button } from "@material-ui/core"
+import { Button } from "@mui/material"
 import React, { useState } from "react"
 import { Redirect, Route } from "react-router-dom"
 import { ContextContainer } from "../../contexts/ContextContainer"
@@ -17,33 +17,26 @@ export function Home(): JSX.Element {
 
 	return (
 		<>
-			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-			<div className={css.container}>
-				<Typography variant="h3">StudyNookLogo📚</Typography>
-
-				<div className={css.buttonContainer}>
-					<Button
-						className={css.button}
-						variant="contained"
-						color="primary"
-						onClick={() => {
-							setRedirect("/login")
-						}}
-					>
-						Login
-					</Button>
-					<Button
-						className={css.button}
-						onClick={() => {
-							setRedirect("/registration")
-						}}
-						variant="contained"
-						color="primary"
-					>
-						Register
-					</Button>
-				</div>
-			</div>
+			<Button
+				className={css.button}
+				variant="contained"
+				color="primary"
+				onClick={() => {
+					setRedirect("/login")
+				}}
+			>
+				Login
+			</Button>
+			<Button
+				className={css.button}
+				onClick={() => {
+					setRedirect("/registration")
+				}}
+				variant="contained"
+				color="primary"
+			>
+				Register
+			</Button>
 		</>
 	)
 }

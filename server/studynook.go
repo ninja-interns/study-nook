@@ -63,10 +63,7 @@ func (u User) ValidateIgnorePassword() error {
 
 // PasswordConfirmation confirms the password is same
 func (u User) PasswordConfirmation() bool {
-	if u.Password == u.ConfirmPassword {
-		return true
-	}
-	return false
+	return u.Password == u.ConfirmPassword
 }
 
 // Admin model

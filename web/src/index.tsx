@@ -7,7 +7,6 @@ import reportWebVitals from "./reportWebVitals"
 ReactDOM.render(
 	<React.StrictMode>
 		<Container
-			// fixed={true}
 			disableGutters={true}
 			sx={{
 				width: 340,
