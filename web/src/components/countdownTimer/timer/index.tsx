@@ -1,7 +1,7 @@
 import * as React from "react"
 import { TimerInterface } from "../interfaces"
 import { Typography } from "@material-ui/core"
-import { Card, CardContent } from "@mui/material"
+import { Box, Card, CardContent, CircularProgress } from "@mui/material"
 
 /**
  * * TIMER COMPONENT
@@ -13,6 +13,7 @@ const Timer = () => {
 	const [timer, setTimer] = React.useState<TimerInterface>()
 	const [mounted, setMounted] = React.useState(false) // Mounted runs createTimer before getTimeLeft
 	const [ticker, setTicker] = React.useState<number>(0) // The ticker increments every second
+	const [timeLeft, setTimeLeft] = React.useState<String>("")
 
 	//* Requests the API to create a new timer - runs once on render
 	React.useEffect(() => {
@@ -23,7 +24,7 @@ const Timer = () => {
 			// If there is no timer duration in the database display "No Timer"
 			if (response.status === 404) {
 				const newTimer: TimerInterface = {
-					timeLeft: "No Timer",
+					timeLeft: 0,
 					timerDuration: 0,
 					isCompleted: false,
 				}
@@ -41,22 +42,26 @@ const Timer = () => {
 	React.useEffect(() => {
 		if (mounted) getTimeLeft()
 
+		// Sends request to the API to calculate and returns time remaining on the timer
 		async function getTimeLeft() {
-			// Sends request to the API to calculate and return time remaining on the timer
 			const response = await fetch("/api/get_time_left")
 			if (response.ok) {
 				const data: TimerInterface = await response.json()
-				if (data.timeLeft === "0s" || data.isCompleted === true) {
-					data.timeLeft = "Finished"
+				if (data.timeLeft === 0 || data.isCompleted === true) {
+					//! data.timeLeft = "Finished"
 					setMounted(false)
 					setCompleted()
+				} else if (data.timeLeft) {
+					// Convert the timeLeft (seconds) to minutes and seconds
+					var timeLeftString = new Date(data?.timeLeft * 1000).toISOString().substr(14, 5)
+					setTimeLeft(timeLeftString)
 				}
 				setTimer(data)
 			}
 			// If there is no timer duration in the database display "No Timer"
 			else if (response.status === 404) {
 				const newTimer: TimerInterface = {
-					timeLeft: "No Timer",
+					timeLeft: 0,
 					timerDuration: 0,
 					isCompleted: false,
 				}
@@ -87,12 +92,40 @@ const Timer = () => {
 		}
 	}, [mounted])
 
+	//! Circular Progress Circle
+	const [progress, setProgress] = React.useState(0)
+	//? Could put this in with the ticker?
+	React.useEffect(() => {
+		const timerProgress = timer.setProgress(timerProgress)
+
+		const timer = setInterval(() => {
+			setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10))
+		}, 800)
+		return () => {
+			clearInterval(timer)
+		}
+	}, [ticker])
+
 	return (
-		<Card sx={{ display: "flex", width: "50%" }}>
-			<CardContent>
-				<Typography variant="h4">{timer?.timeLeft}</Typography>
-			</CardContent>
-		</Card>
+		<Box sx={{ position: "relative", display: "inline-flex" }}>
+			<CircularProgress variant="determinate" value={progress} />
+			<Box
+				sx={{
+					top: 0,
+					left: 0,
+					bottom: 0,
+					right: 0,
+					position: "absolute",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<Typography variant="caption" component="div">
+					{timeLeft}
+				</Typography>
+			</Box>
+		</Box>
 	)
 }
 
