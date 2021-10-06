@@ -62,6 +62,12 @@ func (c *Controller) CalculateSessionRewards(minutes int, id string) error{
 	return nil
 }
 
+func GetItem(id string) {
+
+	
+
+}
+
 // Function to check based on total Experience points,
 // which level group the user is at.
 func CheckLevelGroup(currentExp int) string {
@@ -108,17 +114,33 @@ func CalculateCoinsTime(exp int, minutesInt int) int {
 }
 
 // Function to calculate in which level user is determined by how much EXP user has
-func GetLevelEXP(passedLevels int, passedEXP int, necessaryEXP int, currentEXP int) int {
+func GetLevelEXP(passedLevels int, passedEXP int, necessaryEXP int, currentEXP int) (int, int) {
 	currentEXP -= passedEXP
 	currentLevel := currentEXP / necessaryEXP
+	oldLevel := currentLevel
 	currentLevel += passedLevels
 
-	return currentLevel
+	fmt.Println(currentEXP)
+	fmt.Println(oldLevel)
+	fmt.Println(necessaryEXP)
+
+	var percentage float32
+
+	if oldLevel != 0 {
+		percentage = float32((currentEXP / oldLevel) - necessaryEXP)
+		percentage = (percentage / float32(necessaryEXP)) * 100
+	} else {
+		percentage = (float32(currentEXP) / float32(necessaryEXP)) * 100
+	}
+	
+	fmt.Println(percentage)
+
+	return currentLevel, int(percentage)
 }
 
 // Function to calculate level by total EXP points user has
 // It requires level group
-func CalculateLevelEXP(currentExp int) int {
+func CalculateLevelEXP(currentExp int) (int, int) {
 
 	levelGroup := CheckLevelGroup(currentExp)
 
@@ -130,7 +152,7 @@ func CalculateLevelEXP(currentExp int) int {
 	} else if levelGroup == "B" {
 		return GetLevelEXP(5, 5000, 1500, currentExp)
 	} else if levelGroup == "C" {
-		return GetLevelEXP(10, 11250, 2000, currentExp)
+		return GetLevelEXP(10, 12500, 2000, currentExp)
 	} else if levelGroup == "D" {
 		return GetLevelEXP(15, 22500, 3000, currentExp)
 	} else if levelGroup == "E" {
@@ -164,26 +186,4 @@ func CalculateEXPHandler(w http.ResponseWriter, r *http.Request, u *studynook.Us
 	expGained := CalculateEXPTime(minutesInt)
 
 	fmt.Println("EXP gained is: ", expGained)
-}
-
-// Returns user current level
-func GetLevelHandler(w http.ResponseWriter, r *http.Request, u *studynook.User) {
-
-	level := &Level{}
-
-	err := json.NewDecoder(r.Body).Decode(level)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	currentExp, err := strconv.Atoi(level.Experience)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	userLevel := CalculateLevelEXP(currentExp)
-
-	fmt.Println(userLevel)
-
 }

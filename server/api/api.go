@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/alexedwards/scs/pgxstore"
@@ -40,7 +41,7 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	r.HandleFunc("/api/logout_user", c.LogoutUser)
 	r.HandleFunc("/api/forgot_password", c.ForgotPassword)
 	r.HandleFunc("/api/reset_password", c.ResetPassword)
-	r.HandleFunc("/api/state", WithUser(sessionManager, db, CurrentUserState))
+	r.HandleFunc("/api/state", WithUser(sessionManager, db, c.CurrentUserState))
 	r.HandleFunc("/api/delete_account", WithUser(sessionManager, db, c.DeleteAccount))
 	r.HandleFunc("/api/update_user", WithUser(sessionManager, db, c.UpdateUser))
 	r.HandleFunc("/api/update_password", WithUser(sessionManager, db, c.UpdatePassword))
@@ -75,15 +76,39 @@ type currentUserState struct {
 	Name     string `json:"name"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
+	Coins	 string	`json:"coins"`
+	Level    string	`json:"level"`
+	EXP      string	`json:"experience"`
 }
 
 //will hit when the API from main.go is invoked- can be called from multiple components on frontend using useGetState() from utils folder, custom hook. Backend solution to persisting data through a refresh
-func CurrentUserState(w http.ResponseWriter, r *http.Request, u *studynook.User) {
+func (c *Controller) CurrentUserState(w http.ResponseWriter, r *http.Request, u *studynook.User) {
+
+	coins, err := c.DB.GetCoins(u.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println(err)
+		return
+	}
+
+	exp, err := c.DB.GetEXPAmount(u.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Println(err)
+		return
+	}
+
+	userLevel, userExp := CalculateLevelEXP(exp)
+
 	currentUser := &currentUserState{Email: u.Email,
 		Name:     u.Name,
-		Username: u.Username}
+		Username: u.Username,
+		Coins:	  strconv.Itoa(coins),
+		Level:	  strconv.Itoa(userLevel),
+		EXP:	  strconv.Itoa(userExp),
+	}
 
-	err := json.NewEncoder(w).Encode(currentUser)
+	err = json.NewEncoder(w).Encode(currentUser)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Println(err)

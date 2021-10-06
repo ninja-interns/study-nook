@@ -1,6 +1,18 @@
 package db
 
-import "context"
+import (
+	"context"
+)
+
+type User_Stats struct {
+	ID			string `json:"id"`
+	EXP 		string `json:"exp_amount"`
+	Sessions 	int `json:"sessions_completed"`
+	HoursNooked int `json:"hours_nooked"`
+	Achievements int `json:"achievements_unlocked"`
+	Backgrounds	int `json:"backgrounds_unlocked"`
+	Coins		int `json:"coins"`
+}
 
 /*
  * Insert methods
@@ -95,15 +107,84 @@ func (db *DB) UpdateBackgroundsUnlocked(id string) error {
 /*
  * Get methods
  */
-func (db *DB) GetItem(selectItem string, id string) (int, error) {
+func (db *DB) GetCoins(id string) (int, error) {
 
-	sqlStatement := `SELECT $1 FROM user_stats WHERE id = $2;`
+	sqlStatement := `SELECT coins FROM user_stats WHERE id = $1;`
 
-	returnItem := 0
+	//fmt.Println(id)
 
-	err := db.Conn.QueryRow(context.Background(), sqlStatement, selectItem, id).Scan(returnItem)
+	var returnItem int
+
+	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&returnItem)
 	if err != nil {
 		return returnItem, err
 	}
 	return returnItem, nil
+}
+
+func (db *DB) GetEXPAmount(id string) (int, error) {
+
+	sqlStatement := `SELECT exp_amount FROM user_stats WHERE id = $1;`
+
+	var exp int
+
+	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&exp)
+	if err != nil {
+		return exp, err
+	}
+	return exp, nil
+}
+
+func (db *DB) GetSessions(id string) (int, error) {
+
+	sqlStatement := `SELECT coins FROM user_stats WHERE id = $1;`
+
+	//fmt.Println(id)
+
+	var sessions int
+
+	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&sessions)
+	if err != nil {
+		return sessions, err
+	}
+	return sessions, nil
+}
+
+func (db *DB) GetHoursNooked(id string) (int, error) {
+
+	sqlStatement := `SELECT coins FROM user_stats WHERE id = $1;`
+
+	var hoursNooked int
+
+	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&hoursNooked)
+	if err != nil {
+		return hoursNooked, err
+	}
+	return hoursNooked, nil
+}
+
+func (db *DB) GetAchievements(id string) (int, error) {
+
+	sqlStatement := `SELECT coins FROM user_stats WHERE id = $1;`
+
+	var achievementsUnlocked int
+
+	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&achievementsUnlocked)
+	if err != nil {
+		return achievementsUnlocked, err
+	}
+	return achievementsUnlocked, nil
+}
+
+func (db *DB) GetBackgrounds(id string) (int, error) {
+
+	sqlStatement := `SELECT coins FROM user_stats WHERE id = $1;`
+
+	var backgroundsUnlocked int
+
+	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&backgroundsUnlocked)
+	if err != nil {
+		return backgroundsUnlocked, err
+	}
+	return backgroundsUnlocked, nil
 }

@@ -6,6 +6,9 @@ export interface IAuthCurrentUser {
 	name: string | null
 	username: string | null
 	email: string | null
+	coins: string | null
+	level: string | null
+	experience: number | undefined
 }
 
 function ContextDataContainer() {
@@ -15,6 +18,9 @@ function ContextDataContainer() {
 		name: null,
 		username: null,
 		email: null,
+		coins: null,
+		level: null,
+		experience: undefined,
 	})
 
 	return {

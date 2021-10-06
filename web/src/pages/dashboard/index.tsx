@@ -8,6 +8,9 @@ import { useGetState } from "./../../utils/getState"
 import { GameInterface } from "../../components/gameInterface"
 import { useStyles } from "./dashboardCss"
 
+import levelIcon from "../../assets/star.png"
+import coinsIcon from "../../assets/coins.png"
+
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 	height: 10,
 	width: 150,
@@ -37,9 +40,19 @@ export function Dashboard() {
 
 					<Typography className={css.username}>{currentUser.username}</Typography>
 
-					<div className={css.levelBar}>
-						<BorderLinearProgress variant="determinate" value={20} />
-						<p className={css.levelNumber}>Level: </p>
+					<div className={css.levelItems}>
+						<div className={css.levelWrapper}>
+							<div className={css.levelIcon}>
+								<img className={css.star} src={levelIcon} alt="level-star" id={levelIcon} />
+								<p className={css.levelNumber}>{currentUser.level}</p>
+							</div>
+							<BorderLinearProgress className={css.levelBar} variant="determinate" value={currentUser.experience} />
+						</div>
+					</div>
+
+					<div className={css.coinsWrapper}>
+						<img className={css.coinsIcon} src={coinsIcon} alt="coins" id={coinsIcon} />
+						<p className={css.coinsNumber}>{currentUser.coins}</p>
 					</div>
 
 					<Button className={css.startNookingButton} variant="contained" color="primary" onClick={() => history.push("/nookingSetup")}>
