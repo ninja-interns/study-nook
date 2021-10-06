@@ -61,6 +61,13 @@ func (c *Controller) AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Successful login
+
+	// Renew the token to avoid session fixation attacks
+	if err = c.Sessions.RenewToken(r.Context()); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	// Creating variables in the session
 	c.Sessions.Put(r.Context(), "id", admin.ID)
 	c.Sessions.Put(r.Context(), "email", admin.Email)
@@ -72,4 +79,19 @@ func (c *Controller) AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(response)
 
+}
+
+// AdminLogoutHandler logouts the admin
+func (c *Controller) AdminLogoutHandler(w http.ResponseWriter, r *http.Request) {
+	err := c.Sessions.Destroy(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	response := &ErrorResponse{
+		Message: "Successfully logged out!",
+		IsValid: true,
+	}
+	json.NewEncoder(w).Encode(response)
 }

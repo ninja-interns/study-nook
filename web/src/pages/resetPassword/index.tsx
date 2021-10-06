@@ -1,38 +1,38 @@
-import { Button, TextField, Typography } from "@material-ui/core";
-import { Color } from "@material-ui/lab/Alert";
-import React, { useRef, useState } from "react";
-import { Redirect, Route } from "react-router";
-import { Snackbars } from "../../components";
-import { useStyles } from "./resetPasswordCss";
+import { Button, TextField, Typography } from "@material-ui/core"
+import { Color } from "@material-ui/lab/Alert"
+import React, { useRef, useState } from "react"
+import { Redirect, Route } from "react-router"
+import { Snackbars } from "../../components"
+import { useStyles } from "./resetPasswordCss"
 
 interface IData {
-	isValid: boolean;
-	message: string;
+	isValid: boolean
+	message: string
 }
 
 export function ResetPassword() {
-	const css = useStyles();
-	const emailRef = useRef<HTMLInputElement>();
-	const tokenRef = useRef<HTMLInputElement>();
-	const passwordRef = useRef<HTMLInputElement>();
-	const confirmationRef = useRef<HTMLInputElement>();
-	const [message, setMessage] = useState<string>("");
-	const [loading, setLoading] = useState<boolean>(false);
-	const [severity, setSeverity] = useState<Color | undefined>(undefined);
-	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const [redirect, setRedirect] = useState<string | null>(null);
+	const css = useStyles()
+	const emailRef = useRef<HTMLInputElement>()
+	const tokenRef = useRef<HTMLInputElement>()
+	const passwordRef = useRef<HTMLInputElement>()
+	const confirmationRef = useRef<HTMLInputElement>()
+	const [message, setMessage] = useState<string>("")
+	const [loading, setLoading] = useState<boolean>(false)
+	const [severity, setSeverity] = useState<Color | undefined>(undefined)
+	const [isOpen, setIsOpen] = useState<boolean>(false)
+	const [redirect, setRedirect] = useState<string | null>(null)
 
 	async function handleResetPassword(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setMessage("");
-		setLoading(true);
+		e.preventDefault()
+		setMessage("")
+		setLoading(true)
 
 		if (confirmationRef?.current?.value !== passwordRef?.current?.value) {
-			setMessage("Your passwords do not match");
-			setIsOpen(true);
-			setSeverity("error");
-			setLoading(false);
-			return;
+			setMessage("Your passwords do not match")
+			setIsOpen(true)
+			setSeverity("error")
+			setLoading(false)
+			return
 		}
 
 		try {
@@ -45,30 +45,30 @@ export function ResetPassword() {
 					password: passwordRef?.current?.value,
 					confirmation: confirmationRef?.current?.value,
 				}),
-			});
-			const data: IData = await response.json();
+			})
+			const data: IData = await response.json()
 
 			if (data.isValid) {
-				setRedirect("/login");
-				return;
+				setRedirect("/login")
+				return
 			}
 
-			setMessage(data.message);
-			setIsOpen(true);
-			setSeverity("error");
+			setMessage(data.message)
+			setIsOpen(true)
+			setSeverity("error")
 		} catch (err) {
-			console.error(err);
+			console.error(err)
 		}
-		setLoading(false);
+		setLoading(false)
 	}
 
 	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
 		if (reason === "clickaway") {
-			return;
+			return
 		}
 
-		setIsOpen(false);
-	};
+		setIsOpen(false)
+	}
 
 	return (
 		<div className={css.container}>
@@ -89,5 +89,5 @@ export function ResetPassword() {
 				</form>
 			</div>
 		</div>
-	);
+	)
 }

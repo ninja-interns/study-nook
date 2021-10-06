@@ -1,85 +1,85 @@
-import { Button, Fade, Slide, TextField, Typography } from "@material-ui/core";
-import { Color } from "@material-ui/lab/Alert";
-import React, { useRef, useState } from "react";
-import { Redirect, Route } from "react-router-dom";
-import { useLastLocation } from "react-router-last-location";
-import { Snackbars } from "../../components";
-import { ContextContainer } from "../../contexts/ContextContainer";
-import { useStyles } from "./loginPageCss";
+import { Button, Fade, Slide, TextField, Typography } from "@material-ui/core"
+import { Color } from "@material-ui/lab/Alert"
+import React, { useRef, useState } from "react"
+import { Redirect, Route } from "react-router-dom"
+import { useLastLocation } from "react-router-last-location"
+import { Snackbars } from "../../components"
+import { ContextContainer } from "../../contexts/ContextContainer"
+import { useStyles } from "./loginPageCss"
 
 interface IData {
-	isValid: boolean;
-	message: string;
-	isVerified: boolean;
+	isValid: boolean
+	message: string
+	isVerified: boolean
 }
 
 interface ITransitionProps {
-	children: JSX.Element;
+	children: JSX.Element
 }
 
 function Transition({ children }: ITransitionProps): JSX.Element {
-	const lastLocation: string | undefined = useLastLocation()?.pathname;
+	const lastLocation: string | undefined = useLastLocation()?.pathname
 	if (lastLocation === "/registration") {
 		return (
 			<Slide direction={"right"} in={true} timeout={1000}>
 				{children}
 			</Slide>
-		);
+		)
 	} else {
 		return (
 			<Fade in={true} timeout={1000}>
 				{children}
 			</Fade>
-		);
+		)
 	}
 }
 
 export function LoginPage() {
-	const css = useStyles();
-	const userRef = useRef<HTMLInputElement>();
-	const passwordRef = useRef<HTMLInputElement>();
-	const [loading, setLoading] = useState<boolean>(false);
-	const [message, setMessage] = useState<string>("");
-	const [severity, setSeverity] = useState<Color | undefined>(undefined);
-	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const [redirect, setRedirect] = useState<string | null>(null);
-	const { setIsLoggedIn } = ContextContainer.useContainer();
+	const css = useStyles()
+	const userRef = useRef<HTMLInputElement>()
+	const passwordRef = useRef<HTMLInputElement>()
+	const [loading, setLoading] = useState<boolean>(false)
+	const [message, setMessage] = useState<string>("")
+	const [severity, setSeverity] = useState<Color | undefined>(undefined)
+	const [isOpen, setIsOpen] = useState<boolean>(false)
+	const [redirect, setRedirect] = useState<string | null>(null)
+	const { setIsLoggedIn } = ContextContainer.useContainer()
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setMessage("");
-		setLoading(true);
+		e.preventDefault()
+		setMessage("")
+		setLoading(true)
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
 			const response = await fetch("/api/login_user", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: userRef?.current?.value, username: userRef?.current?.value, password: passwordRef?.current?.value }),
-			});
+			})
 			//awaiting the response to comeback and turn it into readable json data
-			const data: IData = await response.json();
+			const data: IData = await response.json()
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 			if (data.isValid && data.isVerified) {
-				setIsLoggedIn(true);
-				setRedirect("/dashboard");
+				setIsLoggedIn(true)
+				setRedirect("/dashboard")
 			} else {
-				setMessage(data.message);
-				setIsOpen(true);
-				setSeverity("error");
+				setMessage(data.message)
+				setIsOpen(true)
+				setSeverity("error")
 			}
 		} catch (err) {
-			console.error(err);
+			console.error(err)
 		}
-		setLoading(false);
+		setLoading(false)
 	}
 
 	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
 		if (reason === "clickaway") {
-			return;
+			return
 		}
 
-		setIsOpen(false);
-	};
+		setIsOpen(false)
+	}
 
 	return (
 		<Transition>
@@ -111,5 +111,5 @@ export function LoginPage() {
 				</div>
 			</div>
 		</Transition>
-	);
+	)
 }

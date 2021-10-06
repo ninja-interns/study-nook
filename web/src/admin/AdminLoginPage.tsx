@@ -16,6 +16,7 @@ import Container from "@material-ui/core/Container"
 import { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import Alert from "@mui/material/Alert"
+import { ContextContainer } from "../contexts/ContextContainer"
 
 const Copyright = () => {
 	return (
@@ -55,6 +56,7 @@ interface IResponse {
 }
 
 const AdminLoginPage = () => {
+	const { setIsLoggedIn } = ContextContainer.useContainer()
 	const classes = useStyles()
 	const emailRef = useRef<HTMLInputElement>()
 	const passwordRef = useRef<HTMLInputElement>()
@@ -67,14 +69,15 @@ const AdminLoginPage = () => {
 		e.preventDefault()
 		// Hitting the backend POST /admin/login
 		try {
-			const res = await fetch("/admin/login", {
+			const res = await fetch("/api/login_admin", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: emailRef?.current?.value, password: passwordRef?.current?.value }),
 			})
 			const data: IResponse = await res.json()
 			if (res.status === 200 && data.isValid) {
-				history.push("/admin/dashboard")
+				setIsLoggedIn(true)
+				history.push("/admin-dashboard")
 			} else {
 				setResponse(data)
 				setIsError(true)

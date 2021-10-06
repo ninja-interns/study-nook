@@ -47,9 +47,10 @@ export function Dashboard() {
 
 					<Button className={css.startNookingButton} variant="contained" color="primary" onClick={() => history.push("/menu")}>Start Nooking</Button>
 					<Button className={css.menuButton} variant="contained" color="primary" onClick={() => history.push("/menu")}>Menu</Button>
+					<Button onClick={() => history.push("/nookingSetup")}>Nooking Setup</Button>
 				</div>
 			</Fade>
 		</div>
 
 	);
-}
+	
