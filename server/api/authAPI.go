@@ -201,16 +201,16 @@ func (c *Controller) LoginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
-	var name string
+	var id string
 
 	//getting the URL parameter from the GET request and setting it in qCode
 	qCode := chi.URLParam(r, "code")
 
 	//querying my database for the code- if a row doesn't come back, queryRow will throw an error.
 	sqlStatement := `
-	SELECT name FROM users WHERE token = $1`
+	SELECT id FROM users WHERE token = $1`
 
-	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&name)
+	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, qCode).Scan(&id)
 	if err != nil {
 		response := JsonResponse{
 			Message: "Couldn't find your account, please double check your code.",
@@ -237,12 +237,25 @@ func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = c.CreateUserStats(id)
+	if err != nil {
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		w.WriteHeader(http.StatusInternalServerError)
+
+		return
+	}
+
 	//if it's all successful, this response will be written back.
 	response := JsonResponse{
 		Message: "Success, your email is verified.",
 		IsValid: true,
 	}
 	json.NewEncoder(w).Encode(response)
+
 }
 
 type CurrentPassword struct {

@@ -19,5 +19,25 @@ export const useStyles = makeStyles({
         margin: "20px",
         top: "0px",
         left: "0px",
+        fontSize: "13px",
     },
+    username: {
+        position: "absolute",
+        margin: "25px",
+        top: "0px",
+        right: "0px",
+        fontFamily: "arial",
+        fontSize: "17px",
+        textTransform: "uppercase",
+    },
+    levelBar: {
+        position: "absolute",
+        margin: "25px",
+        top: "50px",
+        right: "0px",
+    },
+    levelNumber: {
+        float: "right",
+        marginTop: "3px",
+    }
 });

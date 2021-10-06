@@ -22,6 +22,18 @@ type LevelResponse struct {
 	Level int `json:"level"`
 }
 
+func (c *Controller) CreateUserStats(id string) error {
+	sqlStatement := `INSERT INTO user_stats VALUES ($1, 0, 0, 0, 0, 0, 50);`
+
+	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 // Function to calculate session rewards after session finshes
 func (c *Controller) CalculateSessionRewards(minutes int, id string) {
 
