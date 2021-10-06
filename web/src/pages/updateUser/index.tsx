@@ -1,35 +1,35 @@
-import { Button, TextField, Typography } from "@material-ui/core";
-import { Color } from "@material-ui/lab/Alert";
-import React, { useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { ContextContainer } from "../../contexts/ContextContainer";
-import { Snackbars } from "./../../components/snackbar/index";
-import { useGetState } from "./../../utils/getState";
-import { useStyles } from "./updateUserCss";
+import { Button, TextField, Typography } from "@material-ui/core"
+import { Color } from "@material-ui/lab/Alert"
+import React, { useRef, useState } from "react"
+import { useHistory } from "react-router-dom"
+import { ContextContainer } from "../../contexts/ContextContainer"
+import { Snackbars } from "./../../components/snackbar/index"
+import { useGetState } from "./../../utils/getState"
+import { useStyles } from "./updateUserCss"
 
 interface IData {
-	isValid: boolean;
-	message: string;
+	isValid: boolean
+	message: string
 }
 
 export function UpdateUser() {
-	useGetState();
-	const css = useStyles();
-	const history = useHistory();
-	const usernameRef = useRef<HTMLInputElement>();
-	const nameRef = useRef<HTMLInputElement>();
-	const emailRef = useRef<HTMLInputElement>();
-	const passwordRef = useRef<HTMLInputElement>();
-	const [loading, setLoading] = useState<boolean>(false);
-	const [message, setMessage] = useState<string>("");
-	const [severity, setSeverity] = useState<Color | undefined>(undefined);
-	const [isOpen, setIsOpen] = useState<boolean>(false);
-	const { currentUser } = ContextContainer.useContainer();
+	useGetState()
+	const css = useStyles()
+	const history = useHistory()
+	const usernameRef = useRef<HTMLInputElement>()
+	const nameRef = useRef<HTMLInputElement>()
+	const emailRef = useRef<HTMLInputElement>()
+	const passwordRef = useRef<HTMLInputElement>()
+	const [loading, setLoading] = useState<boolean>(false)
+	const [message, setMessage] = useState<string>("")
+	const [severity, setSeverity] = useState<Color | undefined>(undefined)
+	const [isOpen, setIsOpen] = useState<boolean>(false)
+	const { currentUser } = ContextContainer.useContainer()
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-		setMessage("");
-		setLoading(true);
+		e.preventDefault()
+		setMessage("")
+		setLoading(true)
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
@@ -42,33 +42,33 @@ export function UpdateUser() {
 					email: emailRef?.current?.value,
 					password: passwordRef?.current?.value,
 				}),
-			});
+			})
 			//awaiting the response to comeback and turn it into readable json data
-			const data: IData = await response.json();
+			const data: IData = await response.json()
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 
 			if (data.isValid) {
-				setMessage(data.message);
-				setIsOpen(true);
-				setSeverity("success");
+				setMessage(data.message)
+				setIsOpen(true)
+				setSeverity("success")
 			} else {
-				setMessage(data.message);
-				setIsOpen(true);
-				setSeverity("error");
+				setMessage(data.message)
+				setIsOpen(true)
+				setSeverity("error")
 			}
 		} catch (err) {
-			console.log(err);
+			console.log(err)
 		}
-		setLoading(false);
+		setLoading(false)
 	}
 
 	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
 		if (reason === "clickaway") {
-			return;
+			return
 		}
 
-		setIsOpen(false);
-	};
+		setIsOpen(false)
+	}
 
 	return (
 		<div className={css.container}>
@@ -92,5 +92,5 @@ export function UpdateUser() {
 				</form>
 			</div>
 		</div>
-	);
+	)
 }

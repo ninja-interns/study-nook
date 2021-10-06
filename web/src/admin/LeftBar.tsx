@@ -47,19 +47,19 @@ const LeftBar = () => {
 	const classes = useStyles()
 	return (
 		<Container className={classes.container}>
-			<Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
+			<Link to="/admin-dashboard" style={{ textDecoration: "none" }}>
 				<div className={classes.item}>
 					<Home className={classes.icon} />
 					<Typography className={classes.text}>Home</Typography>
 				</div>
 			</Link>
-			<Link to="/admin/analytics" style={{ textDecoration: "none" }}>
+			<Link to="/admin-analytics" style={{ textDecoration: "none" }}>
 				<div className={classes.item}>
 					<ShowChart className={classes.icon} />
 					<Typography className={classes.text}>Analytics</Typography>
 				</div>
 			</Link>
-			<Link to="/admin/users" style={{ textDecoration: "none" }}>
+			<Link to="/admin-users" style={{ textDecoration: "none" }}>
 				<div className={classes.item}>
 					<Group className={classes.icon} />
 					<Typography className={classes.text}>Users</Typography>

@@ -1,4 +1,3 @@
-import React from "react"
 import { Home } from "../../components"
 import { Fade } from "@material-ui/core"
 

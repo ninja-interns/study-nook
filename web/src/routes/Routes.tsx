@@ -11,8 +11,10 @@ import {
 	ResetPassword,
 	UpdateUser,
 	UpdatePassword,
+	NookingSetup,
+	Nooking,
 } from "../pages"
-import { PrivateRoute } from "./PrivateRoute"
+import { PrivateRoute, AdminPrivateRoute } from "./PrivateRoute"
 import { AdminDashboard } from "../admin/AdminDashboard"
 import { LastLocationProvider } from "react-router-last-location"
 import { AdminLoginPage } from "../admin/AdminLoginPage"
@@ -36,26 +38,15 @@ const Routes = () => {
 					<PrivateRoute path="/profile" component={Profile} />
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
+					<PrivateRoute path="/nookingSetup" component={NookingSetup} />
+					<PrivateRoute path="/nooking" component={Nooking} />
 
-					<Route exact path="/admin/dashboard">
-						<AdminDashboard />
-					</Route>
-					<Route exact path="/admin/login">
-						<AdminLoginPage />
-					</Route>
-					<Route exact path="/admin/users">
-						<UserListPage />
-					</Route>
-					<Route exact path="/admin/users/create">
-						<UserCreatePage />
-					</Route>
-					<Route path="/admin/users/:userID">
-						<UserEditPage />
-					</Route>
-
-					<Route exact path="/admin/analytics">
-						<AnalyticsPage />
-					</Route>
+					<Route path="/admin-login" component={AdminLoginPage} />
+					<AdminPrivateRoute path="/admin-dashboard" component={AdminDashboard} />
+					<AdminPrivateRoute path="/admin-analytics" component={AnalyticsPage} />
+					<AdminPrivateRoute path="/admin-users-create" component={UserCreatePage} />
+					<AdminPrivateRoute path="/admin-users-edit/:userID" component={UserEditPage} />
+					<AdminPrivateRoute path="/admin-users" component={UserListPage} />
 
 					<Route exact path="/" component={HomePage} />
 				</Switch>

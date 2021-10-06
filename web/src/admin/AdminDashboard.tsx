@@ -1,7 +1,6 @@
 import { Grid } from "@material-ui/core"
 import { NavBar } from "./NavBar"
 import { LeftBar } from "./LeftBar"
-import { Feed } from "./Feed"
 import { makeStyles, Container, CssBaseline } from "@material-ui/core"
 import { UserListGrid } from "./UserListGrid"
 
@@ -15,6 +14,7 @@ const AdminDashboard = () => {
 	const classes = useStyles()
 	return (
 		<div>
+			<CssBaseline />
 			<NavBar />
 			<Grid container>
 				<Grid item sm={2} xs={2}>
