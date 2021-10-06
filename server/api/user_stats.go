@@ -22,20 +22,8 @@ type LevelResponse struct {
 	Level int `json:"level"`
 }
 
-func (c *Controller) CreateUserStats(id string) error {
-	sqlStatement := `INSERT INTO user_stats VALUES ($1, 0, 0, 0, 0, 0, 50);`
-
-	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, id)
-	if err != nil {
-		return err
-	}
-
-	return nil
-
-}
-
 // Function to calculate session rewards after session finshes
-func (c *Controller) CalculateSessionRewards(minutes int, id string) {
+func (c *Controller) CalculateSessionRewards(minutes int, id string) error{
 
 	time := minutes
 
@@ -45,93 +33,32 @@ func (c *Controller) CalculateSessionRewards(minutes int, id string) {
 
 	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&exp)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	expGained := CalculateEXPTime(time)
 	coinsGained := CalculateCoinsTime(exp, time)
 
-	c.UpdateEXPAmount(expGained, id)
-	c.UpdateCoins(coinsGained, id)
-
-}
-
-func (c *Controller) GetCoins(selectItem string, id string) (int, error) {
-
-	sqlStatement := `SELECT $1 FROM user_stats WHERE id = $2;`
-
-	returnItem := 0
-
-	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, selectItem, id).Scan(returnItem)
-	if err != nil {
-		return returnItem, err
-	}
-	return returnItem, nil
-}
-
-func (c *Controller) UpdateCoins(coins int, id string) error {
-
-	sqlStatement := `UPDATE user_stats SET coins = coins + $1 WHERE id = $2;`
-
-	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, coins, id)
+	err = c.DB.UpdateEXPAmount(expGained, id)
 	if err != nil {
 		return err
 	}
-	return nil
-}
 
-func (c *Controller) UpdateEXPAmount(exp int, id string) error {
-
-	sqlStatement := `UPDATE user_stats SET exp_amount = exp_amount + $1 WHERE id = $2;`
-
-	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, exp, id)
+	err = c.DB.UpdateCoins(coinsGained, id)
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func (c *Controller) UpdateSessions(id string) error {
-
-	sqlStatement := `UPDATE user_stats SET sessions_completed = sessions_completed + 1 WHERE id = $1;`
-
-	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, id)
+	
+	err = c.DB.UpdateHoursNooked(minutes, id)
 	if err != nil {
 		return err
 	}
-	return nil
-}
 
-func (c *Controller) UpdateHoursNooked(hours int, id string) error {
-
-	sqlStatement := `UPDATE user_stats SET hours_nooked = hours_nooked + $1 WHERE id = $2;`
-
-	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, hours, id)
+	err = c.DB.UpdateSessions(id)
 	if err != nil {
 		return err
 	}
-	return nil
-}
 
-func (c *Controller) UpdateAchievementsUnlocked(id string) error {
-
-	sqlStatement := `UPDATE user_stats SET achievements_unlocked = achievements_unlocked + 1 WHERE id = $1;`
-
-	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, id)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Controller) UpdateBackgroundsUnlocked(id string) error {
-
-	sqlStatement := `UPDATE user_stats SET backgrounds_unlocked = backgrounds_unlocked + 1 WHERE id = $1;`
-
-	_, err := c.DB.Conn.Exec(context.Background(), sqlStatement, id)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -167,7 +94,6 @@ func GetCoinsLevelGroup(levelGroup string) int {
 	} else {
 		return 4
 	}
-
 }
 
 // Calculate how much coins did the user earned in the session
@@ -240,6 +166,7 @@ func CalculateEXPHandler(w http.ResponseWriter, r *http.Request, u *studynook.Us
 	fmt.Println("EXP gained is: ", expGained)
 }
 
+// Returns user current level
 func GetLevelHandler(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 
 	level := &Level{}

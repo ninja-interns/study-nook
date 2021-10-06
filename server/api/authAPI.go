@@ -237,7 +237,7 @@ func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = c.CreateUserStats(id)
+	err = c.DB.CreateUserStats(id)
 	if err != nil {
 		response := JsonResponse{
 			Message: "Something went wrong, please try again.",
