@@ -6,7 +6,6 @@ import { useStyles } from "./homeCss"
 import { useHistory } from "react-router"
 
 export function Home(): JSX.Element {
-	const css = useStyles()
 	const [redirect, setRedirect] = useState<string | null>(null)
 	const { isLoggedIn } = ContextContainer.useContainer()
 	const history = useHistory()
@@ -18,9 +17,7 @@ export function Home(): JSX.Element {
 	return (
 		<>
 			<Button
-				className={css.button}
 				variant="contained"
-				color="primary"
 				onClick={() => {
 					setRedirect("/login")
 				}}
@@ -28,12 +25,10 @@ export function Home(): JSX.Element {
 				Login
 			</Button>
 			<Button
-				className={css.button}
 				onClick={() => {
 					setRedirect("/registration")
 				}}
 				variant="contained"
-				color="primary"
 			>
 				Register
 			</Button>

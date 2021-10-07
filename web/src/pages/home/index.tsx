@@ -1,14 +1,16 @@
+import { ThemeProvider, useTheme } from "@mui/material"
 import { Home } from "../../components"
-import { Fade } from "@material-ui/core"
+import { AppBarComponent } from "../../components/appBar"
+import { DarkThemeButton } from "../../theme"
 
 export function HomePage() {
+	const theme = useTheme()
 	return (
-		<Fade in={true} timeout={1000}>
-			<div>
-				{/* Implement the app bar component */}
-				{/* Add UnDraw here */}
-				<Home />
-			</div>
-		</Fade>
+		<ThemeProvider theme={theme}>
+			{/* <AppBarComponent /> */}
+			{/* Add UnDraw here */}
+			<DarkThemeButton />
+			<Home />
+		</ThemeProvider>
 	)
 }

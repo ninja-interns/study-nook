@@ -1,5 +1,5 @@
 import { Brightness4 as Brightness4Icon, Brightness7 as Brightness7Icon, Menu as MenuIcon } from "@mui/icons-material"
-import { AppBar, Box, createTheme, CssBaseline, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Toolbar, Typography, useTheme } from "@mui/material"
+import { AppBar, createTheme, CssBaseline, Drawer, IconButton, Menu, MenuItem, ThemeProvider, Toolbar, Typography, useTheme } from "@mui/material"
 import Button from "@mui/material/Button"
 import Skeleton from "@mui/material/Skeleton"
 import * as React from "react"
@@ -17,7 +17,7 @@ const ColorModeContext = React.createContext({ toggleColorMode: () => {} }) // T
 const NookingPage = () => {
 	const history = useHistory() // user route history
 
-	//* Theme
+	//* MUI Theme
 	const theme = useTheme()
 	const colorMode = React.useContext(ColorModeContext)
 

@@ -109,11 +109,11 @@ func (c *Controller) GetTimeLeftHandler(w http.ResponseWriter, r *http.Request) 
 	// Get the finish time from the database
 	timer, err := c.DB.GetFinishTime(userId)
 	if err != nil {
-			if err == pgx.ErrNoRows {
-				return http.StatusNotFound, errors.New("error getting finish time from the database: no results in database")
-			}
-			return http.StatusBadRequest, errors.New("error getting finish time from the database")
+		if err == pgx.ErrNoRows {
+			return http.StatusNotFound, errors.New("error getting finish time from the database: no results in database")
 		}
+		return http.StatusBadRequest, errors.New("error getting finish time from the database")
+	}
 
 	// Add 1 second to the finish time - otherwise the timer is deleted before it has finished
 	validFinishTime := timer.FinishTime.Add(time.Second * 1)
