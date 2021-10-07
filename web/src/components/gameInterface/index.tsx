@@ -1,22 +1,28 @@
-import { Fade } from "@material-ui/core";
+import { Fade } from "@material-ui/core"
 
-import { useStyles } from "./gameInterfaceCss";
-import { ReactComponent as Character } from "../../assets/Avatars/gee_me_007.svg";
+import { useStyles } from "./gameInterfaceCss"
+import { ContextContainer } from "../../contexts/ContextContainer"
 
-
+import images from "../../assets/Avatars"
+import backgrounds from "../../assets/Backgrounds"
 
 export function GameInterface() {
-    const css = useStyles();
+	const css = useStyles()
+	const { currentUser } = ContextContainer.useContainer()
 
-    return (
-        <>
-            <Fade in={true} timeout={1000}>
-                <div className={css.container}>
-                    <div className={css.svgBox}>
-                        <Character className={css.svgCharacter} />
-                    </div>
-                </div>
-            </Fade>
-        </>
-    );
+	const imageStyle = {
+		backgroundImage: `url(${backgrounds[currentUser.currentBackground]})`,
+	}
+
+	return (
+		<>
+			<Fade in={true} timeout={1000}>
+				<div className={css.container}>
+					<div className={css.svgBox} style={imageStyle}>
+						<img src={images[currentUser.currentAvatar]} className={css.svgCharacter} />
+					</div>
+				</div>
+			</Fade>
+		</>
+	)
 }

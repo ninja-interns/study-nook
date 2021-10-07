@@ -33,11 +33,14 @@ CREATE TABLE IF NOT EXISTS todo (
 CREATE TABLE IF NOT EXISTS user_stats (
     id text UNIQUE PRIMARY KEY NOT NULL,
     exp_amount int NOT NULL,
+    coins int NOT NULL,
     sessions_completed int NOT NULL,
     hours_nooked int NOT NULL,
     achievements_unlocked int NOT NULL,
     backgrounds_unlocked int NOT NULL,
-    coins int NOT NULL,
+    avatars_unlocked int NOT NULL,
+    current_background text NOT NULL,
+    current_avatar text NOT NULL,
     CONSTRAINT fk_users FOREIGN KEY (id) REFERENCES users (id)
 );
 

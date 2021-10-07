@@ -79,6 +79,8 @@ type currentUserState struct {
 	Coins	 string	`json:"coins"`
 	Level    string	`json:"level"`
 	EXP      string	`json:"experience"`
+	Zone	 string `json:"currentBackground"`
+	Avatar	 string `json:"currentAvatar"`
 }
 
 //will hit when the API from main.go is invoked- can be called from multiple components on frontend using useGetState() from utils folder, custom hook. Backend solution to persisting data through a refresh
@@ -87,18 +89,28 @@ func (c *Controller) CurrentUserState(w http.ResponseWriter, r *http.Request, u 
 	coins, err := c.DB.GetCoins(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	exp, err := c.DB.GetEXPAmount(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	userLevel, userExp := CalculateLevelEXP(exp)
+
+	currentBackground, err := c.DB.GetCurrentBackground(u.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	currentAvatar, err := c.DB.GetCurrentAvatar(u.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	currentUser := &currentUserState{Email: u.Email,
 		Name:     u.Name,
@@ -106,6 +118,8 @@ func (c *Controller) CurrentUserState(w http.ResponseWriter, r *http.Request, u 
 		Coins:	  strconv.Itoa(coins),
 		Level:	  strconv.Itoa(userLevel),
 		EXP:	  strconv.Itoa(userExp),
+		Zone:	  currentBackground,
+		Avatar:	  currentAvatar,
 	}
 
 	err = json.NewEncoder(w).Encode(currentUser)
