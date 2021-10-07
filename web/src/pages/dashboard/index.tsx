@@ -29,6 +29,10 @@ export function Dashboard() {
 
 					<Typography className={css.username}>{currentUser.username}</Typography>
 
+					<Button className={css.changeAvatarButton} variant="contained" color="primary" onClick={() => history.push("/changeAvatar")}>
+						Change Avatar
+					</Button>
+
 					<Button className={css.changeBackgroundButton} variant="contained" color="primary" onClick={() => history.push("/changeBackground")}>
 						Change Background
 					</Button>

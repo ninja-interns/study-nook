@@ -48,6 +48,7 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	
 	//* GAME INTERFACE
 	r.HandleFunc("/api/change_background", WithUser(sessionManager, db, c.ChangeBackgroundHandler))
+	r.HandleFunc("/api/change_avatar", WithUser(sessionManager, db, c.ChangeAvatarHandler))
 
 	//* ACHIVEMENTS
 	r.HandleFunc("/api/achievement_check", WithUser(sessionManager, db, c.AchievementCheck))

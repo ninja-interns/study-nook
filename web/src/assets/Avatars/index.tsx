@@ -9,8 +9,8 @@ import avatar8 from "./avatar-8.svg"
 import avatar9 from "./avatar-9.svg"
 import avatar10 from "./avatar-10.svg"
 import avatar11 from "./avatar-11.svg"
-import avatar12 from "./avatar-11.svg"
-import avatar13 from "./avatar-11.svg"
+import avatar12 from "./avatar-12.svg"
+import avatar13 from "./avatar-13.svg"
 
 export default {
 	avatar1,

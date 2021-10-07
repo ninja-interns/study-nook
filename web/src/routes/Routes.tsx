@@ -16,6 +16,7 @@ import {
 	NookingSetup,
 	Nooking,
 	ChangeBackgroundPage,
+	ChangeAvatarPage,
 } from "../pages"
 import { PrivateRoute, AdminPrivateRoute } from "./PrivateRoute"
 import { AdminDashboard } from "../admin/AdminDashboard"
@@ -46,6 +47,7 @@ const Routes = () => {
 					<PrivateRoute path="/nookingSetup" component={NookingSetup} />
 					<PrivateRoute path="/nooking" component={Nooking} />
 					<PrivateRoute path="/changeBackground" component={ChangeBackgroundPage} />
+					<PrivateRoute path="/changeAvatar" component={ChangeAvatarPage} />
 
 					<Route path="/admin-login" component={AdminLoginPage} />
 					<AdminPrivateRoute path="/admin-dashboard" component={AdminDashboard} />
