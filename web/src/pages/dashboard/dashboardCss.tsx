@@ -20,6 +20,13 @@ export const useStyles = makeStyles({
 		left: "0px",
 		fontSize: "13px",
 	},
+	changeBackgroundButton: {
+		position: "absolute",
+		right: "0",
+		top: "214px",
+		margin: "20px",
+		fontSize: "12px",
+	},
 	username: {
 		position: "absolute",
 		margin: "25px",

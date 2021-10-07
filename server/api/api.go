@@ -45,8 +45,15 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	r.HandleFunc("/api/delete_account", WithUser(sessionManager, db, c.DeleteAccount))
 	r.HandleFunc("/api/update_user", WithUser(sessionManager, db, c.UpdateUser))
 	r.HandleFunc("/api/update_password", WithUser(sessionManager, db, c.UpdatePassword))
-	r.HandleFunc("/api/report_submission", WithUser(sessionManager, db, c.SubmitReports))
+	
+	//* GAME INTERFACE
+	r.HandleFunc("/api/change_background", WithUser(sessionManager, db, c.ChangeBackgroundHandler))
+
+	//* ACHIVEMENTS
 	r.HandleFunc("/api/achievement_check", WithUser(sessionManager, db, c.AchievementCheck))
+
+	//* REPORT
+	r.HandleFunc("/api/report_submission", WithUser(sessionManager, db, c.SubmitReports))
 
 	r.Post("/api/login_admin", c.AdminLoginHandler)   //POST /api/login_admin
 	r.Post("/api/logout_admin", c.AdminLogoutHandler) //POST /api/logout_admin

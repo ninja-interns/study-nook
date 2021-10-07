@@ -29,6 +29,10 @@ export function Dashboard() {
 
 					<Typography className={css.username}>{currentUser.username}</Typography>
 
+					<Button className={css.changeBackgroundButton} variant="contained" color="primary" onClick={() => history.push("/changeBackground")}>
+						Change Background
+					</Button>
+
 					<Button className={css.startNookingButton} variant="contained" color="primary" onClick={() => history.push("/nookingSetup")}>
 						Start Nooking
 					</Button>
