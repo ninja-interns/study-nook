@@ -42,8 +42,3 @@ CREATE TABLE IF NOT EXISTS admins (
     email text UNIQUE NOT NULL,
     password_hash bytea NOT NULL
 );
-
-CREATE TABLE IF NOT EXISTS theme (
-    user_id text NOT NULL,
-    dark_theme boolean NOT NULL
-);

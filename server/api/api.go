@@ -72,10 +72,6 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	r.HandleFunc("/api/delete_timer", WithError(c.DeleteTimerHandler))
 	r.HandleFunc("/api/set_completed", WithError(c.SetIsCompletedHandler))
 
-	//* THEME
-	r.HandleFunc("/api/set_theme", WithError(c.SetThemeHandler))
-	r.HandleFunc("/api/get_theme", WithError(c.GetThemeHandler))
-
 	return c, nil
 }
 

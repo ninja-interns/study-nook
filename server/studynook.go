@@ -115,11 +115,3 @@ type Timer struct {
 	TimeLeft      string        `json:"timeLeft"`
 	IsCompleted    bool         `json:"isCompleted"`
 }
-
-/**
-* * THEME STRUCT
-**/
-type Theme struct {
-	DarkTheme	bool		`json:"darkTheme"`
-	UserId		string	`json:"userId"`
-}

@@ -10,9 +10,9 @@ export function Home(): JSX.Element {
 	const { isLoggedIn } = ContextContainer.useContainer()
 	const history = useHistory()
 
-	if (isLoggedIn) {
-		history.push("/dashboard")
-	}
+	//! if (isLoggedIn) {
+	//! 	history.push("/dashboard")
+	//! }
 
 	return (
 		<>
