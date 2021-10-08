@@ -115,6 +115,6 @@ type Todo struct {
 type Timer struct {
 	TimerDuration time.Duration `json:"timerDuration"`
 	FinishTime    time.Time     `json:"finishTime"`
-	TimeLeft      string        `json:"timeLeft"`
-	IsCompleted    bool         `json:"isCompleted"`
+	TimeLeft      time.Duration `json:"timeLeft"`
+	IsCompleted   bool          `json:"isCompleted"`
 }

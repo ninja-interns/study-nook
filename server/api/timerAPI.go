@@ -115,14 +115,28 @@ func (c *Controller) GetTimeLeftHandler(w http.ResponseWriter, r *http.Request) 
 			return http.StatusBadRequest, errors.New("error getting finish time from the database")
 		}
 
+	// Get duration from the database
+	timerDuration, err := c.DB.GetTimerDuration(userId)
+	if err != nil {
+			if err == pgx.ErrNoRows {
+				return http.StatusNotFound, errors.New("error getting timer duration from the database: no results in database")
+			}
+			return http.StatusBadRequest, errors.New("error getting timer duration from the database")
+		}
+
 	// Add 1 second to the finish time - otherwise the timer is deleted before it has finished
 	validFinishTime := timer.FinishTime.Add(time.Second * 1)
 
 	// If the finish time is valid (in the future) calculate the time left
 	if validFinishTime.After(time.Now()) {
+		timer.TimerDuration = timerDuration.TimerDuration // To calculate the duration bar in react
+
+		// Calculate time remaining (seconds)
 		finishTime := timer.FinishTime
 		timeUntilFinish := time.Until(finishTime)
-		timer.TimeLeft = timeUntilFinish.Round(time.Second).String()
+		timeLeft := timeUntilFinish.Round(time.Second)
+		timer.TimeLeft = timeLeft / 1000000000 // Remove the extra zeros on the end of the duration (there is always 9 zeros following the seconds)
+
 	} else if validFinishTime.Before(time.Now()) { // If the timer is finished
 		// Update the completion status of the timer in database
 		timer.IsCompleted = true
