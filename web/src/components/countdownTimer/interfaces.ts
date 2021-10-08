@@ -1,6 +1,6 @@
 //* Timer Interface
 export interface TimerInterface {
-	timeLeft: string
+	timeLeft: number
 	timerDuration: number // in minutes
 	isCompleted: boolean
 }
