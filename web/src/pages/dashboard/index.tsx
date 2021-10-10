@@ -3,7 +3,7 @@ import AppBarComponent from "../../components/appBar"
 
 /**
  * * DASHBOARD PAGE
- * * Will display the users avatar, Pofile picture
+ * * Will display the users avatar, Profile picture
  */
 export function Dashboard() {
 	return (
