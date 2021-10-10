@@ -2,14 +2,14 @@ import { Typography } from "@mui/material"
 import AppBarComponent from "../../components/appBar"
 
 /**
- * * DASHBOARD PAGE
- * * Will display the users avatar, Pofile picture
+ * * SHOP PAGE
+ * TODO: Purchase new backgrounds and avatars
  */
-export function Dashboard() {
+export function Shop() {
 	return (
 		<>
 			<AppBarComponent />
-			<Typography>Dashboard</Typography>
+			<Typography>Shop</Typography>
 		</>
 	)
 }
