@@ -60,6 +60,20 @@ CREATE TABLE IF NOT EXISTS todo (
     is_completed boolean NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS user_stats (
+    id text UNIQUE PRIMARY KEY NOT NULL,
+    exp_amount int NOT NULL,
+    coins int NOT NULL,
+    sessions_completed int NOT NULL,
+    hours_nooked int NOT NULL,
+    achievements_unlocked int NOT NULL,
+    backgrounds_unlocked int NOT NULL,
+    avatars_unlocked int NOT NULL,
+    current_background text NOT NULL,
+    current_avatar text NOT NULL,
+    CONSTRAINT fk_users FOREIGN KEY (id) REFERENCES users (id)
+);
+
 CREATE TABLE IF NOT EXISTS reports (
     submission_id serial PRIMARY KEY,
     username text UNIQUE NOT NULL,
@@ -71,5 +85,22 @@ CREATE TABLE IF NOT EXISTS admins (
     id text PRIMARY KEY,
     email text UNIQUE NOT NULL,
     password_hash bytea NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS user_achievements (
+    id text NOT NULL PRIMARY KEY,
+    level_medal_1 boolean NOT NULL,
+    level_medal_2 boolean NOT NULL,
+    level_medal_3 boolean NOT NULL,
+    sessions_medal_1 boolean NOT NULL,
+    sessions_medal_2 boolean NOT NULL,
+    sessions_medal_3 boolean NOT NULL,
+    hours_medal_1 boolean NOT NULL,
+    hours_medal_2 boolean NOT NULL,
+    hours_medal_3 boolean NOT NULL,
+    backgrounds_medal_1 boolean NOT NULL,
+    backgrounds_medal_2 boolean NOT NULL,
+    backgrounds_medal_3 boolean NOT NULL,
+    CONSTRAINT fk_users FOREIGN KEY (id) REFERENCES users (id)
 );
 

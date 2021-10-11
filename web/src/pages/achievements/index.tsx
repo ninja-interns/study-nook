@@ -22,7 +22,7 @@ export function AchievementsPage() {
                     <Fade in={true} timeout={2000}>
                         <div className={css.badgesTable}>
 
-                            <Badge badgeID={"level-10"} badgeType={"Level badge"} badgeLevel={"Level 1"} progression={0} goal={1}></Badge>
+                            <Badge badgeID={"level-1"} badgeType={"Level badge"} badgeLevel={"Level 1"} progression={0} goal={1}></Badge>
 
                             <Badge badgeID={"level-10"} badgeType={"Level badge"} badgeLevel={"Level 10"} progression={0} goal={10}></Badge>
 
