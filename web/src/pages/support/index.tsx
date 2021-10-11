@@ -50,6 +50,7 @@ export function SupportPage() {
             //if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
             const data: IData = await response.json();
             if (data.isValid) {
+                console.log(data.message);
                 setBoxMessage(data.message);
                 setIsOpen(true);
                 setSeverity("success");

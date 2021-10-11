@@ -172,7 +172,16 @@ func (c *Controller) SetIsCompletedHandler(w http.ResponseWriter, r *http.Reques
 		return http.StatusBadRequest, errors.New("error updating timer is_completed in database")
 	}
 
-	// ! JOHN Handle the completed timer here?
+	// Get timer duration in order to calculate session rewards and update user_stats
+	minutes, err := c.DB.GetTimerDuration(userId)
+	if err != nil {
+		return http.StatusBadRequest, errors.New("error getting timer duration")
+	}
+
+	err = c.CalculateSessionRewards(int(minutes.TimerDuration), userId)
+	if err != nil {
+		return http.StatusBadRequest, errors.New("error getting timer duration")
+	}
 
 	return http.StatusOK, nil
 }
