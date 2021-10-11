@@ -8,11 +8,11 @@ import (
 )
 
 type Background struct {
-	Background string `json:"currentBackground"`
+	CurrentBackground string `json:"currentBackground"`
 }
 
 type Avatar struct {
-	Avatar string `json:"currentAvatar"`
+	CurrentAvatar string `json:"currentAvatar"`
 }
 
 func (c *Controller) ChangeBackgroundHandler(w http.ResponseWriter, r *http.Request, u *studynook.User) {
@@ -25,7 +25,7 @@ func (c *Controller) ChangeBackgroundHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	err = c.DB.UpdateCurrentBackground(u.ID, background.Background)
+	err = c.DB.UpdateCurrentBackground(u.ID, background.CurrentBackground)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -42,7 +42,7 @@ func (c *Controller) ChangeAvatarHandler(w http.ResponseWriter, r *http.Request,
 		return
 	}
 
-	err = c.DB.UpdateCurrentAvatar(u.ID, avatar.Avatar)
+	err = c.DB.UpdateCurrentAvatar(u.ID, avatar.CurrentAvatar)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

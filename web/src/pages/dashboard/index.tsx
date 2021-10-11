@@ -40,6 +40,7 @@ export function Dashboard() {
 					<Button className={css.startNookingButton} variant="contained" color="primary" onClick={() => history.push("/nookingSetup")}>
 						Start Nooking
 					</Button>
+
 					<Button className={css.menuButton} variant="contained" color="primary" onClick={() => history.push("/menu")}>
 						Menu
 					</Button>
