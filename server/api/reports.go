@@ -50,14 +50,15 @@ func (c *Controller) SubmitReports(w http.ResponseWriter, r *http.Request, u *st
 		// Insert report into report table
 		err := c.InsertToDB(report)
 		if err != nil {
-			ErrorMessage(w)
+
+			json.NewEncoder(w).Encode(ErrorMessage)
 			return
 		}
 
 		// Get serial ID from report
 		submission_id, err = c.GetReportID(report.Username)
 		if err != nil {
-			ErrorMessage(w)
+			json.NewEncoder(w).Encode(ErrorMessage)
 			return
 		}
 

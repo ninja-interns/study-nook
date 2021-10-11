@@ -4,15 +4,19 @@ import {
 	RegisterPage,
 	LoginPage,
 	Dashboard,
-	Profile,
 	EmailVerificationPage,
 	DeletedAccount,
 	ForgotPassword,
 	ResetPassword,
 	UpdateUser,
 	UpdatePassword,
+	MenuPage,
+	SupportPage,
+	AchievementsPage,
 	NookingSetup,
 	Nooking,
+	ChangeBackgroundPage,
+	ChangeAvatarPage,
 } from "../pages"
 import { PrivateRoute, AdminPrivateRoute } from "./PrivateRoute"
 import { AdminDashboard } from "../admin/AdminDashboard"
@@ -35,11 +39,15 @@ const Routes = () => {
 					<Route path="/forgotPassword" component={ForgotPassword} />
 					<Route path="/resetPassword" component={ResetPassword} />
 					<PrivateRoute path="/dashboard" component={Dashboard} />
-					<PrivateRoute path="/profile" component={Profile} />
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
+					<PrivateRoute path="/menu" component={MenuPage} />
+					<PrivateRoute path="/support" component={SupportPage} />
+					<PrivateRoute path="/achievements" component={AchievementsPage} />
 					<PrivateRoute path="/nookingSetup" component={NookingSetup} />
 					<PrivateRoute path="/nooking" component={Nooking} />
+					<PrivateRoute path="/changeBackground" component={ChangeBackgroundPage} />
+					<PrivateRoute path="/changeAvatar" component={ChangeAvatarPage} />
 
 					<Route path="/admin-login" component={AdminLoginPage} />
 					<AdminPrivateRoute path="/admin-dashboard" component={AdminDashboard} />
