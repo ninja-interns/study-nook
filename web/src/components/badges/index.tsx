@@ -28,9 +28,6 @@ export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: Bad
 				body: JSON.stringify({ badgeID: { badgeID } }),
 			})
 			const data: IResponse = await response.json()
-			if (data.unlocked) {
-			} else {
-			}
 		} catch (err) {
 			console.error(err)
 		}

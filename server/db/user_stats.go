@@ -5,20 +5,16 @@ import (
 )
 
 type User_Stats struct {
-	ID			 	string `json:"id"`
-	EXP 		 	string `json:"exp_amount"`
-	Sessions 	 	int `json:"sessions_completed"`
-	HoursNooked  	int `json:"hours_nooked"`
-	Achievements 	int `json:"achievements_unlocked"`
-	Backgrounds	 	int `json:"backgrounds_unlocked"`
-	Coins		 	int `json:"coins"`
+	ID			 			string `json:"id"`
+	ExpAmount				string `json:"expAmount"`
+	SessionsCompleted		int `json:"sessionsCompleted"`
+	HoursNooked  			int `json:"hoursNooked"`
+	Achievements 			int `json:"achievements"`
+	Backgrounds	 			int `json:"backgrounds"`
+	Coins		 			int `json:"coins"`
 }
 
-/*
- * Insert methods
- */
-
- // Creates a new row for user
+ // Creates User Stats will create a new row for user
 func (db *DB) CreateUserStats(id string) error {
 	sqlStatement := `INSERT INTO user_stats VALUES ($1, 50, 50, 0, 0, 0, 0, 0, $2, $3);`
 
@@ -29,10 +25,6 @@ func (db *DB) CreateUserStats(id string) error {
 
 	return nil
 }
-
-/*
- * Update methods
- */
 
 // Update coins method
 func (db *DB) UpdateCoins(coins int, id string) error {
@@ -142,9 +134,7 @@ func (db *DB) UpdateCurrentAvatar(id string, newAvatar string) error {
 	return nil
 }
 
-/*
- * Get methods
- */
+// Get Coins Method
 func (db *DB) GetCoins(id string) (int, error) {
 
 	sqlStatement := `SELECT coins FROM user_stats WHERE id = $1;`
@@ -160,6 +150,7 @@ func (db *DB) GetCoins(id string) (int, error) {
 	return returnItem, nil
 }
 
+// Get EXP Amount Method
 func (db *DB) GetEXPAmount(id string) (int, error) {
 
 	sqlStatement := `SELECT exp_amount FROM user_stats WHERE id = $1;`
@@ -173,6 +164,7 @@ func (db *DB) GetEXPAmount(id string) (int, error) {
 	return exp, nil
 }
 
+// Get Sessions Method
 func (db *DB) GetSessions(id string) (int, error) {
 
 	sqlStatement := `SELECT session_completed FROM user_stats WHERE id = $1;`
@@ -186,6 +178,7 @@ func (db *DB) GetSessions(id string) (int, error) {
 	return sessions, nil
 }
 
+// Get Hours Nooked Method
 func (db *DB) GetHoursNooked(id string) (int, error) {
 
 	sqlStatement := `SELECT hours_nooked FROM user_stats WHERE id = $1;`
@@ -199,6 +192,7 @@ func (db *DB) GetHoursNooked(id string) (int, error) {
 	return hoursNooked, nil
 }
 
+// Get Achievements Method
 func (db *DB) GetAchievements(id string) (int, error) {
 
 	sqlStatement := `SELECT achievements FROM user_stats WHERE id = $1;`
@@ -212,6 +206,7 @@ func (db *DB) GetAchievements(id string) (int, error) {
 	return achievementsUnlocked, nil
 }
 
+// Get Backgrounds Unlocked Method
 func (db *DB) GetBackgroundsUnlocked(id string) (int, error) {
 
 	sqlStatement := `SELECT background_unlocked FROM user_stats WHERE id = $1;`
@@ -225,6 +220,7 @@ func (db *DB) GetBackgroundsUnlocked(id string) (int, error) {
 	return backgroundsUnlocked, nil
 }
 
+// Get Avatars Unlocked Method
 func (db *DB) GetAvatarUnlocked(id string) (int, error) {
 
 	sqlStatement := `SELECT avatars_unlocked FROM user_stats WHERE id = $1;`
@@ -238,6 +234,7 @@ func (db *DB) GetAvatarUnlocked(id string) (int, error) {
 	return avatarsUnlocked, nil
 }
 
+// Get Current Background Method
 func (db *DB) GetCurrentBackground(id string) (string, error) {
 
 	sqlStatement := `SELECT current_background FROM user_stats WHERE id = $1;`
@@ -251,6 +248,7 @@ func (db *DB) GetCurrentBackground(id string) (string, error) {
 	return currentBackground, nil
 }
 
+// Get Current Avatar Method
 func (db *DB) GetCurrentAvatar(id string) (string, error) {
 
 	sqlStatement := `SELECT current_avatar FROM user_stats WHERE id = $1;`

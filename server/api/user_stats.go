@@ -1,20 +1,12 @@
 package api
 
-import (
-	"context"
-	"fmt"
-)
-
-// Function to calculate session rewards after session finshes
+// Calculate session rewards will update all the changes on the DB
+// based on session settings
 func (c *Controller) CalculateSessionRewards(minutes int, id string) error{
 
 	time := minutes
 
-	sqlStatement := `SELECT exp_amount FROM user_stats WHERE id = $1`
-
-	var exp int
-
-	err := c.DB.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&exp)
+	exp, err := c.DB.GetEXPAmount(id)
 	if err != nil {
 		return err
 	}
@@ -45,42 +37,41 @@ func (c *Controller) CalculateSessionRewards(minutes int, id string) error{
 	return nil
 }
 
-func GetItem(id string) {
-
-	
-
-}
-
-// Function to check based on total Experience points,
-// which level group the user is at.
+// Check level group will check in which level user is 
+// based on user's total amount experience and return a char
+// representing their group
 func CheckLevelGroup(currentExp int) string {
 
-	if currentExp > 0 && currentExp < 5000 {
+	switch {
+	case currentExp > 0 && currentExp < 5000:
 		return "A"
-	} else if currentExp >= 5000 && currentExp < 11250 {
+	case currentExp >= 5000 && currentExp < 11250:
 		return "B"
-	} else if currentExp >= 11250 && currentExp < 22500 {
+	case currentExp >= 11250 && currentExp < 22500:
 		return "C"
-	} else if currentExp >= 22500 && currentExp < 37500 {
+	case currentExp >= 22500 && currentExp < 37500:
 		return "D"
-	} else if currentExp >= 37500 && currentExp < 77500 {
+	case currentExp >= 37500 && currentExp < 77500:
 		return "E"
-	} else if currentExp >= 77500 && currentExp < 127500 {
+	case currentExp >= 77500 && currentExp < 127500:
 		return "F"
-	} else {
+	default:
 		return "G"
 	}
 }
 
-// Get number of coins that specific level group can get per minute
+// Get Coins Level Group will get number of coins that specific level group 
+// can get per minute in a session
 func GetCoinsLevelGroup(levelGroup string) int {
-	if levelGroup == "A" || levelGroup == "B" {
+
+	switch levelGroup{
+	case  "A", "B":
 		return 1
-	} else if levelGroup == "C" || levelGroup == "D" {
+	case "C", "D":
 		return 2
-	} else if levelGroup == "E" || levelGroup == "F" {
+	case "E", "F":
 		return 3
-	} else {
+	default:
 		return 4
 	}
 }
@@ -113,8 +104,6 @@ func GetLevelEXP(passedLevels int, passedEXP int, necessaryEXP int, currentEXP i
 		percentage = (float32(currentEXP) / float32(necessaryEXP)) * 100
 	}
 	
-	fmt.Println(percentage)
-
 	return currentLevel, int(percentage)
 }
 
@@ -124,22 +113,23 @@ func CalculateLevelEXP(currentExp int) (int, int) {
 
 	levelGroup := CheckLevelGroup(currentExp)
 
-	// Conditional statement to check in which level group the EXP is in
+	// Switch statement to check in which level group the EXP is in
 	// If it pertains to any group, another function will be called in order to
 	// get the exact level in which the currentExp is in.
-	if levelGroup == "A" {
+	switch levelGroup {
+	case "A":
 		return GetLevelEXP(1, 0, 1000, currentExp)
-	} else if levelGroup == "B" {
+	case "B":
 		return GetLevelEXP(5, 5000, 1500, currentExp)
-	} else if levelGroup == "C" {
+	case "C":
 		return GetLevelEXP(10, 12500, 2000, currentExp)
-	} else if levelGroup == "D" {
+	case "D":
 		return GetLevelEXP(15, 22500, 3000, currentExp)
-	} else if levelGroup == "E" {
+	case "E":
 		return GetLevelEXP(20, 37500, 4000, currentExp)
-	} else if levelGroup == "F" {
+	case "F":
 		return GetLevelEXP(30, 77500, 5000, currentExp)
-	} else {
+	default:
 		return GetLevelEXP(40, 127500, 6000, currentExp)
 	}
 }

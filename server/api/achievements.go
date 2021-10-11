@@ -8,10 +8,10 @@ import (
 )
 
 type Check struct {
-	BadgeID string `json:"id"`
+	BadgeID string `json:"badgeid"`
 }
 
-// Function that checks if user has achievement or not
+// Achievements check will check wether use has unlocked achievement or not
 func (c *Controller) AchievementCheck(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 
 	check := &Check{}
