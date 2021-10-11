@@ -18,7 +18,7 @@ type User_Stats struct {
 func (db *DB) CreateUserStats(id string) error {
 	sqlStatement := `INSERT INTO user_stats VALUES ($1, 50, 50, 0, 0, 0, 0, 0, $2, $3);`
 
-	_, err := db.Conn.Exec(context.Background(), sqlStatement, id, "zone1.jpg", "avatar1.svg")
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id, "zone1", "avatar1")
 	if err != nil {
 		return err
 	}

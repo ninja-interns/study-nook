@@ -71,6 +71,9 @@ CREATE TABLE IF NOT EXISTS user_achievements (
     backgrounds_medal_1 boolean NOT NULL,
     backgrounds_medal_2 boolean NOT NULL,
     backgrounds_medal_3 boolean NOT NULL,
+    avatar_medal_1 boolean NOT NULL,
+    avatar_medal_2 boolean NOT NULL,
+    avatar_medal_3 boolean NOT NULL,
     CONSTRAINT fk_users FOREIGN KEY (id) REFERENCES users (id)
 );
 

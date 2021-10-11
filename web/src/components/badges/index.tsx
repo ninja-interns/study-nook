@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useStyles } from "./badgeCss"
 
 import badgeIcon from "../../assets/medal.png"
@@ -15,23 +15,40 @@ interface IResponse {
 	unlocked: boolean
 }
 
+interface Unlocked {
+	unlocked: boolean
+}
+
 export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: BadgeProps): JSX.Element {
-	const css = useStyles()
+	let isUnlocked = false
 
-	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
-
-		try {
-			const response = await fetch("/api/achievement_check", {
-				method: "POST",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ badgeID: { badgeID } }),
-			})
-			const data: IResponse = await response.json()
-		} catch (err) {
-			console.error(err)
-		}
+	function setIsUnlocked(data: Unlocked) {
+		isUnlocked = data.unlocked
 	}
+
+	useEffect(() => {
+		let isMounted = true
+		;(async () => {
+			try {
+				const response = await fetch("/api/achievement_check", {
+					method: "POST",
+					headers: { "content-type": "application/json" },
+					body: JSON.stringify({ BadgeID: badgeID }),
+				})
+				const data: IResponse = await response.json()
+				if (isMounted) {
+					setIsUnlocked(data)
+				}
+			} catch (err) {
+				console.error(err)
+			}
+		})()
+		return () => {
+			isMounted = false
+		}
+	}, [setIsUnlocked])
+
+	const css = useStyles(isUnlocked)
 
 	return (
 		<figure>
@@ -43,10 +60,10 @@ export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: Bad
 				{" "}
 				Progression:
 				<p className={css.tracker}>
-					{progression}/{goal}
+					{progression}/{isUnlocked}
 				</p>
 				<span className={css.bar}>
-					<span className={css.achievementLevel1}></span>
+					<span className={css.achievement}></span>
 				</span>
 			</span>
 		</figure>
