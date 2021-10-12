@@ -4,7 +4,6 @@ import {
 	RegisterPage,
 	LoginPage,
 	Dashboard,
-	Profile,
 	EmailVerificationPage,
 	DeletedAccount,
 	ForgotPassword,
@@ -18,6 +17,8 @@ import {
 	SupportPage,
 	NookingSetup,
 	Nooking,
+	ChangeBackgroundPage,
+	ChangeAvatarPage,
 } from "../pages"
 import { PrivateRoute, AdminPrivateRoute } from "./PrivateRoute"
 import { LastLocationProvider } from "react-router-last-location"
@@ -42,14 +43,21 @@ const Routes = () => {
 					<PrivateRoute path="/dashboard" component={Dashboard} />
 					<PrivateRoute path="/shop" component={Shop} />
 					<PrivateRoute path="/inventory" component={Inventory} />
-					<PrivateRoute path="/profile" component={Profile} />
 					<PrivateRoute path="/updateUser" component={UpdateUser} />
 					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
 					<PrivateRoute path="/support" component={SupportPage} />
 					<PrivateRoute path="/achievements" component={AchievementsPage} />
 					<PrivateRoute path="/menu" component={MenuPage} />
 					<Route path="/nookingSetup" component={NookingSetup} />
+					<PrivateRoute path="/updateUser" component={UpdateUser} />
+					<PrivateRoute path="/updatePassword" component={UpdatePassword} />
+					<PrivateRoute path="/menu" component={MenuPage} />
+					<PrivateRoute path="/support" component={SupportPage} />
+					<PrivateRoute path="/achievements" component={AchievementsPage} />
+					<PrivateRoute path="/nookingSetup" component={NookingSetup} />
 					<PrivateRoute path="/nooking" component={Nooking} />
+					<PrivateRoute path="/changeBackground" component={ChangeBackgroundPage} />
+					<PrivateRoute path="/changeAvatar" component={ChangeAvatarPage} />
 
 					<Route path="/admin-login" component={AdminLoginPage} />
 					<AdminPrivateRoute path="/admin-dashboard" component={AdminDashboard} />
