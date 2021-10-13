@@ -1,3 +1,4 @@
+import { Box } from "@mui/material"
 import * as React from "react"
 import { TodoContent } from "../interfaces"
 import { TodoForm } from "./TodoForm"
@@ -14,7 +15,7 @@ const TodoListApp = () => {
 	//* Requests the API to return all todos in the database - Runs once on render
 	React.useEffect(() => {
 		async function getTodoList() {
-			const response = await fetch("/api/get_todos")
+			const response = await fetch("http://localhost:8080/api/get_todos")
 			if (response.ok) {
 				const data: TodoContent[] = await response.json()
 				setTodos(data)
@@ -31,7 +32,7 @@ const TodoListApp = () => {
 	 */
 	async function handleTodoCreate(todo: TodoContent) {
 		// Add the new todo to the database
-		const response = await fetch("/api/create_todo", {
+		const response = await fetch("http://localhost:8080/api/create_todo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(todo),
@@ -62,7 +63,7 @@ const TodoListApp = () => {
 		setTodos(newTodosState)
 
 		// Update the todo in the database
-		const response = await fetch("/api/update_todo", {
+		const response = await fetch("http://localhost:8080/api/update_todo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(todoItem),
@@ -75,7 +76,7 @@ const TodoListApp = () => {
 	//* Deletes a todo from the list
 	async function handleTodoRemove(todoItem: TodoContent) {
 		// Delete todo from the database
-		const response = await fetch("/api/delete_todo", {
+		const response = await fetch("http://localhost:8080/api/delete_todo", {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(todoItem),
@@ -90,10 +91,24 @@ const TodoListApp = () => {
 	}
 
 	return (
-		<div>
-			<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
-			<TodoListForm todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} />
-		</div>
+		<Box
+			sx={{
+				display: "grid",
+				gridTemplateColumns: "repeat(2, 1fr)",
+				gap: 1,
+				gridTemplateRows: "auto",
+				gridTemplateAreas: `
+					"todoForm todoForm"
+  					"todoList todoList" `,
+			}}
+		>
+			<Box sx={{ gridArea: "todoForm" }}>
+				<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
+			</Box>
+			<Box sx={{ gridArea: "todoList" }}>
+				<TodoListForm todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} />
+			</Box>
+		</Box>
 	)
 }
 

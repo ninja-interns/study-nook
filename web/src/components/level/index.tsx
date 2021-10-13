@@ -1,11 +1,7 @@
-import { linearProgressClasses } from "@mui/material"
-import { LinearProgress, styled } from "@material-ui/core"
-
+import { Box, Container, LinearProgress, linearProgressClasses, styled, Typography } from "@mui/material"
+import levelIcon from "../../assets/star.png"
 import { ContextContainer } from "../../contexts/ContextContainer"
 import { useGetState } from "./../../utils/getState"
-
-import { useStyles } from "./levelCss"
-import levelIcon from "../../assets/star.png"
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 	height: 10,
@@ -22,18 +18,55 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 
 export function Level() {
 	useGetState()
-	const css = useStyles()
 	const { currentUser } = ContextContainer.useContainer()
 
 	return (
-		<div className={css.levelItems}>
-			<div className={css.levelWrapper}>
-				<div className={css.levelIcon}>
-					<img className={css.star} src={levelIcon} alt="level-star" id={levelIcon} />
-					<p className={css.levelNumber}>{currentUser.level}</p>
-				</div>
-				<BorderLinearProgress className={css.levelBar} variant="determinate" value={currentUser.experience} />
-			</div>
-		</div>
+		<Container
+			sx={{
+				margin: "25px",
+				position: "absolute",
+				top: "50px",
+				right: "0px",
+			}}
+		>
+			<Container
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+					flexDirection: "row",
+				}}
+			>
+				<Container
+					sx={{
+						float: "left",
+						width: "35px",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+				>
+					<Box
+						component="img"
+						src={levelIcon}
+						alt="level-star"
+						id={levelIcon}
+						sx={{
+							width: "35px",
+						}}
+					/>
+					<Typography
+						sx={{
+							position: "absolute",
+							fontSize: "12px",
+							marginTop: "3px",
+						}}
+					>
+						{currentUser.level}
+					</Typography>
+				</Container>
+				<BorderLinearProgress variant="determinate" value={currentUser.experience} />
+			</Container>
+		</Container>
 	)
 }

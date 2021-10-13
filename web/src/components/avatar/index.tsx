@@ -1,9 +1,6 @@
+import { Box, Button, Container } from "@mui/material"
 import React from "react"
-import { Button } from "@material-ui/core"
 import { useHistory } from "react-router"
-
-import { useStyles } from "./avatarCss"
-
 import avatars from "../../assets/Avatars"
 
 interface AvatarProps {
@@ -11,7 +8,6 @@ interface AvatarProps {
 }
 
 export function Avatar({ avatar }: AvatarProps) {
-	const css = useStyles()
 	const history = useHistory() // user route history
 
 	const imageStyle = {
@@ -21,7 +17,7 @@ export function Avatar({ avatar }: AvatarProps) {
 	async function handleSelectSubmit() {
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("/api/change_avatar", {
+			const response = await fetch("http://localhost:8080/api/change_avatar", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ currentAvatar: avatar }),
@@ -36,13 +32,42 @@ export function Avatar({ avatar }: AvatarProps) {
 	}
 
 	return (
-		<div className={css.optionWrapper}>
-			<div className={css.avatarContainer}>
-				<img src={avatars[avatar]} className={css.avatarStyle} />
-			</div>
-			<Button className={css.selectButton} variant="contained" color="primary" onClick={handleSelectSubmit}>
+		<Container
+			sx={{
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "center",
+				justifyContent: "center",
+			}}
+		>
+			<Container
+				sx={{
+					width: "70px",
+					height: "150px",
+					display: "flex",
+				}}
+			>
+				<Box
+					component="img"
+					src={avatars[avatar]}
+					sx={{
+						height: "150px",
+						width: "70px",
+					}}
+				/>
+			</Container>
+			<Button
+				variant="contained"
+				color="primary"
+				onClick={handleSelectSubmit}
+				sx={{
+					width: "80px",
+					top: "10px",
+					fontSize: "10px",
+				}}
+			>
 				Select
 			</Button>
-		</div>
+		</Container>
 	)
 }

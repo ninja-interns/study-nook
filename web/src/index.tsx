@@ -3,16 +3,24 @@ import ReactDOM from "react-dom"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 import CssBaseline from "@mui/material/CssBaseline"
-import { ThemeProvider } from "@mui/material/styles"
-import theme from "./theme"
+import { Container } from "@mui/material"
+// import { ThemeProvider } from "@mui/material/styles"
+// import theme from "./theme"
 
 ReactDOM.render(
 	<React.StrictMode>
-		<ThemeProvider theme={theme}>
+		<Container
+			sx={{
+				width: 400,
+				height: 600,
+				p: 0,
+				m: 0,
+			}}
+		>
 			{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
 			<CssBaseline />
 			<App />
-		</ThemeProvider>
+		</Container>
 	</React.StrictMode>,
 	document.getElementById("root"),
 )

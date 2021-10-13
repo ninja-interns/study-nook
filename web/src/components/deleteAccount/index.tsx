@@ -24,7 +24,7 @@ export function DeleteAccount() {
 		e.preventDefault()
 		setLoading(true)
 		try {
-			const response = await fetch("/api/delete_account", {
+			const response = await fetch("http://localhost:8080/api/delete_account", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ currentPassword: currentPasswordRef?.current?.value }),
