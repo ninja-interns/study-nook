@@ -11,8 +11,20 @@ export const useStyles = makeStyles({
 				display: "block",
 			},
 		},
-		opacity: (isUnlocked) => (isUnlocked ? 1.0 : 0.5),
 	},
+	badgeElementLocked: {
+		width: "50px",
+		margin: "20px",
+		marginBottom: "10px",
+		cursor: "pointer",
+		"&:hover": {
+			"& ~ $textBox": {
+				display: "block",
+			},
+		},
+		opacity: 0.5,
+	},
+
 	badgeCaption: {
 		textAlign: "center",
 		marginRight: "5px",

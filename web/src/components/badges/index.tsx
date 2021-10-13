@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useStyles } from "./badgeCss"
 
 import badgeIcon from "../../assets/medal.png"
+import { stringify } from "querystring"
 
 interface BadgeProps {
 	badgeID: string
@@ -20,9 +21,7 @@ interface Unlocked {
 }
 
 export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: BadgeProps): JSX.Element {
-	let isUnlocked = false
-
-	function setIsUnlocked(data: Unlocked) {
+	/*function setIsUnlocked(data: Unlocked) {
 		isUnlocked = data.unlocked
 	}
 
@@ -36,9 +35,8 @@ export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: Bad
 					body: JSON.stringify({ BadgeID: badgeID }),
 				})
 				const data: IResponse = await response.json()
-				if (isMounted) {
-					setIsUnlocked(data)
-				}
+				setIsUnlocked(data)
+				console.log(data)
 			} catch (err) {
 				console.error(err)
 			}
@@ -46,9 +44,13 @@ export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: Bad
 		return () => {
 			isMounted = false
 		}
-	}, [setIsUnlocked])
+	}, [])
 
-	const css = useStyles(isUnlocked)
+	function fun() {
+		console.log(isUnlocked)
+	}*/
+
+	const css = useStyles()
 
 	return (
 		<figure>
@@ -60,7 +62,7 @@ export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: Bad
 				{" "}
 				Progression:
 				<p className={css.tracker}>
-					{progression}/{isUnlocked}
+					{progression}/{goal}
 				</p>
 				<span className={css.bar}>
 					<span className={css.achievement}></span>
