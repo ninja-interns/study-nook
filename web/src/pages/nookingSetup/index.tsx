@@ -33,7 +33,9 @@ const NookingSetup = () => {
 				<TodoListApp />
 			</Box>
 			<Box sx={{ gridArea: "button" }}>
-				<Button onClick={() => history.push("/nooking")}>Start Nooking</Button>
+				<Button variant="contained" onClick={() => history.push("/nooking")}>
+					Start Nooking
+				</Button>
 			</Box>
 			<NavigationBar />
 		</Box>

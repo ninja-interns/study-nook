@@ -21,15 +21,17 @@ export function Level() {
 	const { currentUser } = ContextContainer.useContainer()
 
 	return (
-		<Container
+		// position on the page
+		<Box
 			sx={{
+				display: "flex",
 				margin: "25px",
 				position: "absolute",
 				top: "50px",
-				right: "0px",
+				right: 0,
 			}}
 		>
-			<Container
+			<Box
 				sx={{
 					display: "flex",
 					alignItems: "center",
@@ -37,7 +39,7 @@ export function Level() {
 					flexDirection: "row",
 				}}
 			>
-				<Container
+				<Box
 					sx={{
 						float: "left",
 						width: "35px",
@@ -64,9 +66,9 @@ export function Level() {
 					>
 						{currentUser.level}
 					</Typography>
-				</Container>
+				</Box>
 				<BorderLinearProgress variant="determinate" value={currentUser.experience} />
-			</Container>
-		</Container>
+			</Box>
+		</Box>
 	)
 }

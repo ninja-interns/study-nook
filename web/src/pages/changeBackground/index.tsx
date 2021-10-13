@@ -11,12 +11,11 @@ export function ChangeBackgroundPage() {
 	return (
 		<>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-			<Container
+			<Box
 				sx={{
 					width: "400px",
 					height: "600px",
 					position: "absolute",
-					border: "solid black",
 					overflowY: "scroll",
 					"&::-webkit-scrollbar": {
 						display: "none",
@@ -27,7 +26,7 @@ export function ChangeBackgroundPage() {
 					alignItems: "center",
 				}}
 			>
-				<Container
+				<Box
 					sx={{
 						marginBottom: "70px",
 						display: "flex",
@@ -60,8 +59,8 @@ export function ChangeBackgroundPage() {
 							cursor: "pointer",
 						}}
 					></Box>
-				</Container>
-				<Container>
+				</Box>
+				<Box>
 					<Background background={"zone1"} />
 
 					<Background background={"zone2"} />
@@ -79,14 +78,14 @@ export function ChangeBackgroundPage() {
 					<Background background={"zone8"} />
 
 					<Background background={"zone9"} />
-				</Container>
+				</Box>
 
-				<Container
+				<Box
 					sx={{
 						marginTop: "40px",
 					}}
-				></Container>
-			</Container>
+				></Box>
+			</Box>
 		</>
 	)
 }

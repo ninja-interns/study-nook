@@ -1,5 +1,4 @@
-import { Box, Button, Container } from "@mui/material"
-import React from "react"
+import { Box, Button } from "@mui/material"
 import { useHistory } from "react-router"
 import backgrounds from "../../assets/Backgrounds"
 
@@ -32,7 +31,7 @@ export function Background({ background }: BackgroundProps) {
 	}
 
 	return (
-		<Container
+		<Box
 			sx={{
 				marginBottom: "10px",
 				display: "flex",
@@ -64,6 +63,6 @@ export function Background({ background }: BackgroundProps) {
 			>
 				Select
 			</Button>
-		</Container>
+		</Box>
 	)
 }

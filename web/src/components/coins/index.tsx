@@ -8,7 +8,7 @@ export function Coins() {
 	const { currentUser } = ContextContainer.useContainer()
 
 	return (
-		<Container
+		<Box
 			sx={{
 				position: "absolute",
 				margin: "25px",
@@ -39,6 +39,6 @@ export function Coins() {
 			>
 				{currentUser.coins}
 			</Typography>
-		</Container>
+		</Box>
 	)
 }

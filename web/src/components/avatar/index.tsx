@@ -32,7 +32,7 @@ export function Avatar({ avatar }: AvatarProps) {
 	}
 
 	return (
-		<Container
+		<Box
 			sx={{
 				display: "flex",
 				flexDirection: "column",
@@ -40,7 +40,7 @@ export function Avatar({ avatar }: AvatarProps) {
 				justifyContent: "center",
 			}}
 		>
-			<Container
+			<Box
 				sx={{
 					width: "70px",
 					height: "150px",
@@ -55,7 +55,7 @@ export function Avatar({ avatar }: AvatarProps) {
 						width: "70px",
 					}}
 				/>
-			</Container>
+			</Box>
 			<Button
 				variant="contained"
 				color="primary"
@@ -68,6 +68,6 @@ export function Avatar({ avatar }: AvatarProps) {
 			>
 				Select
 			</Button>
-		</Container>
+		</Box>
 	)
 }
