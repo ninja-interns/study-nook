@@ -74,7 +74,7 @@ const UserEditPage = () => {
 	useEffect(() => {
 		try {
 			//Fetch User from the API endpoint
-			fetch(`/admin/users/${userID}`)
+			fetch(`http://localhost:8080/admin/users/${userID}`)
 				.then((response) => response.json())
 				.then((json) => (json === undefined ? setIsError(true) : setUser(json)))
 		} catch (err) {
@@ -88,7 +88,7 @@ const UserEditPage = () => {
 		if (updatePassword) {
 			try {
 				// Hitting the API endpoint: PUT /admin/users/123
-				const res = await fetch(`/admin/users/${userID}`, {
+				const res = await fetch(`http://localhost:8080/admin/users/${userID}`, {
 					method: "PUT",
 					headers: { "content-type": "application/json" },
 					body: JSON.stringify({
@@ -116,7 +116,7 @@ const UserEditPage = () => {
 		} else {
 			try {
 				// Hitting the API endpoint: PUT /admin/user_details_only/123
-				const res = await fetch(`/admin/user_details_only/${userID}`, {
+				const res = await fetch(`http://localhost:8080/admin/user_details_only/${userID}`, {
 					method: "PUT",
 					headers: { "content-type": "application/json" },
 					body: JSON.stringify({
