@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/styles"
+import { keyframes } from "@mui/styled-engine"
 import { theme } from "../../contexts/themeContext"
 
 export const useStyles = makeStyles({
@@ -25,5 +26,23 @@ export const useStyles = makeStyles({
 		marginTop: "60px",
 		cursor: "pointer",
 		color: theme.palette.secondary.contrastText,
+		maxWidth: "fit-content",
+		"&:hover": {
+			fontSize: "30px",
+			animationPlayState: "paused",
+			WebkitMaskImage: "none",
+		},
+		WebkitMaskImage: "linear-gradient(-150deg, rgba(0,0,0,.6) 30%, #000 50%, rgba(0,0,0,.6) 70%)",
+		WebkitMaskSize: "200%",
+
+		animation: "$shine 2s linear infinite",
+	},
+	"@keyframes shine": {
+		"0%": {
+			WebkitMaskPosition: "150%",
+		},
+		"100%": {
+			WebkitMaskPosition: "-50%",
+		},
 	},
 })
