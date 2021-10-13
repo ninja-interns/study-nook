@@ -48,10 +48,10 @@ export function LoginPage() {
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 		setMessage("")
-		setLoading(true)
+		setLoading(false)
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("/api/login_user", {
+			const response = await fetch("http://localhost:8080/api/login_user", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: userRef?.current?.value, username: userRef?.current?.value, password: passwordRef?.current?.value }),

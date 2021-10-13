@@ -13,7 +13,6 @@ export const useStyles = makeStyles({
 		width: "400px",
 		height: "600px",
 		position: "absolute",
-		border: "solid black",
 		overflowY: "scroll",
 		"&::-webkit-scrollbar": {
 			display: "none",

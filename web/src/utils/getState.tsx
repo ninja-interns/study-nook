@@ -10,7 +10,7 @@ export function useGetState() {
 		let isMounted = true
 		;(async () => {
 			try {
-				const response = await fetch("/api/state", {
+				const response = await fetch("http://localhost:8080/api/state", {
 					method: "GET",
 					headers: { "content-type": "application/json" },
 				})
