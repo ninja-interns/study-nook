@@ -1,7 +1,6 @@
 import * as React from "react"
 import { TimerInterface } from "../interfaces"
-import { Typography } from "@material-ui/core"
-import { Box, Card, CardContent, CircularProgress } from "@mui/material"
+import { Box, Card, CardContent, CircularProgress, Paper, Typography } from "@mui/material"
 
 /**
  * * TIMER COMPONENT
@@ -106,7 +105,7 @@ const Timer = () => {
 	}, [timer?.timeLeft, timer?.timerDuration])
 
 	return (
-		<Box sx={{ position: "relative", display: "inline-flex" }}>
+		<Box sx={{ position: "relative", display: "inline-flex", mt: 2 }}>
 			<CircularProgress variant="determinate" value={progress} size={120} />
 			<Box
 				sx={{

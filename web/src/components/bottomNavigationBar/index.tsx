@@ -4,11 +4,11 @@ import BottomNavigationAction from "@mui/material/BottomNavigationAction"
 import * as React from "react"
 import { Link, useRouteMatch } from "react-router-dom"
 import DashboardIcon from "@mui/icons-material/Dashboard"
-import TimerIcon from "@mui/icons-material/Timer"
+import TimerIcon from "@mui/icons-material/Timer" // Could use this for nooking setup
 import StorefrontIcon from "@mui/icons-material/Storefront"
-import MenuIcon from "@mui/icons-material/Menu"
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz" // Could use this for menu
-import ListIcon from "@mui/icons-material/List" // Could use this for nooking setup
+import MenuIcon from "@mui/icons-material/Menu" // Could use this for menu
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
+import ListIcon from "@mui/icons-material/List"
 
 /**
  * * NAVIGATION BAR COMPONENT

@@ -1,6 +1,6 @@
 import * as React from "react"
 import { TodoContent } from "../interfaces"
-import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card } from "@mui/material"
+import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card, Paper } from "@mui/material"
 
 /**
  * * TODO LIST COMPONENT
@@ -42,27 +42,41 @@ const TodoList = () => {
 	}
 
 	return (
-		<Card>
+		<Paper elevation={4}>
 			<List
 				sx={{
-					height: "10rem",
+					height: 220,
 					overflow: "auto",
+					width: 350,
+
+					// Scrollbar styling
+					"&::-webkit-scrollbar": {
+						display: "none",
+					},
 				}}
 			>
 				{todos.map((todo) => {
 					return (
-						<ListItem key={todo.id}>
-							<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
-								<ListItemIcon>
-									<Checkbox checked={todo.isCompleted} edge="start" />
-								</ListItemIcon>
-								<Typography>{todo.todoText}</Typography>
-							</ListItemButton>
-						</ListItem>
+						<Paper
+							elevation={2}
+							sx={{
+								m: 2,
+								p: 0,
+							}}
+						>
+							<ListItem key={todo.id}>
+								<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
+									<ListItemIcon>
+										<Checkbox checked={todo.isCompleted} edge="start" />
+									</ListItemIcon>
+									<Typography>{todo.todoText}</Typography>
+								</ListItemButton>
+							</ListItem>
+						</Paper>
 					)
 				})}
 			</List>
-		</Card>
+		</Paper>
 	)
 }
 

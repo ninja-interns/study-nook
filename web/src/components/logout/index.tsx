@@ -1,3 +1,4 @@
+import { Button } from "@mui/material"
 import { useState } from "react"
 import { Redirect, Route } from "react-router-dom"
 import { ContextContainer } from "../../contexts/ContextContainer"
@@ -26,7 +27,7 @@ export function Logout() {
 	return (
 		<div>
 			<Route render={() => (redirect !== null ? <Redirect to={redirect} /> : null)} />
-			<p onClick={handleLogout}>Logout</p>
+			<Button onClick={handleLogout}>Logout</Button>
 		</div>
 	)
 }

@@ -11,34 +11,29 @@ export function GameInterface() {
 	}
 
 	return (
-		<>
+		<Box
+			style={imageStyle}
+			sx={{
+				width: "350px",
+				height: "200px",
+				border: "solid black",
+				borderWidth: "1px",
+				backgroundSize: "350px 200px",
+			}}
+		>
 			<Box
-				style={imageStyle}
+				component="img"
+				src={images[currentUser.currentAvatar]}
 				sx={{
-					width: "350px",
-					height: "200px",
-					border: "solid black",
-					position: "absolute",
-					bottom: "100px",
-					margin: "25px",
-					borderWidth: "1px",
-					backgroundSize: "350px 200px",
+					width: "80px",
+					height: "120px",
+					position: "relative",
+					display: "block",
+					left: "120px",
+					bottom: "0px",
+					top: "70px",
 				}}
-			>
-				<Box
-					component="img"
-					src={images[currentUser.currentAvatar]}
-					sx={{
-						width: "80px",
-						height: "120px",
-						position: "relative",
-						display: "block",
-						left: "120px",
-						top: "70px",
-						bottom: "0px",
-					}}
-				/>
-			</Box>
-		</>
+			/>
+		</Box>
 	)
 }
