@@ -1,4 +1,4 @@
-import { Box } from "@mui/material"
+import { Box, Paper } from "@mui/material"
 import * as React from "react"
 import { TodoContent } from "../interfaces"
 import { TodoForm } from "./TodoForm"
@@ -91,24 +91,17 @@ const TodoListApp = () => {
 	}
 
 	return (
-		<Box
+		<Paper
+			elevation={2}
 			sx={{
-				display: "grid",
-				gridTemplateColumns: "repeat(2, 1fr)",
-				gap: 1,
-				gridTemplateRows: "auto",
-				gridTemplateAreas: `
-					"todoForm todoForm"
-  					"todoList todoList" `,
+				p: 1,
 			}}
 		>
-			<Box sx={{ gridArea: "todoForm" }}>
+			<Box sx={{ display: "flex", flexDirection: "column" }}>
 				<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
-			</Box>
-			<Box sx={{ gridArea: "todoList" }}>
 				<TodoListForm todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} />
 			</Box>
-		</Box>
+		</Paper>
 	)
 }
 

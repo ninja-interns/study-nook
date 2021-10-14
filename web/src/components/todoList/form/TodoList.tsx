@@ -13,7 +13,7 @@ const TodoListForm = (props: TodoListInterface) => {
 	return (
 		<List
 			sx={{
-				height: 380,
+				height: 340,
 				overflowY: "auto",
 				width: "100%",
 				m: 0,
@@ -21,17 +21,7 @@ const TodoListForm = (props: TodoListInterface) => {
 
 				// Scrollbar styling
 				"&::-webkit-scrollbar": {
-					width: "16px",
-				},
-				"&::-webkit-scrollbar-track": {
-					backgroundColor: "#e4e4e4",
-					borderRadius: "100px",
-				},
-				"&::-webkit-scrollbar-thumb": {
-					border: "5px solid transparent",
-					borderRadius: "100px",
-					backgroundColor: "#8070d4",
-					backgroundClip: "content-box",
+					display: "none",
 				},
 			}}
 		>
@@ -42,8 +32,6 @@ const TodoListForm = (props: TodoListInterface) => {
 					<Paper
 						elevation={2}
 						sx={{
-							// height: 15,
-							// width: "100%",
 							m: 2,
 							p: 2,
 						}}

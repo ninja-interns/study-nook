@@ -19,10 +19,12 @@ const NookingSetup = () => {
 				p: 2,
 				display: "grid",
 				gridTemplateColumns: "repeat(4, 1fr)",
-				gap: 3,
+				gap: 2,
 				gridTemplateRows: "auto",
 				gridTemplateAreas: `
+					"form form . ."
 					"form form button button"
+					"form form . ."
   					"list list list list" `,
 			}}
 		>
@@ -33,7 +35,7 @@ const NookingSetup = () => {
 				<TodoListApp />
 			</Box>
 			<Box sx={{ gridArea: "button" }}>
-				<Button variant="contained" onClick={() => history.push("/nooking")}>
+				<Button fullWidth variant="contained" onClick={() => history.push("/nooking")}>
 					Start Nooking
 				</Button>
 			</Box>
