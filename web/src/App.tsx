@@ -1,12 +1,14 @@
+import { ThemeProvider } from "@mui/material"
 import { ContextContainer } from "./contexts/ContextContainer"
-import { Dashboard } from "./pages/dashboard"
-import { NookingSetup } from "./pages/nookingSetup"
+import { theme } from "./contexts/themeContext"
 import Routes from "./routes/Routes"
 
 function App() {
 	return (
 		<ContextContainer.Provider>
-			<Routes />
+			<ThemeProvider theme={theme}>
+				<Routes />
+			</ThemeProvider>
 		</ContextContainer.Provider>
 	)
 }

@@ -42,13 +42,9 @@ export function MenuPage() {
 						mt: 10,
 					}}
 				>
-					<Button sx={{ fontSize: 24 }}>Settings</Button>
-					<Button sx={{ fontSize: 24 }} onClick={() => history.push("./achievements")}>
-						Achievements
-					</Button>
-					<Button sx={{ fontSize: 24 }} onClick={() => history.push("./support")}>
-						Support
-					</Button>
+					<Button>Settings</Button>
+					<Button onClick={() => history.push("./achievements")}>Achievements</Button>
+					<Button onClick={() => history.push("./support")}>Support</Button>
 					<Logout />
 				</Stack>
 				<NavigationBar />

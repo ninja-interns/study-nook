@@ -49,6 +49,7 @@ const Timer = () => {
 				if (data.timeLeft === 0 || data.isCompleted === true) {
 					data.timeLeft = 0
 					setMounted(false)
+					setTimeLeft("finished")
 					setCompleted()
 				} else if (data.timeLeft) {
 					// Convert the timeLeft (seconds) to minutes and seconds
@@ -91,7 +92,7 @@ const Timer = () => {
 		}
 	}, [mounted])
 
-	//* Circular Progress Circle - Calculates the per
+	//* Circular Progress Circle - Calculates the percentage
 	const [progress, setProgress] = React.useState(0)
 	React.useEffect(() => {
 		if (timer?.timerDuration && timer?.timeLeft) {

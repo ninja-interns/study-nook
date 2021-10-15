@@ -1,6 +1,6 @@
 import * as React from "react"
 import { TodoContent } from "../interfaces"
-import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card, Paper } from "@mui/material"
+import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Paper, Container } from "@mui/material"
 
 /**
  * * TODO LIST COMPONENT
@@ -42,10 +42,11 @@ const TodoList = () => {
 	}
 
 	return (
-		<Paper elevation={4}>
+		<div>
+			<Typography>List:</Typography>
 			<List
 				sx={{
-					height: 220,
+					height: 200,
 					overflow: "auto",
 					width: 350,
 
@@ -58,7 +59,7 @@ const TodoList = () => {
 				{todos.map((todo) => {
 					return (
 						<Paper
-							elevation={2}
+							elevation={3}
 							sx={{
 								m: 2,
 								p: 0,
@@ -76,7 +77,7 @@ const TodoList = () => {
 					)
 				})}
 			</List>
-		</Paper>
+		</div>
 	)
 }
 

@@ -1,4 +1,4 @@
-import { Route, Switch, MemoryRouter as Router } from "react-router-dom"
+import { Route, Switch, HashRouter as Router } from "react-router-dom"
 import {
 	HomePage,
 	RegisterPage,

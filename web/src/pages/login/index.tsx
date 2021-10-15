@@ -1,11 +1,11 @@
-import { Button, Fade, Slide, TextField, Typography } from "@material-ui/core"
-import { Color } from "@material-ui/lab/Alert"
+import { Box, Button, Color, Fade, Slide, TextField, Typography } from "@mui/material"
 import React, { useRef, useState } from "react"
 import { Redirect, Route } from "react-router-dom"
 import { useLastLocation } from "react-router-last-location"
 import { Snackbars } from "../../components"
 import { ContextContainer } from "../../contexts/ContextContainer"
 import { useStyles } from "./loginPageCss"
+import logo from "../../assets/logo.svg"
 
 interface IData {
 	isValid: boolean
@@ -65,7 +65,7 @@ export function LoginPage() {
 			} else {
 				setMessage(data.message)
 				setIsOpen(true)
-				setSeverity("error")
+				// setSeverity("error")
 			}
 		} catch (err) {
 			console.error(err)
@@ -83,16 +83,59 @@ export function LoginPage() {
 
 	return (
 		<Transition>
-			<div className={css.container}>
+			<Box
+				component="div"
+				sx={{
+					height: "100%",
+					width: "100%",
+					display: "flex",
+					alignItems: "center",
+				}}
+			>
 				<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-				<div className={css.content}>
-					<Typography>StudyNookLogo📚</Typography>
-					<Typography variant="h2">Login</Typography>
-					<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-					<form className={css.form} onSubmit={handleLogin}>
-						<TextField fullWidth required label="Email or Username" type="text" inputRef={userRef} />
-						<TextField fullWidth required label="Password" type="password" inputRef={passwordRef} />
-						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
+				<Box
+					component="div"
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						width: "100%",
+					}}
+				>
+					<Typography variant="h4">StudyNook</Typography>
+					<Box
+						component="img"
+						src={logo}
+						sx={{
+							height: 180,
+							width: 180,
+						}}
+					></Box>
+					{/* <Typography variant="h2">Login</Typography> */}
+					{/* <Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} /> */}
+					<Box
+						component="form"
+						onSubmit={handleLogin}
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							width: "100%",
+							padding: "1rem",
+						}}
+					>
+						<TextField fullWidth required label="Email or Username" type="text" inputRef={userRef} variant="standard" />
+						<TextField fullWidth required label="Password" type="password" inputRef={passwordRef} variant="standard" />
+						<Button
+							variant="contained"
+							color="primary"
+							disabled={loading}
+							type="submit"
+							sx={{
+								margin: "1rem",
+								width: "75%",
+							}}
+						>
 							Login
 						</Button>
 						<Typography variant="body1">
@@ -107,9 +150,9 @@ export function LoginPage() {
 								Recover
 							</Button>
 						</Typography>
-					</form>
-				</div>
-			</div>
+					</Box>
+				</Box>
+			</Box>
 		</Transition>
 	)
 }
