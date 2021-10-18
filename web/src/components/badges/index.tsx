@@ -22,7 +22,7 @@ export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: Bad
 		e.preventDefault()
 
 		try {
-			const response = await fetch("/api/achievement_check", {
+			const response = await fetch("http://localhost:8080/api/achievement_check", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ badgeID: { badgeID } }),

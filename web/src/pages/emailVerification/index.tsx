@@ -28,7 +28,7 @@ export function EmailVerificationPage() {
 			setMessage("Loading...")
 			setIsOpen(true)
 			setSeverity("info")
-			const response = await fetch(`/api/verify_email/${verificationRef?.current?.value}`, {
+			const response = await fetch(`http://localhost:8080/api/verify_email/${verificationRef?.current?.value}`, {
 				method: "GET",
 			})
 			const data: IData = await response.json()

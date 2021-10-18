@@ -74,7 +74,7 @@ export function RegisterPage(): JSX.Element {
 			setMessage("Loading...")
 			setIsOpen(true)
 			setSeverity("info")
-			const response = await fetch("/api/create_user", {
+			const response = await fetch("http://localhost:8080/api/create_user", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({
