@@ -6,6 +6,9 @@ export const useStyles = makeStyles({
 		height: "600px",
 		position: "absolute",
 		border: "solid black",
+		backgroundColor: "white",
+		WebkitFontSmoothing: "antialiased",
+		MozOsxFontSmoothing: "grayscale",
 	},
 	closeButton: {
 		width: "40px",
@@ -15,19 +18,18 @@ export const useStyles = makeStyles({
 		margin: "20px",
 		cursor: "pointer",
 	},
-	options: {
-		display: "flex",
-		flex: "colunmn",
+	option: {
+		maxWidth: "fit-content",
+		margin: "30px",
 		marginLeft: "40px",
 		fontSize: "25px",
-		marginTop: "60px",
 		cursor: "pointer",
-		maxWidth: "fit-content",
-		paddin: "12px 48px",
+		marginBottom: "60px",
 		"&:hover": {
-			fontSize: "30px",
-			animationPlayState: "paused",
-			WebkitMaskImage: "none",
+			fontSize: "28px",
 		},
+	},
+	optionsContainer: {
+		marginTop: "70px",
 	},
 })
