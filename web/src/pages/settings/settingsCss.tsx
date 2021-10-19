@@ -1,6 +1,4 @@
-import { makeStyles, withThemeCreator } from "@material-ui/styles"
-import { keyframes } from "@mui/styled-engine"
-import { theme } from "../../contexts/themeContext"
+import { makeStyles } from "@material-ui/styles"
 
 export const useStyles = makeStyles({
 	container: {
@@ -20,20 +18,18 @@ export const useStyles = makeStyles({
 		margin: "20px",
 		cursor: "pointer",
 	},
-	options: {
-		display: "flex",
-		flex: "colunmn",
+	option: {
+		maxWidth: "fit-content",
+		margin: "30px",
 		marginLeft: "40px",
 		fontSize: "25px",
-		marginTop: "60px",
 		cursor: "pointer",
-		color: theme.palette.secondary.contrastText,
-		maxWidth: "fit-content",
-		paddin: "12px 48px",
+		marginBottom: "60px",
 		"&:hover": {
-			fontSize: "30px",
-			animationPlayState: "paused",
-			WebkitMaskImage: "none",
+			fontSize: "28px",
 		},
+	},
+	optionsContainer: {
+		marginTop: "70px",
 	},
 })

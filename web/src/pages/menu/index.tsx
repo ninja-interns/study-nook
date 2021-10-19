@@ -18,7 +18,7 @@ export function MenuPage() {
 				<div className={css.container}>
 					<img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
 
-					<Typography className={css.options} variant="h4">
+					<Typography className={css.options} variant="h4" onClick={() => history.push("./settings")}>
 						Settings
 					</Typography>
 					<Typography className={css.options} variant="h4" onClick={() => history.push("./achievements")}>
