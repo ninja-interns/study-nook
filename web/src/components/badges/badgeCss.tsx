@@ -1,6 +1,10 @@
 import { makeStyles } from "@material-ui/styles"
+import { flexbox } from "@mui/system"
 
 export const useStyles = makeStyles({
+	achievementContainer: {
+		display: "flex",
+	},
 	badgeElement: {
 		width: "50px",
 		margin: "20px",
@@ -11,6 +15,8 @@ export const useStyles = makeStyles({
 				display: "block",
 			},
 		},
+
+		opacity: "1",
 	},
 	badgeElementLocked: {
 		width: "50px",
@@ -22,9 +28,21 @@ export const useStyles = makeStyles({
 				display: "block",
 			},
 		},
-		opacity: 0.5,
-	},
 
+		opacity: "1",
+	},
+	locker: {
+		position: "absolute",
+		width: "55px",
+		margin: "17px",
+		marginTop: "30px",
+		cursor: "pointer",
+		"&:hover": {
+			"& ~ $textBox": {
+				display: "block",
+			},
+		},
+	},
 	badgeCaption: {
 		textAlign: "center",
 		marginRight: "5px",

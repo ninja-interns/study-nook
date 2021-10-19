@@ -188,7 +188,7 @@ func (db *DB) GetAvatarsMedal1(id string) (bool,error) {
 
 	var returnItem bool
 
-	sqlStatement := `SELECT avatars_medal_1 FROM user_achievements WHERE id = $1;`
+	sqlStatement := `SELECT avatar_medal_1 FROM user_achievements WHERE id = $1;`
 
 	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&returnItem)
 	if err != nil {
@@ -202,7 +202,7 @@ func (db *DB) GetAvatarsMedal2(id string) (bool,error) {
 
 	var returnItem bool
 
-	sqlStatement := `SELECT avatars_medal_2 FROM user_achievements WHERE id = $1;`
+	sqlStatement := `SELECT avatar_medal_2 FROM user_achievements WHERE id = $1;`
 
 	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&returnItem)
 	if err != nil {
@@ -216,7 +216,7 @@ func (db *DB) GetAvatarsMedal3(id string) (bool,error) {
 
 	var returnItem bool
 
-	sqlStatement := `SELECT avatars_medal_3 FROM user_achievements WHERE id = $1;`
+	sqlStatement := `SELECT avatar_medal_3 FROM user_achievements WHERE id = $1;`
 
 	err := db.Conn.QueryRow(context.Background(), sqlStatement, id).Scan(&returnItem)
 	if err != nil {

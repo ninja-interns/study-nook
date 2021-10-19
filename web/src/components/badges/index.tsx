@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useStyles } from "./badgeCss"
 
 import badgeIcon from "../../assets/medal.png"
-import { stringify } from "querystring"
+import locker from "../../assets/lock.png"
 
 interface BadgeProps {
 	badgeID: string
@@ -10,6 +10,7 @@ interface BadgeProps {
 	badgeLevel: string
 	progression: number
 	goal: number
+	isUnlocked: boolean | undefined
 }
 
 interface IResponse {
@@ -20,7 +21,9 @@ interface Unlocked {
 	unlocked: boolean
 }
 
-export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: BadgeProps): JSX.Element {
+export function Badge({ badgeID, badgeType, badgeLevel, progression, goal, isUnlocked }: BadgeProps): JSX.Element {
+	//let isUnlocked = false
+
 	/*function setIsUnlocked(data: Unlocked) {
 		isUnlocked = data.unlocked
 	}
@@ -50,24 +53,33 @@ export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: Bad
 		console.log(isUnlocked)
 	}*/
 
+	function Locked() {
+		if (!isUnlocked) return <img src={locker} className={css.locker} />
+		else return <></>
+	}
+
 	const css = useStyles()
 
 	return (
-		<figure>
-			<img className={css.badgeElement} src={badgeIcon} alt="badge" id={badgeID} />
-			<figcaption className={css.badgeCaption}>
-				{badgeType} - {badgeLevel}
-			</figcaption>
-			<span className={css.textBox}>
-				{" "}
-				Progression:
-				<p className={css.tracker}>
-					{progression}/{goal}
-				</p>
-				<span className={css.bar}>
-					<span className={css.achievement}></span>
+		<div className={css.achievementContainer}>
+			<figure>
+				<Locked />
+				<img className={isUnlocked ? css.badgeElement : css.badgeElementLocked} src={badgeIcon} alt="badge" id={badgeID} />
+
+				<figcaption className={css.badgeCaption}>
+					{badgeType} - {badgeLevel}
+				</figcaption>
+				<span className={css.textBox}>
+					{" "}
+					Progression:
+					<p className={css.tracker}>
+						{progression}/{goal}
+					</p>
+					<span className={css.bar}>
+						<span className={css.achievement}></span>
+					</span>
 				</span>
-			</span>
-		</figure>
+			</figure>
+		</div>
 	)
 }
