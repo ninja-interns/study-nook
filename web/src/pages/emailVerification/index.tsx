@@ -3,6 +3,7 @@ import { Color } from "@material-ui/lab/Alert"
 import React, { useRef, useState } from "react"
 import { Redirect, Route } from "react-router-dom"
 import { Snackbars } from "../../components"
+import { DomainContainer } from "../../contexts/DomainContext"
 import { useStyles } from "./emailVerificationCss"
 
 interface IData {
@@ -11,6 +12,7 @@ interface IData {
 }
 
 export function EmailVerificationPage() {
+	const { url } = DomainContainer.useContainer()
 	const css = useStyles()
 	const verificationRef = useRef<HTMLInputElement>()
 	const [message, setMessage] = useState<string>("")
@@ -28,7 +30,7 @@ export function EmailVerificationPage() {
 			setMessage("Loading...")
 			setIsOpen(true)
 			setSeverity("info")
-			const response = await fetch(`/api/verify_email/${verificationRef?.current?.value}`, {
+			const response = await fetch(`${url}/api/verify_email/${verificationRef?.current?.value}`, {
 				method: "GET",
 			})
 			const data: IData = await response.json()

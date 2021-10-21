@@ -2,6 +2,7 @@ import * as React from "react"
 import { TimerInterface } from "../interfaces"
 import { Typography } from "@material-ui/core"
 import { Box, Card, CardContent, CircularProgress } from "@mui/material"
+import { DomainContainer } from "../../../contexts/DomainContext"
 
 /**
  * * TIMER COMPONENT
@@ -10,6 +11,7 @@ import { Box, Card, CardContent, CircularProgress } from "@mui/material"
  * * Once the timer has finished it will display "Finished"
  */
 const Timer = () => {
+	const { url } = DomainContainer.useContainer()
 	const [timer, setTimer] = React.useState<TimerInterface>()
 	const [mounted, setMounted] = React.useState(false) // Mounted runs createTimer before getTimeLeft
 	const [ticker, setTicker] = React.useState<number>(0) // The ticker increments every second
@@ -19,7 +21,7 @@ const Timer = () => {
 	React.useEffect(() => {
 		async function createTimer() {
 			// Sends request to the API to create the timer (Uses the duration stored in the database)
-			const response = await fetch("/api/create_timer")
+			const response = await fetch(`${url}/api/create_timer`)
 
 			// If there is no timer duration in the database display "No Timer"
 			if (response.status === 404) {
@@ -44,7 +46,7 @@ const Timer = () => {
 
 		// Sends request to the API to calculate and returns time remaining on the timer
 		async function getTimeLeft() {
-			const response = await fetch("/api/get_time_left")
+			const response = await fetch(`${url}/api/get_time_left`)
 			if (response.ok) {
 				const data: TimerInterface = await response.json()
 				if (data.timeLeft === 0 || data.isCompleted === true) {
@@ -76,7 +78,7 @@ const Timer = () => {
 
 	//* Requests the API to set the timer to completed
 	async function setCompleted() {
-		const response = await fetch("/api/set_completed")
+		const response = await fetch(`${url}/api/set_completed`)
 		if (!response.ok) {
 			console.error("Error setting timer isCompleted: " + response.statusText)
 		}

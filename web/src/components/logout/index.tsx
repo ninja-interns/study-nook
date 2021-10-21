@@ -1,15 +1,17 @@
 import { useState } from "react"
 import { Redirect, Route } from "react-router-dom"
 import { ContextContainer } from "../../contexts/ContextContainer"
+import { DomainContainer } from "../../contexts/DomainContext"
 
 export function Logout() {
+	const { url } = DomainContainer.useContainer()
 	const { setIsLoggedIn } = ContextContainer.useContainer()
 	const [redirect, setRedirect] = useState<string | null>(null)
 
 	async function handleLogout() {
 		//hitting the backend route of /logoutUser with the body of necessary values
 		try {
-			const response = await fetch("/api/logout_user", {
+			const response = await fetch(`${url}/api/logout_user`, {
 				method: "POST",
 			})
 			//awaiting the response to comeback and turn it into readable json data

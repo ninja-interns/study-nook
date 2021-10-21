@@ -2,6 +2,7 @@ import React from "react"
 import { useStyles } from "./badgeCss"
 
 import badgeIcon from "../../assets/medal.png"
+import { DomainContainer } from "../../contexts/DomainContext"
 
 interface BadgeProps {
 	badgeID: string
@@ -16,13 +17,14 @@ interface IResponse {
 }
 
 export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: BadgeProps): JSX.Element {
+	const { url } = DomainContainer.useContainer()
 	const css = useStyles()
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 
 		try {
-			const response = await fetch("/api/achievement_check", {
+			const response = await fetch(`${url}/api/achievement_check`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ badgeID: { badgeID } }),

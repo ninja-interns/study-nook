@@ -5,12 +5,14 @@ import { useHistory } from "react-router"
 import { useStyles } from "./backgroundCss"
 
 import backgrounds from "../../assets/Backgrounds"
+import { DomainContainer } from "../../contexts/DomainContext"
 
 interface BackgroundProps {
 	background: keyof typeof backgrounds
 }
 
 export function Background({ background }: BackgroundProps) {
+	const { url } = DomainContainer.useContainer()
 	const css = useStyles()
 	const history = useHistory() // user route history
 
@@ -21,7 +23,7 @@ export function Background({ background }: BackgroundProps) {
 	async function handleSelectSubmit() {
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("/api/change_background", {
+			const response = await fetch(`${url}/api/change_background`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ currentBackground: background }),
