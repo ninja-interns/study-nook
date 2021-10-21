@@ -1,14 +1,15 @@
 import { createContainer } from "unstated-next"
 
-//! Comment
+/**
+ * * DOMAIN CONTEXT CONTAINER
+ * * Provides a different url to the rest of the application for api calls
+ * * depending on whether the build is development or production
+ */
 function DomainContainerProvider() {
-	let scheme = "http://"
-	let domain = "localhost:8080"
+	let url = "http://localhost:8080"
 	if (process.env.NODE_ENV === "production") {
-		scheme = "https://"
-		domain = "studynook.xyz"
+		url = "https://studynook.xyz"
 	}
-	const url = scheme + domain
 
 	return {
 		url,
