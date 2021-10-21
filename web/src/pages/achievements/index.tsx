@@ -45,8 +45,8 @@ export function AchievementsPage() {
 		let isMounted = true
 		;(async () => {
 			try {
-				const response = await fetch("/api/achievement_check", {
-					method: "GET",
+				const response = await fetch("http://localhost:8080/api/achievement_check", {
+					method: "POST",
 					headers: { "content-type": "application/json" },
 				})
 				const data: IUnlocked = await response.json()

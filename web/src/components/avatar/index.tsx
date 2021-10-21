@@ -21,7 +21,7 @@ export function Avatar({ avatar }: AvatarProps) {
 	async function handleSelectSubmit() {
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("/api/change_avatar", {
+			const response = await fetch("http://localhost:8080/api/change_avatar", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ currentAvatar: avatar }),

@@ -30,7 +30,7 @@ const NookingPage = () => {
 
 	//* Delete the timer and route the user to the dashboard
 	async function handleStopNooking() {
-		const response = await fetch("/api/delete_timer")
+		const response = await fetch("http://localhost:8080/api/delete_timer")
 		if (!response.ok) {
 			console.error("Error deleting timer: " + response.statusText)
 		}

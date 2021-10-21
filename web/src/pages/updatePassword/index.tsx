@@ -30,7 +30,7 @@ export function UpdatePassword() {
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("/api/update_password", {
+			const response = await fetch("http://localhost:8080/api/update_password", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({

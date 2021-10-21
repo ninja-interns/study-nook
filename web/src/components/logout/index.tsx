@@ -9,14 +9,14 @@ export function Logout() {
 	async function handleLogout() {
 		//hitting the backend route of /logoutUser with the body of necessary values
 		try {
-			const response = await fetch("/api/logout_user", {
+			const response = await fetch("http://localhost:8080/api/logout_user", {
 				method: "POST",
 			})
 			//awaiting the response to comeback and turn it into readable json data
 			const data = await response.json()
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 			if (data.isValid) {
-				setIsLoggedIn(false)
+				setIsLoggedIn(true)
 				setRedirect("/login")
 			}
 		} catch (err) {
