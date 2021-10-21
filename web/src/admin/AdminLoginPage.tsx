@@ -17,6 +17,7 @@ import { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import Alert from "@mui/material/Alert"
 import { ContextContainer } from "../contexts/ContextContainer"
+import { DomainContainer } from "../contexts/DomainContext"
 
 const Copyright = () => {
 	return (
@@ -57,6 +58,7 @@ interface IResponse {
 
 const AdminLoginPage = () => {
 	const { setIsLoggedIn } = ContextContainer.useContainer()
+	const { url } = DomainContainer.useContainer()
 	const classes = useStyles()
 	const emailRef = useRef<HTMLInputElement>()
 	const passwordRef = useRef<HTMLInputElement>()
@@ -69,7 +71,7 @@ const AdminLoginPage = () => {
 		e.preventDefault()
 		// Hitting the backend POST /admin/login
 		try {
-			const res = await fetch("http://localhost:8080/api/login_admin", {
+			const res = await fetch(url + "/api/login_admin", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: emailRef?.current?.value, password: passwordRef?.current?.value }),
