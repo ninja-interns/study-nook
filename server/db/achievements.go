@@ -225,3 +225,183 @@ func (db *DB) GetAvatarsMedal3(id string) (bool,error) {
 
 	return returnItem, nil
 }
+
+func (db *DB) UpdateLevelMedal1(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET level_medal_1 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateLevelMedal2(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET level_medal_2 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateLevelMedal3(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET level_medal_3 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateSessionsMedal1(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET sessions_medal_1 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateSessionsMedal2(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET sessions_medal_2 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateSessionsMedal3(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET sessions_medal_3 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateHoursMedal1(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET hours_medal_1 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateHoursMedal2(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET hours_medal_2 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateHoursMedal3(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET hours_medal_3 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateBackgroundsMedal1(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET backgrounds_medal_1 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateBackgroundsMedal2(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET backgrounds_medal_2 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateBackgroundsMedal3(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET backgrounds_medal_3 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateAvatarsMedal1(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET avatar_medal_1 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateAvatarsMedal2(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET avatar_medal_2 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (db *DB) UpdateAvatarsMedal3(id string) (error) {
+
+	sqlStatement := `UPDATE user_achievements SET avatar_medal_3 = true WHERE id = $1;`
+
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

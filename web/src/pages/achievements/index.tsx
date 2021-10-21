@@ -76,7 +76,7 @@ export function AchievementsPage() {
 								badgeID={"level_medal_2"}
 								badgeType={"Level badge"}
 								badgeLevel={"Level 10"}
-								progression={15}
+								progression={1}
 								goal={10}
 								isUnlocked={unlocked?.level_medal_2}
 							/>
@@ -105,7 +105,7 @@ export function AchievementsPage() {
 								badgeLevel={"10 Session"}
 								progression={0}
 								goal={10}
-								isUnlocked={unlocked?.level_medal_2}
+								isUnlocked={unlocked?.session_medal_2}
 							/>
 
 							<Badge
@@ -114,7 +114,7 @@ export function AchievementsPage() {
 								badgeLevel={"20 Session"}
 								progression={0}
 								goal={20}
-								isUnlocked={unlocked?.level_medal_3}
+								isUnlocked={unlocked?.session_medal_3}
 							/>
 
 							<Badge

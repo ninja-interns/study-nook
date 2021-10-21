@@ -107,6 +107,18 @@ func GetLevelEXP(passedLevels int, passedEXP int, necessaryEXP int, currentEXP i
 	return currentLevel, int(percentage)
 }
 
+func (c *Controller) GetLevel(id string) (int, error) {
+
+	exp, err := c.DB.GetEXPAmount(id)
+	if err != nil {
+		return 0, err
+	}
+
+	level, _ := CalculateLevelEXP(exp)
+
+	return level, nil
+}
+
 // Function to calculate level by total EXP points user has
 // It requires level group
 func CalculateLevelEXP(currentExp int) (int, int) {

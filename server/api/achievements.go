@@ -29,8 +29,6 @@ type Response struct {
 // Achievements check will check wether use has unlocked achievement or not
 func (c *Controller) AchievementCheck(w http.ResponseWriter, r *http.Request, u *studynook.User) {
 
-	fmt.Println("Im here")
-
 	level_medal_1, err := c.DB.GetLevelMedal1(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -159,42 +157,264 @@ func (c *Controller) AchievementCheck(w http.ResponseWriter, r *http.Request, u 
 	json.NewEncoder(w).Encode(response)
 }
 
-func (c *Controller) CheckAchievement(badgeId string, id string) (bool, error) {
-	
-	switch badgeId {
-	case "level_medal_1":
-		return c.DB.GetLevelMedal1(id)
-	case "level_medal_2":
-		return c.DB.GetLevelMedal2(id)
-	case "level_medal_3":
-		return c.DB.GetLevelMedal3(id)
-	case "sessions_medal_1":
-		return c.DB.GetSessionMedal1(id)
-	case "sessions_medal_2":
-		return c.DB.GetSessionMedal2(id)
-	case "sessions_medal_3":
-		return c.DB.GetSessionMedal3(id)
-	case "hours_medal_1":
-		return c.DB.GetSessionMedal1(id)
-	case "hours_medal_2":
-		return c.DB.GetSessionMedal2(id)
-	case "hours_medal_3":
-		return c.DB.GetSessionMedal3(id)
-	case "backgrounds_medal_1":
-		return c.DB.GetBackgroundMedal1(id)
-	case "backgrounds_medal_2":
-		return c.DB.GetBackgroundMedal2(id)
-	case "backgrounds_medal_3":
-		return c.DB.GetBackgroundMedal3(id)
-	case "avatar_medal_1":
-		return c.DB.GetAvatarsMedal1(id)
-	case "avatar_medal_2":
-		return c.DB.GetAvatarsMedal2(id)
-	case "avatar_medal_3":
-		return c.DB.GetAvatarsMedal3(id)
-	default:
-		return false, nil
-
-	}
+func CheckObtained(current int, goal int) bool {
+	return current >= goal
 }
+
+func (c* Controller) CheckLevelMedals(id string) error{
+	
+	// Level var
+	level, err := c.GetLevel(id) 
+	if err != nil {
+		return err
+	}
+	
+	// Level medal 1
+	check := CheckObtained(level, 1)
+	checkDb, err := c.DB.GetLevelMedal1(id)
+	if err != nil {
+		return err
+	}
+
+	if(check != checkDb) {
+		c.DB.UpdateLevelMedal1(id)
+	}
+	
+	
+	// Level medal 2
+	check = CheckObtained(level, 10)
+	checkDb, err = c.DB.GetLevelMedal2(id)
+	if err != nil {
+		return err
+	}
+
+
+	if(check != checkDb) {
+		c.DB.UpdateLevelMedal2(id)
+	}
+
+	// Level medal 3
+	check = CheckObtained(level, 20)
+	checkDb, err = c.DB.GetLevelMedal3(id)
+	if err != nil {
+		return err
+	}
+
+	if(check != checkDb) {
+		c.DB.UpdateLevelMedal3(id)
+	}
+
+	return nil
+}
+
+func (c* Controller) CheckHoursMedal(id string) error{
+	
+	// Sessions var
+	sessions, err := c.DB.GetSessions(id)
+	if err != nil {
+		return err
+	}
+
+	// Sessions medal 1
+	sessionsDb, err := c.DB.GetSessionMedal1(id)
+	if err != nil {
+		return err
+	}
+
+	sessionsCheck := CheckObtained(sessions, 1)
+
+	if(sessionsCheck != sessionsDb) {
+		c.DB.UpdateSessionsMedal1(id)
+	}
+
+	// Sessions medal 2
+	sessionsDb, err = c.DB.GetSessionMedal2(id)
+	if err != nil {
+		return err
+	}
+
+	sessionsCheck = CheckObtained(sessions, 10)
+
+	if(sessionsCheck != sessionsDb) {
+		c.DB.UpdateSessionsMedal2(id)
+	}
+
+	// Sessions medal 3
+	sessionsDb, err = c.DB.GetSessionMedal3(id)
+	if err != nil {
+		return err
+	}
+
+	sessionsCheck = CheckObtained(sessions, 20)
+
+	if(sessionsCheck != sessionsDb) {
+		c.DB.UpdateSessionsMedal3(id)
+	}
+
+	return nil
+}
+
+func (c* Controller) CheckSessionsMedal(id string) error{
+	
+	// Hours focused var 
+	hours, err := c.DB.GetHoursNooked(id)
+	if err != nil {
+		return err
+	}
+	hours /= 60
+
+	// Hours medal 1
+	hoursDb, err := c.DB.GetHoursMedal1(id)
+	if err != nil {
+		return err
+	}
+
+	hoursCheck := CheckObtained(hours, 1)
+
+	if(hoursCheck != hoursDb) {
+		c.DB.UpdateHoursMedal1(id)
+	}
+
+	// Hours medal 2
+	hoursDb, err = c.DB.GetHoursMedal2(id)
+	if err != nil {
+		return err
+	}
+
+	hoursCheck = CheckObtained(hours, 5)
+
+	if(hoursCheck != hoursDb) {
+		c.DB.UpdateHoursMedal2(id)
+	}
+
+	// Hours medal 3
+	hoursDb, err = c.DB.GetHoursMedal3(id)
+	if err != nil {
+		return err
+	}
+
+	hoursCheck = CheckObtained(hours, 10)
+
+	if(hoursCheck != hoursDb) {
+		c.DB.UpdateHoursMedal3(id)
+	}
+
+	return nil
+}
+
+func (c* Controller) CheckBackgroundsMedals(id string) error{
+	
+	// Background var
+	background, err := c.DB.GetBackgroundsUnlocked(id)
+	if err != nil {
+		return err
+	}
+
+	// Background medal 1
+	backgroundDb, err := c.DB.GetBackgroundMedal1(id)
+	if err != nil {
+		return err
+	}
+	
+	backgroundsCheck := CheckObtained(background, 2)
+
+	if(backgroundsCheck != backgroundDb) {
+		c.DB.UpdateBackgroundsMedal1(id)
+	}
+
+	// Background medal 2
+	backgroundDb, err = c.DB.GetBackgroundMedal2(id)
+	if err != nil {
+		return err
+	}
+	
+	backgroundsCheck = CheckObtained(background, 5)
+
+	if(backgroundsCheck != backgroundDb) {
+		c.DB.UpdateBackgroundsMedal2(id)
+	}
+
+	// Background medal 3
+	backgroundDb, err = c.DB.GetBackgroundMedal3(id)
+	if err != nil {
+		return err
+	}
+	
+	backgroundsCheck = CheckObtained(background, 7)
+
+	if(backgroundsCheck != backgroundDb) {
+		c.DB.UpdateBackgroundsMedal3(id)
+	}
+	
+
+	return nil
+}
+
+func (c* Controller) CheckAvatarMedals(id string) error{
+	
+	// Avatar var
+	avatar, err := c.DB.GetAvatarUnlocked(id)
+	if err != nil {
+		return err
+	}
+	
+	// Avatar medal 1
+	avatarDb, err := c.DB.GetAvatarsMedal1(id)
+	if err != nil {
+		return err
+	}
+	
+	avatarCheck := CheckObtained(avatar, 2)
+
+	if(avatarCheck != avatarDb) {
+		c.DB.UpdateAvatarsMedal1(id)
+	}
+
+	// Avatar medal 2
+	avatarDb, err = c.DB.GetAvatarsMedal2(id)
+	if err != nil {
+		return err
+	}
+	
+	avatarCheck = CheckObtained(avatar, 5)
+
+	if(avatarCheck != avatarDb) {
+		c.DB.UpdateAvatarsMedal2(id)
+	}
+
+	// Avatar medal 1
+	avatarDb, err = c.DB.GetAvatarsMedal3(id)
+	if err != nil {
+		return err
+	}
+	
+	avatarCheck = CheckObtained(avatar, 10)
+
+	if(avatarCheck != avatarDb) {
+		c.DB.UpdateAvatarsMedal3(id)
+	}
+
+	return nil
+}
+
+func (c *Controller) AchievementsUnlockCheck(id string) error{
+	
+	err := c.CheckLevelMedals(id)
+	if err != nil {
+		return err
+	}
+
+	err = c.CheckHoursMedal(id)
+	if err != nil {
+		return err
+	}
+
+	err = c.CheckSessionsMedal(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 
