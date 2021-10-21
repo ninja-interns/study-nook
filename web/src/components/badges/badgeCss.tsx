@@ -81,7 +81,7 @@ export const useStyles = makeStyles({
 		display: "block",
 		height: "7px",
 		border: "1px solid rgba(0,0,0, 0.3)",
-		width: "140px",
+
 		borderRadius: "10%",
 		overflow: "hidden",
 	},

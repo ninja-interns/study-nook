@@ -24,6 +24,11 @@ type Response struct {
 	Avatar_medal_1 bool `json:"avatar_medal_1"`
 	Avatar_medal_2 bool `json:"avatar_medal_2"`
 	Avatar_medal_3 bool `json:"avatar_medal_3"`
+	Level int `json:"level"`
+	Sessions int `json:"sessions_completed"`
+	Hours_focused int `json:"hours_focused"`
+	Backgrounds int `json:"backgrounds"`
+	Avatars int `json:"avatars"`
 }
 
 // Achievements check will check wether use has unlocked achievement or not
@@ -32,106 +37,125 @@ func (c *Controller) AchievementCheck(w http.ResponseWriter, r *http.Request, u 
 	level_medal_1, err := c.DB.GetLevelMedal1(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
-
 		return
 	}
 
 	level_medal_2, err := c.DB.GetLevelMedal2(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	level_medal_3, err := c.DB.GetLevelMedal3(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	session_medal_1, err := c.DB.GetSessionMedal1(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	session_medal_2, err := c.DB.GetSessionMedal2(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	session_medal_3, err := c.DB.GetSessionMedal3(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 	
 	hours_medal_1, err := c.DB.GetHoursMedal1(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	hours_medal_2, err := c.DB.GetHoursMedal2(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	hours_medal_3, err := c.DB.GetHoursMedal3(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	background_medal_1, err := c.DB.GetBackgroundMedal1(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	background_medal_2, err := c.DB.GetBackgroundMedal2(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	background_medal_3, err := c.DB.GetBackgroundMedal3(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	avatar_medal_1, err := c.DB.GetAvatarsMedal1(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	avatar_medal_2, err := c.DB.GetAvatarsMedal2(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 
 	avatar_medal_3, err := c.DB.GetAvatarsMedal3(u.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	level, err := c.GetLevel(u.ID)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	sessions_complete, err := c.DB.GetSessions(u.ID)
+	if err != nil {
 		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	hours_focused, err := c.DB.GetHoursNooked(u.ID)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	hours_focused /= 60
+
+	backgrounds, err := c.DB.GetBackgroundsUnlocked(u.ID)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	avatars, err := c.DB.GetAvatarUnlocked(u.ID) 
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -152,6 +176,11 @@ func (c *Controller) AchievementCheck(w http.ResponseWriter, r *http.Request, u 
 		Avatar_medal_1: avatar_medal_1,
 		Avatar_medal_2: avatar_medal_2,
 		Avatar_medal_3: avatar_medal_3,
+		Level: level,
+		Sessions: sessions_complete,
+		Hours_focused: hours_focused,
+		Backgrounds: backgrounds,
+		Avatars: avatars,
 	}
 
 	json.NewEncoder(w).Encode(response)
@@ -209,53 +238,6 @@ func (c* Controller) CheckLevelMedals(id string) error{
 
 func (c* Controller) CheckHoursMedal(id string) error{
 	
-	// Sessions var
-	sessions, err := c.DB.GetSessions(id)
-	if err != nil {
-		return err
-	}
-
-	// Sessions medal 1
-	sessionsDb, err := c.DB.GetSessionMedal1(id)
-	if err != nil {
-		return err
-	}
-
-	sessionsCheck := CheckObtained(sessions, 1)
-
-	if(sessionsCheck != sessionsDb) {
-		c.DB.UpdateSessionsMedal1(id)
-	}
-
-	// Sessions medal 2
-	sessionsDb, err = c.DB.GetSessionMedal2(id)
-	if err != nil {
-		return err
-	}
-
-	sessionsCheck = CheckObtained(sessions, 10)
-
-	if(sessionsCheck != sessionsDb) {
-		c.DB.UpdateSessionsMedal2(id)
-	}
-
-	// Sessions medal 3
-	sessionsDb, err = c.DB.GetSessionMedal3(id)
-	if err != nil {
-		return err
-	}
-
-	sessionsCheck = CheckObtained(sessions, 20)
-
-	if(sessionsCheck != sessionsDb) {
-		c.DB.UpdateSessionsMedal3(id)
-	}
-
-	return nil
-}
-
-func (c* Controller) CheckSessionsMedal(id string) error{
-	
 	// Hours focused var 
 	hours, err := c.DB.GetHoursNooked(id)
 	if err != nil {
@@ -297,6 +279,53 @@ func (c* Controller) CheckSessionsMedal(id string) error{
 
 	if(hoursCheck != hoursDb) {
 		c.DB.UpdateHoursMedal3(id)
+	}
+
+	return nil
+}
+
+func (c* Controller) CheckSessionsMedal(id string) error{
+	
+	// Sessions var
+	sessions, err := c.DB.GetSessions(id)
+	if err != nil {
+		return err
+	}
+
+	// Sessions medal 1
+	sessionsDb, err := c.DB.GetSessionMedal1(id)
+	if err != nil {
+		return err
+	}
+
+	sessionsCheck := CheckObtained(sessions, 1)
+
+	if(sessionsCheck != sessionsDb) {
+		c.DB.UpdateSessionsMedal1(id)
+	}
+
+	// Sessions medal 2
+	sessionsDb, err = c.DB.GetSessionMedal2(id)
+	if err != nil {
+		return err
+	}
+
+	sessionsCheck = CheckObtained(sessions, 10)
+
+	if(sessionsCheck != sessionsDb) {
+		c.DB.UpdateSessionsMedal2(id)
+	}
+
+	// Sessions medal 3
+	sessionsDb, err = c.DB.GetSessionMedal3(id)
+	if err != nil {
+		return err
+	}
+
+	sessionsCheck = CheckObtained(sessions, 20)
+
+	if(sessionsCheck != sessionsDb) {
+		c.DB.UpdateSessionsMedal3(id)
 	}
 
 	return nil

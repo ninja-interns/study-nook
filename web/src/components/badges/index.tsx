@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useStyles } from "./badgeCss"
+import { linearProgressClasses } from "@mui/material"
+import { LinearProgress, styled } from "@material-ui/core"
 
 import badgeIcon from "../../assets/medal.png"
 import locker from "../../assets/lock.png"
@@ -8,9 +10,10 @@ interface BadgeProps {
 	badgeID: string
 	badgeType: string
 	badgeLevel: string
-	progression: number
+	progression: number | undefined
 	goal: number
 	isUnlocked: boolean | undefined
+	progressBar: number | undefined
 }
 
 interface IResponse {
@@ -21,38 +24,20 @@ interface Unlocked {
 	unlocked: boolean
 }
 
-export function Badge({ badgeID, badgeType, badgeLevel, progression, goal, isUnlocked }: BadgeProps): JSX.Element {
-	//let isUnlocked = false
+const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+	height: 10,
+	width: 140,
+	borderRadius: 25,
+	[`&.${linearProgressClasses.colorPrimary}`]: {
+		backgroundColor: theme.palette.grey[theme.palette.type === "light" ? 200 : 800],
+	},
+	[`& .${linearProgressClasses.bar}`]: {
+		borderRadius: 5,
+		backgroundColor: theme.palette.type === "light" ? "#1a90ff" : "#308fe8",
+	},
+}))
 
-	/*function setIsUnlocked(data: Unlocked) {
-		isUnlocked = data.unlocked
-	}
-
-	useEffect(() => {
-		let isMounted = true
-		;(async () => {
-			try {
-				const response = await fetch("/api/achievement_check", {
-					method: "POST",
-					headers: { "content-type": "application/json" },
-					body: JSON.stringify({ BadgeID: badgeID }),
-				})
-				const data: IResponse = await response.json()
-				setIsUnlocked(data)
-				console.log(data)
-			} catch (err) {
-				console.error(err)
-			}
-		})()
-		return () => {
-			isMounted = false
-		}
-	}, [])
-
-	function fun() {
-		console.log(isUnlocked)
-	}*/
-
+export function Badge({ badgeID, badgeType, badgeLevel, progression, goal, isUnlocked, progressBar }: BadgeProps): JSX.Element {
 	function Locked() {
 		if (!isUnlocked) return <img src={locker} className={css.locker} />
 		else return <></>
@@ -75,9 +60,7 @@ export function Badge({ badgeID, badgeType, badgeLevel, progression, goal, isUnl
 					<p className={css.tracker}>
 						{progression}/{goal}
 					</p>
-					<span className={css.bar}>
-						<span className={css.achievement}></span>
-					</span>
+					<BorderLinearProgress className={css.bar} variant="determinate" value={progressBar} />
 				</span>
 			</figure>
 		</div>
