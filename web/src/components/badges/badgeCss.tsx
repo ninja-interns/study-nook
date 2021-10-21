@@ -28,20 +28,22 @@ export const useStyles = makeStyles({
 				display: "block",
 			},
 		},
-
-		opacity: "1",
+		opacity: 0.5,
+		filter: "grayscale(100%)",
 	},
 	locker: {
 		position: "absolute",
-		width: "55px",
-		margin: "17px",
-		marginTop: "30px",
+		width: "40px",
+		margin: "25px",
+		marginTop: "25px",
 		cursor: "pointer",
 		"&:hover": {
 			"& ~ $textBox": {
 				display: "block",
 			},
 		},
+		opacity: "1",
+		zIndex: 100,
 	},
 	badgeCaption: {
 		textAlign: "center",
