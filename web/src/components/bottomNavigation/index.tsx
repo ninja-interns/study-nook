@@ -12,7 +12,6 @@ import { Link, useRouteMatch } from "react-router-dom"
  * * The bar displays an icon for the pages and the icon and text for the current page
  */
 export default function NavigationBar() {
-	//! COMMENT
 	const routeMatch = useRouteMatch(["/dashboard", "/nooking", "/menu"])
 	const currentTab = routeMatch?.path
 
