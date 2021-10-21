@@ -5,6 +5,7 @@ import { Redirect, Route } from "react-router-dom"
 import { useLastLocation } from "react-router-last-location"
 import { Snackbars } from "../../components"
 import { ContextContainer } from "../../contexts/ContextContainer"
+import { DomainContainer } from "../../contexts/DomainContext"
 import { useStyles } from "./loginPageCss"
 
 interface IData {
@@ -44,6 +45,7 @@ export function LoginPage() {
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 	const [redirect, setRedirect] = useState<string | null>(null)
 	const { setIsLoggedIn } = ContextContainer.useContainer()
+	const { url } = DomainContainer.useContainer()
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -51,7 +53,7 @@ export function LoginPage() {
 		setLoading(true)
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("http://localhost:8080/api/login_user", {
+			const response = await fetch(`${url}/api/login_user`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: userRef?.current?.value, username: userRef?.current?.value, password: passwordRef?.current?.value }),

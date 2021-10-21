@@ -71,7 +71,7 @@ const AdminLoginPage = () => {
 		e.preventDefault()
 		// Hitting the backend POST /admin/login
 		try {
-			const res = await fetch(url + "/api/login_admin", {
+			const res = await fetch(`${url}/api/login_admin`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: emailRef?.current?.value, password: passwordRef?.current?.value }),

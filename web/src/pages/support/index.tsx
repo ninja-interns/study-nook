@@ -13,6 +13,7 @@ import { Snackbars } from "../../components"
 import { getCurrentDate } from "./../../utils/getDate"
 
 import closeButton from "../../assets/close-button.png"
+import { DomainContainer } from "../../contexts/DomainContext"
 
 interface IData {
 	isValid: boolean
@@ -24,6 +25,7 @@ export function SupportPage() {
 	const history = useHistory()
 	useGetState()
 	const { currentUser } = ContextContainer.useContainer()
+	const { url } = DomainContainer.useContainer()
 
 	const [error, setError] = useState("")
 	const [popup, setPopup] = useState(false)
@@ -40,7 +42,7 @@ export function SupportPage() {
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("http://localhost:8080/api/report_submission", {
+			const response = await fetch(`${url}/api/report_submission`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ username: currentUser.username, date: getCurrentDate(), message: message }),

@@ -5,22 +5,17 @@ import reportWebVitals from "./reportWebVitals"
 import CssBaseline from "@mui/material/CssBaseline"
 import { ThemeProvider } from "@mui/material/styles"
 import theme from "./theme"
-
-let scheme = "http"
-let domain = "localhost:8080"
-
-if (process.env.NODE_ENV === "production") {
-	scheme = "https"
-	domain = "${studynook.xyz}"
-}
+import { DomainContainer } from "./contexts/DomainContext"
 
 ReactDOM.render(
 	<React.StrictMode>
-		<ThemeProvider theme={theme}>
-			{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-			<CssBaseline />
-			<App />
-		</ThemeProvider>
+		<DomainContainer.Provider>
+			<ThemeProvider theme={theme}>
+				{/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+				<CssBaseline />
+				<App />
+			</ThemeProvider>
+		</DomainContainer.Provider>
 	</React.StrictMode>,
 	document.getElementById("root"),
 )

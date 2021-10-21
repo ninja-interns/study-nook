@@ -3,6 +3,7 @@ import { Color } from "@material-ui/lab/Alert"
 import React, { useRef, useState } from "react"
 import { Redirect, Route } from "react-router"
 import { Snackbars } from "../../components"
+import { DomainContainer } from "../../contexts/DomainContext"
 import { useStyles } from "./forgotPasswordCss"
 
 interface IData {
@@ -11,6 +12,7 @@ interface IData {
 }
 
 export function ForgotPassword() {
+	const { url } = DomainContainer.useContainer()
 	const css = useStyles()
 	const emailRef = useRef<HTMLInputElement>()
 	const [message, setMessage] = useState<string>("")
@@ -27,7 +29,7 @@ export function ForgotPassword() {
 		setLoading(true)
 
 		try {
-			const response = await fetch("http://localhost:8080/api/forgot_password", {
+			const response = await fetch(`${url}/api/forgot_password`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: emailRef?.current?.value }),

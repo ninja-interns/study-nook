@@ -1,6 +1,7 @@
 import * as React from "react"
 import { TodoContent } from "../interfaces"
 import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card } from "@mui/material"
+import { DomainContainer } from "../../../contexts/DomainContext"
 
 /**
  * * TODO LIST COMPONENT
@@ -9,12 +10,13 @@ import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Car
  * TODO: Sort the todos - completed at the bottom of the list
  */
 const TodoList = () => {
+	const { url } = DomainContainer.useContainer()
 	const [todos, setTodos] = React.useState<TodoContent[]>([])
 
 	//* Requests the API to return todos stored in the database - Runs once on render
 	React.useEffect(() => {
 		async function getTodoList() {
-			const response = await fetch("http://localhost:8080/api/get_todos")
+			const response = await fetch(`${url}/api/get_todos`)
 			if (response.ok) {
 				const data: TodoContent[] = await response.json()
 				setTodos(data)
@@ -34,7 +36,7 @@ const TodoList = () => {
 		setTodos(newTodosState)
 
 		// Sends request to the API to update the completion status of the todo
-		await fetch("http://localhost:8080/api/update_todo", {
+		await fetch(`${url}/api/update_todo`, {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(todoItem),

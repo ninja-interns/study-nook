@@ -5,6 +5,7 @@ import { Color } from "@material-ui/lab/Alert"
 import React, { useRef, useState } from "react"
 import { Redirect, Route } from "react-router-dom"
 import { useLastLocation } from "react-router-last-location"
+import { DomainContainer } from "../../contexts/DomainContext"
 import { Snackbars } from "./../../components/snackbar/index"
 import { useStyles } from "./registerPageCss"
 
@@ -41,6 +42,7 @@ export function RegisterPage(): JSX.Element {
 	const [severity, setSeverity] = useState<Color | undefined>(undefined)
 	const [redirect, setRedirect] = useState<string | null>(null)
 	const [isOpen, setIsOpen] = useState<boolean>(false)
+	const { url } = DomainContainer.useContainer()
 
 	interface IData {
 		isValid: boolean
@@ -74,7 +76,7 @@ export function RegisterPage(): JSX.Element {
 			setMessage("Loading...")
 			setIsOpen(true)
 			setSeverity("info")
-			const response = await fetch("http://localhost:8080/api/create_user", {
+			const response = await fetch(`${url}/api/create_user`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({

@@ -3,6 +3,7 @@ import { Color } from "@material-ui/lab/Alert"
 import React, { useRef, useState } from "react"
 import { Redirect, Route } from "react-router"
 import { Snackbars } from "../../components"
+import { DomainContainer } from "../../contexts/DomainContext"
 import { useStyles } from "./resetPasswordCss"
 
 interface IData {
@@ -21,6 +22,7 @@ export function ResetPassword() {
 	const [severity, setSeverity] = useState<Color | undefined>(undefined)
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 	const [redirect, setRedirect] = useState<string | null>(null)
+	const { url } = DomainContainer.useContainer()
 
 	async function handleResetPassword(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -36,7 +38,7 @@ export function ResetPassword() {
 		}
 
 		try {
-			const response = await fetch("http://localhost:8080/api/reset_password", {
+			const response = await fetch(`${url}/api/reset_password`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({

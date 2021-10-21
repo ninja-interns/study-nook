@@ -13,6 +13,7 @@ import { Brightness4 as Brightness4Icon, Brightness7 as Brightness7Icon, Menu as
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} }) // Toggles dark / light mode
 const NookingPage = () => {
 	const history = useHistory() // user route history
+	const { url } = DomainContainer.useContainer()
 
 	//* Theme
 	const theme = useTheme()
@@ -30,7 +31,7 @@ const NookingPage = () => {
 
 	//* Delete the timer and route the user to the dashboard
 	async function handleStopNooking() {
-		const response = await fetch("http://localhost:8080/api/delete_timer")
+		const response = await fetch(`${url}/api/delete_timer`)
 		if (!response.ok) {
 			console.error("Error deleting timer: " + response.statusText)
 		}
