@@ -37,15 +37,17 @@ const TodoForm = (props: TodoFormInterface) => {
 	}
 
 	return (
-		<Box
-			component="form"
-			onSubmit={handleSubmit}
-			sx={{
-				width: 200,
-				maxWidth: "50%",
-			}}
-		>
-			<TextField variant="outlined" label="Add a todo" inputRef={inputRef} onChange={handleInputChange} color="secondary" />
+		<Box component="form" onSubmit={handleSubmit}>
+			<TextField
+				variant="filled"
+				label="Add a todo"
+				inputRef={inputRef}
+				onChange={handleInputChange}
+				color="secondary"
+				sx={{
+					width: "100%",
+				}}
+			/>
 		</Box>
 	)
 }
