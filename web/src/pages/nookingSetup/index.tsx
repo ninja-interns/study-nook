@@ -13,6 +13,14 @@ import { TodoListApp } from "../../components/todoList/form"
 const NookingSetup = () => {
 	const history = useHistory() // routes history
 
+	//* Set the nooking session to true in local storage and routing user to nooking page
+	const handleNookingSession = () => {
+		const isNooking = true
+		chrome.storage.sync.set({ key: isNooking })
+
+		history.push("/nooking")
+	}
+
 	return (
 		<Box
 			sx={{
@@ -35,7 +43,7 @@ const NookingSetup = () => {
 				<TodoListApp />
 			</Box>
 			<Box sx={{ gridArea: "button" }}>
-				<Button fullWidth variant="contained" onClick={() => history.push("/nooking")}>
+				<Button fullWidth variant="contained" onClick={handleNookingSession}>
 					Start Nooking
 				</Button>
 			</Box>
