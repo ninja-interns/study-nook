@@ -55,19 +55,16 @@ const TimerForm = () => {
 		}
 	}
 
-	//! MUI COMPONENT COMMENT
+	//* MUI Component
 	const [open, setOpen] = React.useState(false)
-
 	const handleClickOpen = () => {
 		setOpen(true)
 	}
-
 	const handleClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
 		if (reason !== "backdropClick") {
 			setOpen(false)
 		}
 	}
-
 	const MenuProps = {
 		PaperProps: {
 			style: {
