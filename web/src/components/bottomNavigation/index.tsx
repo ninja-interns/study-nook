@@ -13,8 +13,7 @@ import { Link, useRouteMatch } from "react-router-dom"
  * * The bar displays an icon for the pages and the icon and text for the current page
  */
 export default function NavigationBar() {
-	//! Comment
-	// If nooking is set to false redirect the user to the nooking setup instead of nooking
+	//* If nooking is set to false redirect the user to the nooking setup page instead of nooking
 	const [nookingRoute, setNookingRoute] = React.useState("/nooking")
 	chrome.storage.sync.get(["key"], function (result) {
 		if (result.key === false) {
@@ -22,7 +21,7 @@ export default function NavigationBar() {
 		}
 	})
 
-	//! Comment
+	//* Checks which route matches the current page and displays the label for that nav action button
 	const routeMatch = useRouteMatch(["/dashboard", nookingRoute, "/menu"])
 	const currentTab = routeMatch?.path
 

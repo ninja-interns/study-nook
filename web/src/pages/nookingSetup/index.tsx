@@ -12,13 +12,12 @@ import { TodoListApp } from "../../components/todoList/form"
 export function NookingSetup() {
 	const history = useHistory() // routes history
 
-	//! Comment
+	//* Set the nooking session to true in local storage and routing user to nooking page
 	const handleNookingSession = () => {
-		history.push("/nooking")
-
-		// Set nooking session to true
 		const isNooking = true
 		chrome.storage.sync.set({ key: isNooking })
+
+		history.push("/nooking")
 	}
 
 	return (

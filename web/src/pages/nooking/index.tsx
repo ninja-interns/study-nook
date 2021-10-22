@@ -6,21 +6,20 @@ import { DomainContainer } from "../../contexts/DomainContext"
 import { ContextContainer } from "../../contexts/ContextContainer"
 import images from "../../assets/Avatars"
 import backgrounds from "../../assets/Backgrounds"
-
+import { useGetState } from "./../../utils/getState"
 /**
  * * NOOKING PAGE
  * * This is the page of the app where the user is studying / working
  * * It diaplays the timer and todo items that they created on the nooking setup page
- * TODO: add game interface
- * TODO: change the todo list to be wider
  **/
 export function Nooking() {
+	useGetState() // keeps the gameInterface persistant through closing and opening the extension
 	const history = useHistory() // routes history
 	const { url } = DomainContainer.useContainer()
 
 	//* Delete the timer and route the user to the dashboard
 	async function handleStopNooking() {
-		//! Comment
+		// deleteing timer in the database
 		const response = await fetch(`${url}/api/delete_timer`)
 		if (!response.ok) {
 			console.error("Error deleting timer: " + response.statusText)
@@ -30,13 +29,14 @@ export function Nooking() {
 		const isNooking = false
 		chrome.storage.sync.set({ key: isNooking })
 
+		// routing user to dashboard
 		history.push("/dashboard")
 	}
 
 	return (
 		<Box>
 			<Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
-				<Stack direction="row" justifyContent="center" alignItems="center" spacing={10}>
+				<Stack direction="row" justifyContent="center" alignItems="center" spacing={6}>
 					<Timer />
 					<Button variant="contained" onClick={handleStopNooking}>
 						Stop Nooking
@@ -69,6 +69,7 @@ function GameInterface() {
 				borderWidth: "1px",
 				backgroundSize: "350px 200px",
 				display: "block",
+				p: 0,
 			}}
 		>
 			<Box

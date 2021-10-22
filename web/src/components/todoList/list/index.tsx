@@ -1,13 +1,12 @@
+import { Checkbox, List, ListItem, ListItemButton, ListItemIcon, Paper, Typography } from "@mui/material"
 import * as React from "react"
-import { TodoContent } from "../interfaces"
-import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card } from "@mui/material"
 import { DomainContainer } from "../../../contexts/DomainContext"
+import { TodoContent } from "../interfaces"
 
 /**
  * * TODO LIST COMPONENT
  * * Renders the todo list stored in the database
  * * Updates the todo item to completed or not completed when the user clicks the checkbox
- * TODO: Sort the todos - completed at the bottom of the list
  */
 const TodoList = () => {
 	const { url } = DomainContainer.useContainer()
@@ -44,27 +43,42 @@ const TodoList = () => {
 	}
 
 	return (
-		<Card>
+		<div>
+			<Typography>List:</Typography>
 			<List
 				sx={{
-					height: "10rem",
+					height: 200,
 					overflow: "auto",
+					width: 350,
+
+					// Scrollbar styling
+					"&::-webkit-scrollbar": {
+						display: "none",
+					},
 				}}
 			>
 				{todos.map((todo) => {
 					return (
-						<ListItem key={todo.id}>
-							<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
-								<ListItemIcon>
-									<Checkbox checked={todo.isCompleted} edge="start" />
-								</ListItemIcon>
-								<Typography>{todo.todoText}</Typography>
-							</ListItemButton>
-						</ListItem>
+						<Paper
+							elevation={3}
+							sx={{
+								m: 2,
+								p: 0,
+							}}
+						>
+							<ListItem key={todo.id}>
+								<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
+									<ListItemIcon>
+										<Checkbox checked={todo.isCompleted} edge="start" />
+									</ListItemIcon>
+									<Typography>{todo.todoText}</Typography>
+								</ListItemButton>
+							</ListItem>
+						</Paper>
 					)
 				})}
 			</List>
-		</Card>
+		</div>
 	)
 }
 
