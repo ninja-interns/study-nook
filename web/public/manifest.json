@@ -1,20 +1,17 @@
 {
-  "name": "Study Nook",
-  "description": "Productivity App",
-  "version": "1.0",
-  "manifest_version": 2,
-  "browser_action": {
-    "default_popup": "index.html",
-    "default_title": "Study Nook"
-  },
-  "icons": {
-    "16": "logo192.png",
-    "48": "logo192.png",
-    "128": "logo192.png"
-  },
-  "permissions": [
-    "*://localhost:*/*",
-    "cookies"
-  ],
-  "content_security_policy": "script-src 'self' 'sha256-AUreulBIC0DSBna3NBBd0Irx4n9k5m2yEH/s6OJ5uA0='; object-src 'self'"
+	"name": "Study Nook",
+	"description": "Productivity App",
+	"version": "1.0",
+	"manifest_version": 2,
+	"browser_action": {
+		"default_popup": "popup.html",
+		"default_title": "Study Nook"
+	},
+	"icons": {
+		"16": "logo192.png",
+		"48": "logo192.png",
+		"128": "logo192.png"
+	},
+	"permissions": ["*://localhost:*/*", "cookies", "storage"],
+	"content_security_policy": "script-src 'self' 'sha256-AUreulBIC0DSBna3NBBd0Irx4n9k5m2yEH/s6OJ5uA0='; object-src 'self'"
 }

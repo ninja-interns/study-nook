@@ -4,6 +4,7 @@ import TimerIcon from "@mui/icons-material/Timer" // Could use this for nooking 
 import { Box } from "@mui/material"
 import BottomNavigation from "@mui/material/BottomNavigation"
 import BottomNavigationAction from "@mui/material/BottomNavigationAction"
+import * as React from "react"
 import { Link, useRouteMatch } from "react-router-dom"
 
 /**
@@ -12,14 +13,27 @@ import { Link, useRouteMatch } from "react-router-dom"
  * * The bar displays an icon for the pages and the icon and text for the current page
  */
 export default function NavigationBar() {
-	const routeMatch = useRouteMatch(["/dashboard", "/nooking", "/menu"])
+	//! Comment
+	const [nookingRoute, setNookingRoute] = React.useState("/nooking")
+	chrome.storage.sync.get(["key"], function (result) {
+		console.log("Value currently is " + result.key)
+
+		if (result.key === false) {
+			setNookingRoute("/nookingSetup")
+		}
+	})
+
+	//! Comment
+	const routeMatch = useRouteMatch(["/dashboard", nookingRoute, "/menu"])
 	const currentTab = routeMatch?.path
+
+	// If nooking is set to false redirect the user to the nooking setup instead of nooking
 
 	return (
 		<Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
 			<BottomNavigation value={currentTab}>
 				<BottomNavigationAction label="Dashboard" value="/dashboard" to="/dashboard" component={Link} icon={<DashboardIcon />} />
-				<BottomNavigationAction label="Nooking" value="/nooking" to="/nooking" component={Link} icon={<TimerIcon />} />
+				<BottomNavigationAction label="Nooking" value={nookingRoute} to={nookingRoute} component={Link} icon={<TimerIcon />} />
 				<BottomNavigationAction label="Menu" value="/menu" to="/menu" component={Link} icon={<MoreHorizIcon />} />
 			</BottomNavigation>
 		</Box>

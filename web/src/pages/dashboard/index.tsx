@@ -19,6 +19,15 @@ export function Dashboard() {
 	const history = useHistory()
 	const [redirect, setRedirect] = useState<string | null>(null)
 
+	//* This checks if there is a current nooking session, if there is it redirects the user to the nooking page
+	chrome.storage.sync.get(["key"], function (result) {
+		console.log("Nooking currently is " + result.key)
+
+		if (result.key === true) {
+			setRedirect("/nooking")
+		}
+	})
+
 	return (
 		<div>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
