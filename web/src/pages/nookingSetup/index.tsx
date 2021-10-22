@@ -18,13 +18,7 @@ export function NookingSetup() {
 
 		// Set nooking session to true
 		const isNooking = true
-		chrome.storage.sync.set({ key: isNooking }, function () {
-			console.log("Nooking is set to " + isNooking)
-		})
-
-		chrome.storage.sync.get(["key"], function (result) {
-			console.log("Value currently is " + result.key)
-		})
+		chrome.storage.sync.set({ key: isNooking })
 	}
 
 	return (

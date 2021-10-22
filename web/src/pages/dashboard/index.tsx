@@ -15,14 +15,12 @@ import NavigationBar from "../../components/bottomNavigation"
 export function Dashboard() {
 	useGetState()
 	const css = useStyles()
-	const { currentUser } = ContextContainer.useContainer()
 	const history = useHistory()
+	const { currentUser } = ContextContainer.useContainer()
 	const [redirect, setRedirect] = useState<string | null>(null)
 
 	//* This checks if there is a current nooking session, if there is it redirects the user to the nooking page
 	chrome.storage.sync.get(["key"], function (result) {
-		console.log("Nooking currently is " + result.key)
-
 		if (result.key === true) {
 			setRedirect("/nooking")
 		}
@@ -45,10 +43,6 @@ export function Dashboard() {
 
 					<Button className={css.changeBackgroundButton} variant="contained" color="primary" onClick={() => history.push("/changeBackground")}>
 						Change Background
-					</Button>
-
-					<Button className={css.startNookingButton} variant="contained" color="primary" onClick={() => history.push("/nookingSetup")}>
-						Start Nooking
 					</Button>
 
 					<NavigationBar />

@@ -9,7 +9,6 @@ export const useStyles = makeStyles({
 		width: "400px",
 		height: "600px",
 		position: "absolute",
-		border: "solid black",
 	},
 	svgBox: {
 		width: "350px",
@@ -20,7 +19,6 @@ export const useStyles = makeStyles({
 		margin: "20px",
 		borderWidth: "1px",
 		backgroundSize: "350px 200px",
-
 		display: "block",
 	},
 	svgCharacter: {

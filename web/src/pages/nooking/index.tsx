@@ -1,15 +1,18 @@
 import { Box, Button, Paper, Stack } from "@mui/material"
-import * as React from "react"
-import { Redirect, Route, useHistory } from "react-router-dom"
-import { GameInterface } from "../../components"
+import { useHistory } from "react-router-dom"
 import { Timer } from "../../components/countdownTimer/timer/index"
 import { TodoList } from "../../components/todoList/list"
 import { DomainContainer } from "../../contexts/DomainContext"
+import { ContextContainer } from "../../contexts/ContextContainer"
+import images from "../../assets/Avatars"
+import backgrounds from "../../assets/Backgrounds"
 
 /**
  * * NOOKING PAGE
  * * This is the page of the app where the user is studying / working
  * * It diaplays the timer and todo items that they created on the nooking setup page
+ * TODO: add game interface
+ * TODO: change the todo list to be wider
  **/
 export function Nooking() {
 	const history = useHistory() // routes history
@@ -23,11 +26,9 @@ export function Nooking() {
 			console.error("Error deleting timer: " + response.statusText)
 		}
 
-		// Set nooking session to true here
+		// Set nooking session to false here
 		const isNooking = false
-		chrome.storage.sync.set({ key: isNooking }, function () {
-			console.log("Nooking is set to " + isNooking)
-		})
+		chrome.storage.sync.set({ key: isNooking })
 
 		history.push("/dashboard")
 	}
@@ -41,9 +42,40 @@ export function Nooking() {
 						Stop Nooking
 					</Button>
 				</Stack>
-				<Paper elevation={2}>{/* <GameInterface /> */}</Paper>
+				<Paper elevation={2}>
+					<GameInterface />
+				</Paper>
 				<TodoList />
 			</Stack>
+		</Box>
+	)
+}
+
+function GameInterface() {
+	const { currentUser } = ContextContainer.useContainer()
+
+	const imageStyle = {
+		backgroundImage: `url(${backgrounds[currentUser.currentBackground]})`,
+	}
+
+	return (
+		<Box
+			component="div"
+			style={imageStyle}
+			sx={{
+				width: "350px",
+				height: "200px",
+				border: "solid black",
+				borderWidth: "1px",
+				backgroundSize: "350px 200px",
+				display: "block",
+			}}
+		>
+			<Box
+				component="img"
+				src={images[currentUser.currentAvatar]}
+				sx={{ width: "80", height: "120", position: "relative", display: "block", left: "120px", top: "70px", bottom: "0px" }}
+			/>
 		</Box>
 	)
 }

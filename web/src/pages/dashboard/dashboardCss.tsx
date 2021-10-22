@@ -5,7 +5,6 @@ export const useStyles = makeStyles({
 		width: "400px",
 		height: "600px",
 		position: "relative",
-		border: "solid black",
 	},
 	menuButton: {
 		position: "absolute",

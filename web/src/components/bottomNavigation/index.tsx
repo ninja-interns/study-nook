@@ -14,10 +14,9 @@ import { Link, useRouteMatch } from "react-router-dom"
  */
 export default function NavigationBar() {
 	//! Comment
+	// If nooking is set to false redirect the user to the nooking setup instead of nooking
 	const [nookingRoute, setNookingRoute] = React.useState("/nooking")
 	chrome.storage.sync.get(["key"], function (result) {
-		console.log("Value currently is " + result.key)
-
 		if (result.key === false) {
 			setNookingRoute("/nookingSetup")
 		}
@@ -26,8 +25,6 @@ export default function NavigationBar() {
 	//! Comment
 	const routeMatch = useRouteMatch(["/dashboard", nookingRoute, "/menu"])
 	const currentTab = routeMatch?.path
-
-	// If nooking is set to false redirect the user to the nooking setup instead of nooking
 
 	return (
 		<Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
