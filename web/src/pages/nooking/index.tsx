@@ -1,4 +1,4 @@
-import { Button, Paper, Stack } from "@mui/material"
+import { Box, Button, Paper, Stack } from "@mui/material"
 import * as React from "react"
 import { Redirect, Route, useHistory } from "react-router-dom"
 import { GameInterface } from "../../components"
@@ -12,13 +12,11 @@ import { DomainContainer } from "../../contexts/DomainContext"
  * * It diaplays the timer and todo items that they created on the nooking setup page
  **/
 export function Nooking() {
+	const history = useHistory() // routes history
 	const { url } = DomainContainer.useContainer()
-	const [redirect, setRedirect] = React.useState<string | null>(null)
 
 	//* Delete the timer and route the user to the dashboard
 	async function handleStopNooking() {
-		setRedirect("/dashboard")
-
 		//! Comment
 		const response = await fetch(`${url}/api/delete_timer`)
 		if (!response.ok) {
@@ -30,11 +28,12 @@ export function Nooking() {
 		chrome.storage.sync.set({ key: isNooking }, function () {
 			console.log("Nooking is set to " + isNooking)
 		})
+
+		history.push("/dashboard")
 	}
 
 	return (
-		<>
-			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
+		<Box>
 			<Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
 				<Stack direction="row" justifyContent="center" alignItems="center" spacing={10}>
 					<Timer />
@@ -45,6 +44,6 @@ export function Nooking() {
 				<Paper elevation={2}>{/* <GameInterface /> */}</Paper>
 				<TodoList />
 			</Stack>
-		</>
+		</Box>
 	)
 }
