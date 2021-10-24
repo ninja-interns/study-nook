@@ -1,17 +1,24 @@
 import { createTheme } from "@mui/material/styles"
-import { red } from "@mui/material/colors"
 
 // A custom theme for this app
 const theme = createTheme({
-	palette: {
-		primary: {
-			main: "#556cd6",
+	components: {
+		MuiButton: {
+			defaultProps: {
+				style: {
+					// Style 1
+					borderBottomLeftRadius: "12px",
+					borderBottomRightRadius: "4px",
+					borderTopLeftRadius: "4px",
+					borderTopRightRadius: "12px",
+					//Style 2
+				},
+			},
 		},
-		secondary: {
-			main: "#19857b",
-		},
-		error: {
-			main: red.A400,
+		MuiFab: {
+			defaultProps: {
+				style: {},
+			},
 		},
 	},
 })

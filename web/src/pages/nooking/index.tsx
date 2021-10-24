@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Stack } from "@mui/material"
+import { Box, Button, createTheme, Fab, PaletteMode, Paper, Stack, ThemeProvider, useTheme } from "@mui/material"
 import { useHistory } from "react-router-dom"
 import { Timer } from "../../components/countdownTimer/timer/index"
 import { TodoList } from "../../components/todoList/list"
@@ -7,6 +7,10 @@ import { ContextContainer } from "../../contexts/ContextContainer"
 import images from "../../assets/Avatars"
 import backgrounds from "../../assets/Backgrounds"
 import { useGetState } from "./../../utils/getState"
+import * as React from "react"
+import CloseIcon from "@mui/icons-material/Close"
+import StopIcon from "@mui/icons-material/Stop"
+
 /**
  * * NOOKING PAGE
  * * This is the page of the app where the user is studying / working
@@ -14,6 +18,7 @@ import { useGetState } from "./../../utils/getState"
  **/
 export function Nooking() {
 	useGetState() // keeps the gameInterface persistant through closing and opening the extension
+	const theme = useTheme()
 	const history = useHistory() // routes history
 	const { url } = DomainContainer.useContainer()
 
@@ -34,49 +39,72 @@ export function Nooking() {
 	}
 
 	return (
-		<Box>
-			<Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
-				<Stack direction="row" justifyContent="center" alignItems="center" spacing={6}>
-					<Timer />
-					<Button variant="contained" onClick={handleStopNooking}>
-						Stop Nooking
-					</Button>
-				</Stack>
-				<Paper elevation={2}>
-					<GameInterface />
-				</Paper>
-				<TodoList />
-			</Stack>
-		</Box>
+		<ThemeProvider theme={theme}>
+			<Paper elevation={2}>
+				<GameInterface />
+			</Paper>
+			<Fab color="primary" onClick={handleStopNooking} sx={{ bottom: 270, left: 330, position: "fixed" }}>
+				<CloseIcon fontSize="large" />
+			</Fab>
+			<TodoList />
+		</ThemeProvider>
 	)
 }
 
 function GameInterface() {
 	const { currentUser } = ContextContainer.useContainer()
 
+	// Set the background image
 	const imageStyle = {
 		backgroundImage: `url(${backgrounds[currentUser.currentBackground]})`,
 	}
 
+	//* SET COLOR FUNCTION - Change the font colour depending on the color of the background
+	function setColor() {
+		if (
+			currentUser.currentBackground === "zone5" ||
+			currentUser.currentBackground === "zone6" ||
+			currentUser.currentBackground === "zone7" ||
+			currentUser.currentBackground === "zone9"
+		) {
+			return "white"
+		}
+		return "black"
+	}
+
 	return (
 		<Box
+			color={setColor}
 			component="div"
 			style={imageStyle}
 			sx={{
-				width: "350px",
-				height: "200px",
-				border: "solid black",
-				borderWidth: "1px",
-				backgroundSize: "350px 200px",
+				width: "400px",
+				height: "300px",
+				backgroundSize: "525px 300px",
+				backgroundPosition: "center",
 				display: "block",
 				p: 0,
+				m: 0,
 			}}
 		>
 			<Box
-				component="img"
-				src={images[currentUser.currentAvatar]}
-				sx={{ width: "80", height: "120", position: "relative", display: "block", left: "120px", top: "70px", bottom: "0px" }}
-			/>
+				sx={{
+					position: "relative",
+					display: "inline-flex",
+					left: 5,
+					top: 0,
+					right: 400,
+					bottom: 290,
+					fontFamily: "Orbitron",
+					fontWeight: 800,
+					fontSize: 32,
+					letterSpacing: 3,
+					pl: 1,
+				}}
+			>
+				<Timer />
+			</Box>
+			<Box component="img" src={images[currentUser.currentAvatar]} sx={{ height: "180", position: "relative", display: "block", left: 210, top: 52 }} />
 		</Box>
 	)
 }

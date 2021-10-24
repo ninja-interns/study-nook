@@ -1265,6 +1265,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/orbitron@^4.5.1":
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/orbitron/-/orbitron-4.5.1.tgz#11df5651bcfc516aeb70d9b8472bbfcefb4f97ba"
+  integrity sha512-zYalrxIj3AzzvzUmtw71tOno3isNxGqvqihRyVBSAAE5+c8ggG0uNfLWG5PYqf1QrsztHXjQsXkpCDjxRrzR6w==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.npmjs.org/@hapi/address/-/address-2.1.4.tgz"

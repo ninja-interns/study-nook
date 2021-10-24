@@ -1,4 +1,4 @@
-import { Checkbox, List, ListItem, ListItemButton, ListItemIcon, Paper, Typography } from "@mui/material"
+import { Box, Checkbox, Divider, List, ListItem, ListItemButton, ListItemIcon, Paper, Typography } from "@mui/material"
 import * as React from "react"
 import { DomainContainer } from "../../../contexts/DomainContext"
 import { TodoContent } from "../interfaces"
@@ -43,13 +43,13 @@ const TodoList = () => {
 	}
 
 	return (
-		<div>
-			<Typography>List:</Typography>
+		<Box>
+			<Typography sx={{ pt: 2 }}>List:</Typography>
 			<List
 				sx={{
-					height: 200,
+					height: 260,
 					overflow: "auto",
-					width: 350,
+					width: 400,
 
 					// Scrollbar styling
 					"&::-webkit-scrollbar": {
@@ -59,14 +59,9 @@ const TodoList = () => {
 			>
 				{todos.map((todo) => {
 					return (
-						<Paper
-							elevation={3}
-							sx={{
-								m: 2,
-								p: 0,
-							}}
-						>
-							<ListItem key={todo.id}>
+						<>
+							<Divider />
+							<ListItem key={todo.id} sx={{ width: "400", p: 0, m: 0 }}>
 								<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
 									<ListItemIcon>
 										<Checkbox checked={todo.isCompleted} edge="start" />
@@ -74,11 +69,11 @@ const TodoList = () => {
 									<Typography>{todo.todoText}</Typography>
 								</ListItemButton>
 							</ListItem>
-						</Paper>
+						</>
 					)
 				})}
 			</List>
-		</div>
+		</Box>
 	)
 }
 

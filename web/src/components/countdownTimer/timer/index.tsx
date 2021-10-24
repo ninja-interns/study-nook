@@ -1,5 +1,5 @@
 import { Typography } from "@material-ui/core"
-import { Box, CircularProgress } from "@mui/material"
+import { Box, CircularProgress, createTheme, CssBaseline, ThemeProvider } from "@mui/material"
 import * as React from "react"
 import { DomainContainer } from "../../../contexts/DomainContext"
 import { TimerInterface } from "../interfaces"
@@ -109,9 +109,12 @@ const Timer = () => {
 		}
 	}, [timer?.timeLeft, timer?.timerDuration])
 
-	return (
-		<Box sx={{ position: "relative", display: "inline-flex", p: 1 }}>
-			<CircularProgress variant="determinate" value={progress} size={120} />
+	return <Box>{timeLeft}</Box>
+}
+
+export { Timer }
+
+/* <CircularProgress variant="determinate" value={progress} size={120} />
 			<Box
 				sx={{
 					top: 0,
@@ -123,13 +126,6 @@ const Timer = () => {
 					alignItems: "center",
 					justifyContent: "center",
 				}}
-			>
-				<Typography variant="h5" component="div">
-					{timeLeft}
-				</Typography>
-			</Box>
-		</Box>
-	)
-}
+			> */
 
-export { Timer }
+/* </Box> */
