@@ -1,7 +1,7 @@
 import DashboardIcon from "@mui/icons-material/Dashboard"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 import TimerIcon from "@mui/icons-material/Timer" // Could use this for nooking setup
-import { Box } from "@mui/material"
+import { Box, Paper } from "@mui/material"
 import BottomNavigation from "@mui/material/BottomNavigation"
 import BottomNavigationAction from "@mui/material/BottomNavigationAction"
 import * as React from "react"
@@ -26,12 +26,12 @@ export default function NavigationBar() {
 	const currentTab = routeMatch?.path
 
 	return (
-		<Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+		<Paper elevation={3} sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
 			<BottomNavigation value={currentTab}>
 				<BottomNavigationAction label="Dashboard" value="/dashboard" to="/dashboard" component={Link} icon={<DashboardIcon />} />
 				<BottomNavigationAction label="Nooking" value={nookingRoute} to={nookingRoute} component={Link} icon={<TimerIcon />} />
 				<BottomNavigationAction label="Menu" value="/menu" to="/menu" component={Link} icon={<MoreHorizIcon />} />
 			</BottomNavigation>
-		</Box>
+		</Paper>
 	)
 }

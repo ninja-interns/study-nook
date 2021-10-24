@@ -64,6 +64,8 @@ export function LoginPage() {
 			if (data.isValid && data.isVerified) {
 				setIsLoggedIn(true)
 				setRedirect("/dashboard")
+			} else if (data.message === "Please verify your email first.") {
+				setRedirect("/verifyEmail")
 			} else {
 				setMessage(data.message)
 				setIsOpen(true)

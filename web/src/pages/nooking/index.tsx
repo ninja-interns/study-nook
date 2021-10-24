@@ -104,7 +104,7 @@ function GameInterface() {
 			>
 				<Timer />
 			</Box>
-			<Box component="img" src={images[currentUser.currentAvatar]} sx={{ height: "180", position: "relative", display: "block", left: 210, top: 52 }} />
+			<Box component="img" src={images[currentUser.currentAvatar]} sx={{ height: "180", position: "relative", display: "block", left: 210, top: 50 }} />
 		</Box>
 	)
 }

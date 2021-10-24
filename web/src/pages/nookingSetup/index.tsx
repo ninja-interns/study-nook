@@ -24,7 +24,8 @@ const NookingSetup = () => {
 	return (
 		<Box
 			sx={{
-				p: 2,
+				pt: 2,
+				pb: 2,
 				display: "grid",
 				gridTemplateColumns: "repeat(4, 1fr)",
 				gap: 2,
@@ -36,13 +37,13 @@ const NookingSetup = () => {
   					"list list list list" `,
 			}}
 		>
-			<Box sx={{ gridArea: "form" }}>
+			<Box sx={{ gridArea: "form", pl: 2 }}>
 				<TimerForm />
 			</Box>
 			<Box sx={{ gridArea: "list" }}>
 				<TodoListApp />
 			</Box>
-			<Box sx={{ gridArea: "button" }}>
+			<Box sx={{ gridArea: "button", pr: 2 }}>
 				<Button fullWidth variant="contained" onClick={handleNookingSession}>
 					Start Nooking
 				</Button>

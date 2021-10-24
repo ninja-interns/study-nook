@@ -93,17 +93,10 @@ const TodoListApp = () => {
 	}
 
 	return (
-		<Paper
-			elevation={2}
-			sx={{
-				p: 1,
-			}}
-		>
-			<Box sx={{ display: "flex", flexDirection: "column" }}>
-				<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
-				<TodoListForm todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} />
-			</Box>
-		</Paper>
+		<Box sx={{ display: "flex", flexDirection: "column" }}>
+			<TodoListForm todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} />
+			<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
+		</Box>
 	)
 }
 

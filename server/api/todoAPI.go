@@ -24,7 +24,7 @@ func (c *Controller) CreateTodoHandler(w http.ResponseWriter, r *http.Request) (
 	}
 
 	// Insert todo into the Database
-	err = c.DB.CreateTodo(todo.ID, userId, todo.Text, false)
+	err = c.DB.CreateTodo(todo.ID, userId, todo.Text, todo.Title, false)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error interting todo into the database")
 	}
@@ -52,7 +52,7 @@ func (c *Controller) GetTodosHandler(w http.ResponseWriter, r *http.Request) (in
 	todoList := []*studynook.Todo{}
 	for results.Next() {
 		item := &studynook.Todo{}
-		err = results.Scan(&item.ID, &item.UserId, &item.Text, &item.IsCompleted)
+		err = results.Scan(&item.ID, &item.UserId, &item.Text, &item.IsCompleted, &item.Title)
 		if err != nil {
 			return http.StatusBadRequest, errors.New("error scanning results into todo list")
 		}
@@ -82,6 +82,12 @@ func (c *Controller) UpdateTodoHandler(w http.ResponseWriter, r *http.Request) (
 	err = c.DB.SetTodoText(todo.ID, todo.Text)
 	if err != nil {
 		return http.StatusBadRequest, errors.New("error updating todos' text in database")
+	}
+
+	// Update the todo title in the Database
+	err = c.DB.SetTodoTitle(todo.ID, todo.Title)
+	if err != nil {
+		return http.StatusBadRequest, errors.New("error updating todos' title in database")
 	}
 
 	// Update the todo completion in the Database
