@@ -1,5 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
+import { v4 as uuidv4 } from "uuid"
 import {
 	Box,
 	Button,
@@ -16,7 +17,7 @@ import {
 	Typography,
 } from "@mui/material"
 import React from "react"
-import { TodoListInterface, TodoListUpdateInterface } from "../interfaces"
+import { TodoContent, TodoListInterface, TodoListUpdateInterface } from "../interfaces"
 
 /**
  * * TODO LIST (FORM) COMPONENT
@@ -82,17 +83,43 @@ const TodoListForm = (props: TodoListInterface) => {
 
 /**
  * * EDIT BUTTON COMPONENT
- * !! COMMENT
+ * * When the edit button is pressed a dialog appears where the user can change the description and title of the todo
  */
 const EditButton = (props: TodoListUpdateInterface) => {
+	const inputRef = React.useRef<HTMLInputElement>(null)
+	const [inputText, setInputText] = React.useState(props.todo.todoText)
+	const [inputTitle, setInputTitle] = React.useState(props.todo.todoTitle)
+
+	//* Updates the input text with what the user is typing into the TextField - Runs when the input changes
+	function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
+		console.log(event.target.value)
+		setInputTitle(event.target.value)
+	}
+	function handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
+		console.log(event.target.value)
+		setInputText(event.target.value)
+	}
+
+	//* Creates a new todo item and resets the input field to blank - Runs when the user hits enter to add a new todo
+	function handleSubmit(todo: TodoContent) {
+		// Create new todo item
+		const newTodo: TodoContent = {
+			id: todo.id,
+			userId: todo.userId,
+			todoText: inputText,
+			isCompleted: false,
+			todoTitle: inputTitle,
+		}
+		props.handleTodoUpdate(newTodo)
+
+		//Close the form
+		setOpen(false)
+	}
+
+	//* MUI Component
 	const [open, setOpen] = React.useState(false)
 	const handleClickOpen = () => {
 		setOpen(true)
-	}
-	const handleClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-		if (reason !== "backdropClick") {
-			setOpen(false)
-		}
 	}
 
 	return (
@@ -100,30 +127,43 @@ const EditButton = (props: TodoListUpdateInterface) => {
 			<IconButton edge="end" onClick={handleClickOpen}>
 				<EditIcon />
 			</IconButton>
-			<Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-				<DialogTitle>Create New Task</DialogTitle>
+			<Dialog disableEscapeKeyDown open={open}>
+				<DialogTitle>Edit Task</DialogTitle>
 				<DialogContent>
 					<Box component="form" sx={{ display: "flex", flexWrap: "wrap" }}>
 						<FormControl fullWidth sx={{ m: 1 }}>
 							<TextField
-								variant="standard"
+								variant="filled"
+								label="Title"
 								defaultValue={props.todo.todoTitle}
-								onChange={(event: React.ChangeEvent<HTMLInputElement>) => props.handleTodoUpdate(event, props.todo)}
-								error={props.todo.todoTitle === ""}
-								sx={{ width: "100%" }}
+								inputRef={inputRef}
+								onChange={handleTitleChange}
+								sx={{
+									width: "100%",
+								}}
 							/>
 							<TextField
-								variant="standard"
+								variant="filled"
+								label="Description"
 								defaultValue={props.todo.todoText}
-								onChange={(event: React.ChangeEvent<HTMLInputElement>) => props.handleTodoUpdate(event, props.todo)}
-								error={props.todo.todoText === ""}
-								sx={{ width: "100%" }}
+								inputRef={inputRef}
+								onChange={handleTextChange}
+								sx={{
+									width: "100%",
+								}}
 							/>
 						</FormControl>
 					</Box>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={handleClose}>Ok</Button>
+					<Button
+						type="submit"
+						onClick={() => {
+							handleSubmit(props.todo)
+						}}
+					>
+						Ok
+					</Button>
 				</DialogActions>
 			</Dialog>
 		</Box>
