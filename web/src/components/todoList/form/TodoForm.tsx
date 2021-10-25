@@ -24,8 +24,6 @@ const TodoForm = (props: TodoFormInterface) => {
 
 	//* Creates a new todo item and resets the input field to blank - Runs when the user hits enter to add a new todo
 	function handleSubmit() {
-		console.log("handle submit")
-
 		// Create new todo item
 		const newTodo: TodoContent = {
 			id: uuidv4(),
@@ -35,7 +33,6 @@ const TodoForm = (props: TodoFormInterface) => {
 			todoTitle: inputTitle,
 		}
 		props.handleTodoCreate(newTodo)
-		console.log(newTodo)
 
 		//Close the form
 		setOpen(false)

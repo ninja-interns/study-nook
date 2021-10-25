@@ -10,7 +10,6 @@ import { ContextContainer } from "../../contexts/ContextContainer"
 import { useGetState } from "./../../utils/getState"
 
 export function Dashboard() {
-	const css = useStyles()
 	useGetState()
 	const history = useHistory()
 	const { currentUser } = ContextContainer.useContainer()

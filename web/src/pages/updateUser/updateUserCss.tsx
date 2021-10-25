@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles"
 
 export const useStyles = makeStyles({
 	container: {
@@ -29,4 +29,4 @@ export const useStyles = makeStyles({
 		margin: "1rem",
 		width: "45%",
 	},
-});
+})

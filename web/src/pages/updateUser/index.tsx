@@ -1,5 +1,5 @@
-import { Button, TextField, Typography } from "@material-ui/core"
 import { Color } from "@material-ui/lab/Alert"
+import { Box, Button, TextField, Typography } from "@mui/material"
 import React, { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { ContextContainer } from "../../contexts/ContextContainer"
@@ -73,26 +73,44 @@ export function UpdateUser() {
 	}
 
 	return (
-		<div className={css.container}>
-			<div className={css.content}>
-				<Typography variant="h2">Update Profile</Typography>
-				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-				<form className={css.form} onSubmit={handleLogin}>
-					<TextField fullWidth required disabled label="Email" type="text" defaultValue={currentUser.email} inputRef={emailRef} />
-					<TextField fullWidth required label="Username" type="text" defaultValue={currentUser.username} inputRef={usernameRef} />
-					<TextField fullWidth required label="Name" type="text" defaultValue={currentUser.name} inputRef={nameRef} />
-					<Typography variant="body1">Please enter your password to confirm these changes</Typography>
-					<TextField fullWidth required label="Password" type="password" inputRef={passwordRef} />
-					<div className={css.buttonContainer}>
-						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
-							Update
-						</Button>
-						<Button className={css.button} disabled={loading} variant="outlined" color="primary" onClick={() => history.goBack()}>
-							Back
-						</Button>
-					</div>
-				</form>
-			</div>
-		</div>
+		// <Box component="div" className={css.container}>
+		<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", height: 600, width: 400 }}>
+			<Typography variant="h2">Update Profile</Typography>
+			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+			<Box component="form" className={css.form} onSubmit={handleLogin}>
+				<TextField variant="standard" fullWidth required label="Name" type="text" defaultValue={currentUser.name} inputRef={nameRef} sx={{ mb: 2 }} />
+				<TextField
+					variant="standard"
+					fullWidth
+					required
+					disabled
+					label="Email"
+					type="text"
+					defaultValue={currentUser.email}
+					inputRef={emailRef}
+					sx={{ mb: 2 }}
+				/>
+				<TextField
+					variant="standard"
+					fullWidth
+					required
+					label="Username"
+					type="text"
+					defaultValue={currentUser.username}
+					inputRef={usernameRef}
+					sx={{ mb: 2 }}
+				/>
+				<Typography variant="body1">Please enter your password to confirm these changes</Typography>
+				<TextField variant="standard" fullWidth required label="Password" type="password" inputRef={passwordRef} sx={{ mb: 2 }} />
+				<Box sx={{ display: "flex", justifyContent: "space-evenly", width: "100%", mt: 2 }}>
+					<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
+						Update
+					</Button>
+					<Button className={css.button} disabled={loading} variant="contained" color="primary" onClick={() => history.goBack()}>
+						Back
+					</Button>
+				</Box>
+			</Box>
+		</Box>
 	)
 }

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react"
-import { Button, TextField, Typography } from "@material-ui/core"
+import { Button, TextField, Typography } from "@mui/material"
 import { SimpleModal } from "./../modal"
 import { Redirect, Route } from "react-router"
 import { Snackbars } from ".."
@@ -61,14 +61,23 @@ export function DeleteAccount() {
 		<>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-			<SimpleModal buttonName="Delete Account" buttonVariant="outlined" buttonColor="secondary">
+			<SimpleModal buttonName="Delete Account">
 				<div className={css.container}>
-					<Typography>Are you sure you want to delete your account?</Typography>
+					<Typography sx={{ mb: 1 }}>Are you sure you want to delete your account?</Typography>
 					<Typography>
 						<b>This action cannot be undone.</b>
 					</Typography>
 					<form onSubmit={handleDeleteAccount}>
-						<TextField fullWidth required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={currentPasswordRef} />
+						<TextField
+							variant="standard"
+							fullWidth
+							required
+							label="Password"
+							type="password"
+							inputProps={{ minLength: 6 }}
+							inputRef={currentPasswordRef}
+							sx={{ mb: 2 }}
+						/>
 						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
 							Delete
 						</Button>

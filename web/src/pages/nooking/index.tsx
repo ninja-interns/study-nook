@@ -43,7 +43,7 @@ export function Nooking() {
 			<Paper elevation={2}>
 				<GameInterface />
 			</Paper>
-			<Fab color="primary" onClick={handleStopNooking} sx={{ bottom: 270, left: 330, position: "fixed" }}>
+			<Fab color="primary" onClick={handleStopNooking} sx={{ bottom: 274, left: 330, position: "fixed", zIndex: 1 }}>
 				<CloseIcon fontSize="large" />
 			</Fab>
 			<TodoList />

@@ -44,12 +44,12 @@ const TodoList = () => {
 
 	return (
 		<Box>
-			<Typography sx={{ pt: 2 }}>List:</Typography>
 			<List
 				sx={{
 					height: 260,
 					overflow: "auto",
 					width: 400,
+					pt: "20px",
 
 					// Scrollbar styling
 					"&::-webkit-scrollbar": {

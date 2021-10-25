@@ -3,6 +3,13 @@ import { createTheme } from "@mui/material/styles"
 // A custom theme for this app
 const theme = createTheme({
 	components: {
+		MuiFab: {
+			defaultProps: {
+				style: {
+					backgroundColor: "#ffd364", // yellow
+				},
+			},
+		},
 		MuiButton: {
 			variants: [
 				{
