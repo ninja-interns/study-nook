@@ -23,9 +23,10 @@ const NookingSetup = () => {
 	}
 
 	return (
-		<div className={css.container}>
+		<>
 			<Fade in={true} timeout={1000}>
 				<Box
+					component="div"
 					sx={{
 						pt: 2,
 						pb: 2,
@@ -40,24 +41,21 @@ const NookingSetup = () => {
   					"list list list list" `,
 					}}
 				>
-					<div>
-						<Box sx={{ gridArea: "form", pl: 2, pr: 2 }}>
-							<TimerForm />
-						</Box>
-						<Box sx={{ gridArea: "list" }}>
-							<TodoListApp />
-						</Box>
-						<Box sx={{ gridArea: "button", pr: 2, pl: 2 }}>
-							<Button fullWidth variant="contained" onClick={handleNookingSession} sx={{ alignContent: "center" }}>
-								Start Nooking
-							</Button>
-						</Box>
-					</div>
+					<Box sx={{ gridArea: "form", pl: 2, pr: 2 }}>
+						<TimerForm />
+					</Box>
+					<Box sx={{ gridArea: "list" }}>
+						<TodoListApp />
+					</Box>
+					<Box sx={{ gridArea: "button", pr: 2, pl: 2 }}>
+						<Button fullWidth variant="contained" onClick={handleNookingSession} sx={{ alignContent: "center" }}>
+							Start Nooking
+						</Button>
+					</Box>
 				</Box>
 			</Fade>
-
 			<NavigationBar />
-		</div>
+		</>
 	)
 }
 
