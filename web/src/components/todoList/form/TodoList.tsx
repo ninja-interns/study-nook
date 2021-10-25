@@ -1,6 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
-import { v4 as uuidv4 } from "uuid"
 import {
 	Box,
 	Button,

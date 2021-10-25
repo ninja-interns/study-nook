@@ -1,10 +1,12 @@
-import { Button, TextField, Typography } from "@material-ui/core"
+import { Box, Button, TextField, Typography } from "@mui/material"
 import { Color } from "@material-ui/lab/Alert"
 import React, { useRef, useState } from "react"
 import { Redirect, Route } from "react-router"
 import { Snackbars } from "../../components"
 import { DomainContainer } from "../../contexts/DomainContext"
 import { useStyles } from "./forgotPasswordCss"
+import { Player } from "@lottiefiles/react-lottie-player"
+import lottieJson from "../../animation/71439-girl-working-on-computer.json"
 
 interface IData {
 	isValid: boolean
@@ -59,26 +61,30 @@ export function ForgotPassword() {
 	}
 
 	return (
-		<div className={css.container}>
+		<>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-			<div className={css.content}>
-				<Typography>StudyNookLogo📚</Typography>
-				<Typography variant="h2">Recover Password</Typography>
-				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-				<Typography variant="body1">Please enter your email you used to sign up with StudyNook</Typography>
-				<form className={css.form} onSubmit={handleForgotPassword}>
-					<TextField fullWidth label="Email" type="email" inputRef={emailRef} />
-					<Button variant="contained" color="primary" className={css.button} disabled={loading} type="submit">
-						Submit
-					</Button>
-					<Typography variant="body1">
-						Already have an account?{" "}
-						<Button onClick={() => setRedirect("/login")} disabled={loading}>
-							Log in
-						</Button>
+			<Player autoplay loop src={lottieJson} style={{ height: "250px", width: "400px" }}></Player>
+			<Box component="div" sx={{ display: "flex", alignItems: "center" }}>
+				<Box component="div" className={css.content}>
+					<Typography fontFamily="Pacifico" fontSize="30" sx={{ pb: 2 }}>
+						Recover Password
 					</Typography>
-				</form>
-			</div>
-		</div>
+					<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+					<Typography variant="body1">Please enter your email you used to sign up with StudyNook</Typography>
+					<Box component="form" className={css.form} onSubmit={handleForgotPassword}>
+						<TextField variant="standard" fullWidth label="Email" type="email" inputRef={emailRef} />
+						<Button variant="contained" color="primary" className={css.button} disabled={loading} type="submit">
+							Submit
+						</Button>
+						<Typography variant="body1">
+							Already have an account?{" "}
+							<Button onClick={() => setRedirect("/login")} disabled={loading}>
+								Log in
+							</Button>
+						</Typography>
+					</Box>
+				</Box>
+			</Box>
+		</>
 	)
 }
