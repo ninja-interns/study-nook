@@ -75,7 +75,7 @@ const TimerForm = () => {
 	}
 
 	return (
-		<Paper elevation={3} sx={{ pt: 1, pb: 1, textAlign: "center" }}>
+		<Box sx={{ pt: 1, pb: 1, textAlign: "center", border: "1px solid #374785" }}>
 			<Button onClick={handleClickOpen} size="large" sx={{ fontSize: 26 }}>
 				{duration}:00
 			</Button>
@@ -107,7 +107,7 @@ const TimerForm = () => {
 					<Button onClick={handleClose}>Ok</Button>
 				</DialogActions>
 			</Dialog>
-		</Paper>
+		</Box>
 	)
 }
 

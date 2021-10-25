@@ -46,7 +46,7 @@ const TodoListForm = (props: TodoListInterface) => {
 							<Divider />
 							<ListItem
 								key={todo.id}
-								sx={{ height: 50, width: 400, p: 0, m: 0 }}
+								sx={{ height: 60, width: 400, p: 0, m: 0 }}
 								secondaryAction={
 									<Box sx={{ display: "flex" }}>
 										<Box sx={{ pr: 2 }}>
@@ -63,7 +63,6 @@ const TodoListForm = (props: TodoListInterface) => {
 									</Box>
 								}
 							>
-								<Divider orientation="vertical" color="primary" sx={{ p: 0, m: 0, borderWidth: 2, height: 60 }} />
 								<Box sx={{ display: "flex", flexDirection: "column" }}>
 									<Typography color="secondary" component="div" sx={{ pl: 2, fontStyle: "bold" }}>
 										{todo.todoTitle}

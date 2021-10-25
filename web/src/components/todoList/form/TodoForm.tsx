@@ -48,16 +48,13 @@ const TodoForm = (props: TodoFormInterface) => {
 	}
 
 	return (
-		<Box>
+		<Box sx={{ display: "flex", alignItems: "center", pt: 2 }}>
 			<Button
 				variant="outlined"
 				onClick={handleClickOpen}
 				size="large"
 				sx={{
 					fontSize: 26,
-					"& .MuiButton": {
-						borderRadius: "1px",
-					},
 				}}
 			>
 				Create New Task

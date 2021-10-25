@@ -62,14 +62,12 @@ const TodoList = () => {
 						<>
 							<Divider />
 							<ListItem key={todo.id} sx={{ width: "400", p: 0, m: 0 }}>
-								<Divider orientation="vertical" color="primary" sx={{ p: 0, m: 0, borderWidth: 2, height: 60 }} />
-
 								<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
 									<ListItemIcon>
 										<Checkbox checked={todo.isCompleted} edge="start" />
 									</ListItemIcon>
 									<Box sx={{ display: "flex", flexDirection: "column" }}>
-										<Typography color="secondary" component="div" sx={{ pl: 2, fontStyle: "bold" }}>
+										<Typography color="secondary" component="div" sx={{ pl: 2, fontWeight: 800, letterSpacing: 1 }}>
 											{todo.todoTitle}
 										</Typography>
 										<Typography component="div" sx={{ pl: 2 }}>

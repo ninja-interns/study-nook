@@ -44,7 +44,7 @@ const NookingSetup = () => {
 				<TodoListApp />
 			</Box>
 			<Box sx={{ gridArea: "button", pr: 2 }}>
-				<Button fullWidth variant="contained" onClick={handleNookingSession}>
+				<Button fullWidth variant="contained" onClick={handleNookingSession} sx={{ alignContent: "center" }}>
 					Start Nooking
 				</Button>
 			</Box>

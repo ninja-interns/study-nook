@@ -1,12 +1,11 @@
-import { Button, Fade, Slide, TextField, Typography } from "@material-ui/core"
+import { Player } from "@lottiefiles/react-lottie-player"
 import { Color } from "@material-ui/lab/Alert"
+import { Box, Button, TextField, Typography } from "@mui/material"
 import React, { useRef, useState } from "react"
 import { Redirect, Route } from "react-router-dom"
-import { useLastLocation } from "react-router-last-location"
 import { Snackbars } from "../../components"
 import { ContextContainer } from "../../contexts/ContextContainer"
 import { DomainContainer } from "../../contexts/DomainContext"
-import { useStyles } from "./loginPageCss"
 
 interface IData {
 	isValid: boolean
@@ -14,29 +13,7 @@ interface IData {
 	isVerified: boolean
 }
 
-interface ITransitionProps {
-	children: JSX.Element
-}
-
-function Transition({ children }: ITransitionProps): JSX.Element {
-	const lastLocation: string | undefined = useLastLocation()?.pathname
-	if (lastLocation === "/registration") {
-		return (
-			<Slide direction={"right"} in={true} timeout={1000}>
-				{children}
-			</Slide>
-		)
-	} else {
-		return (
-			<Fade in={true} timeout={1000}>
-				{children}
-			</Fade>
-		)
-	}
-}
-
 export function LoginPage() {
-	const css = useStyles()
 	const userRef = useRef<HTMLInputElement>()
 	const passwordRef = useRef<HTMLInputElement>()
 	const [loading, setLoading] = useState<boolean>(false)
@@ -47,6 +24,16 @@ export function LoginPage() {
 	const { setIsLoggedIn } = ContextContainer.useContainer()
 	const { url } = DomainContainer.useContainer()
 
+	//* Animation Choices
+	// const lottieJson = "https://assets9.lottiefiles.com/packages/lf20_cpeiwzvb.json"
+	const lottieJson = "https://assets3.lottiefiles.com/private_files/lf30_lps8ojuw.json"
+	// const lottieJson = "https://assets9.lottiefiles.com/packages/lf20_dv3etasb.json"
+	// const lottieJson = "https://assets7.lottiefiles.com/private_files/lf30_vwwchm2i.json"
+	// const lottieJson = "https://assets3.lottiefiles.com/packages/lf20_7smeegra.json"
+	// const lottieJson = "https://assets9.lottiefiles.com/packages/lf20_3jmvq04g.json"
+	// const lottieJson = "https://assets10.lottiefiles.com/packages/lf20_ynvlol6t.json"
+
+	//* Handle Login Function
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 		setMessage("")
@@ -77,43 +64,43 @@ export function LoginPage() {
 		setLoading(false)
 	}
 
+	//* Snackbar MUI
 	const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
 		if (reason === "clickaway") {
 			return
 		}
-
 		setIsOpen(false)
 	}
 
 	return (
-		<Transition>
-			<div className={css.container}>
-				<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-				<div className={css.content}>
-					<Typography>StudyNookLogo📚</Typography>
-					<Typography variant="h2">Login</Typography>
-					<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-					<form className={css.form} onSubmit={handleLogin}>
-						<TextField fullWidth required label="Email or Username" type="text" inputRef={userRef} />
-						<TextField fullWidth required label="Password" type="password" inputRef={passwordRef} />
-						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
-							Login
+		<>
+			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
+			<Player autoplay loop src={lottieJson} style={{ height: "250px", width: "400px" }}></Player>
+			<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+				<Typography fontFamily="Pacifico" fontSize="30" sx={{ pb: 2 }}>
+					Study Nook
+				</Typography>
+				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+				<Box component="form" onSubmit={handleLogin} sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+					<TextField variant="standard" fullWidth required label="Email or Username" type="text" inputRef={userRef} sx={{ width: 360, p: 1 }} />
+					<TextField variant="standard" fullWidth required label="Password" type="password" inputRef={passwordRef} sx={{ width: 360, p: 1 }} />
+					<Button variant="contained" disabled={loading} type="submit" sx={{ m: 1, width: "75%" }}>
+						Login
+					</Button>
+					<Typography variant="body1">
+						Don't have an account?{" "}
+						<Button onClick={() => setRedirect("/registration")} disabled={loading}>
+							Register
 						</Button>
-						<Typography variant="body1">
-							Don't have an account?{" "}
-							<Button onClick={() => setRedirect("/registration")} disabled={loading}>
-								Register
-							</Button>
-						</Typography>
-						<Typography variant="body1">
-							Forgot your password?{" "}
-							<Button onClick={() => setRedirect("/forgotPassword")} disabled={loading}>
-								Recover
-							</Button>
-						</Typography>
-					</form>
-				</div>
-			</div>
-		</Transition>
+					</Typography>
+					<Typography variant="body1">
+						Forgot your password?{" "}
+						<Button onClick={() => setRedirect("/forgotPassword")} disabled={loading}>
+							Recover
+						</Button>
+					</Typography>
+				</Box>
+			</Box>
+		</>
 	)
 }
