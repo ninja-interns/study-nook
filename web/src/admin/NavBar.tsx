@@ -51,11 +51,7 @@ const NavBar = () => {
 	let history = useHistory()
 	const logoutAdmin = async () => {
 		try {
-<<<<<<< HEAD
-			const res = await fetch("http://localhost:8080/api/logout_admin", {
-=======
 			const res = await fetch(`${url}/api/logout_admin`, {
->>>>>>> adcab154a417c1a196c316c5dce76c4a30dd4557
 				method: "POST",
 			})
 			const data: IResponse = await res.json()
