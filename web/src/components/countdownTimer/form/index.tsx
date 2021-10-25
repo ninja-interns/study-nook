@@ -75,8 +75,8 @@ const TimerForm = () => {
 	}
 
 	return (
-		<Box sx={{ pt: 1, pb: 1, textAlign: "center", border: "1px solid #374785" }}>
-			<Button onClick={handleClickOpen} size="large" sx={{ fontSize: 26 }}>
+		<Box sx={{ pt: 1, pb: 1, textAlign: "center", border: "1px solid #8888ff" }}>
+			<Button size="large" sx={{ fontSize: 26 }} onClick={handleClickOpen}>
 				{duration}:00
 			</Button>
 			<Dialog disableEscapeKeyDown open={open} onClose={handleClose}>

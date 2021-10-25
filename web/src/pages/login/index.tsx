@@ -1,4 +1,5 @@
 import { Player } from "@lottiefiles/react-lottie-player"
+import lottieJson from "../../animation/71439-girl-working-on-computer.json"
 import { Color } from "@material-ui/lab/Alert"
 import { Box, Button, TextField, Typography } from "@mui/material"
 import React, { useRef, useState } from "react"
@@ -23,15 +24,6 @@ export function LoginPage() {
 	const [redirect, setRedirect] = useState<string | null>(null)
 	const { setIsLoggedIn } = ContextContainer.useContainer()
 	const { url } = DomainContainer.useContainer()
-
-	//* Animation Choices
-	// const lottieJson = "https://assets9.lottiefiles.com/packages/lf20_cpeiwzvb.json"
-	const lottieJson = "https://assets3.lottiefiles.com/private_files/lf30_lps8ojuw.json"
-	// const lottieJson = "https://assets9.lottiefiles.com/packages/lf20_dv3etasb.json"
-	// const lottieJson = "https://assets7.lottiefiles.com/private_files/lf30_vwwchm2i.json"
-	// const lottieJson = "https://assets3.lottiefiles.com/packages/lf20_7smeegra.json"
-	// const lottieJson = "https://assets9.lottiefiles.com/packages/lf20_3jmvq04g.json"
-	// const lottieJson = "https://assets10.lottiefiles.com/packages/lf20_ynvlol6t.json"
 
 	//* Handle Login Function
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {

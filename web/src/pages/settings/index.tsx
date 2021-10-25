@@ -1,13 +1,12 @@
 import { Player } from "@lottiefiles/react-lottie-player"
 import { Slide, Typography } from "@material-ui/core"
-import { Fab } from "@mui/material"
+import { Box, Fab } from "@mui/material"
 import CloseIcon from "@mui/icons-material/Close"
 import { useHistory, Route, Redirect } from "react-router-dom"
 import { useState } from "react"
-
 import { useGetState } from "./../../utils/getState"
-
 import { useStyles } from "./settingsCss"
+import { DeleteAccount } from "../../components"
 
 export function Settings() {
 	useGetState()
@@ -26,11 +25,14 @@ export function Settings() {
 
 					<div className={css.optionsContainer}>
 						<Typography className={css.option} variant={"h4"} onClick={() => history.push("./updateUser")}>
-							Change Username
+							Update Profile
 						</Typography>
 						<Typography className={css.option} variant={"h4"} onClick={() => history.push("./updatePassword")}>
 							Change Password
 						</Typography>
+						<Box component="div">
+							<DeleteAccount />
+						</Box>
 					</div>
 				</div>
 			</Slide>
