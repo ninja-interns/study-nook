@@ -14,14 +14,6 @@ export const useStyles = makeStyles({
 		justifyContent: "flex-start",
 		alignItems: "center",
 	},
-	closeButton: {
-		width: "40px",
-		position: "absolute",
-		top: "0px",
-		right: "0px",
-		margin: "20px",
-		cursor: "pointer",
-	},
 	pageTitle: {
 		position: "absolute",
 		left: "0",

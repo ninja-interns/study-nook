@@ -13,7 +13,6 @@ export const useStyles = makeStyles({
 		width: "400px",
 		height: "600px",
 		position: "absolute",
-		border: "solid black",
 		overflowY: "scroll",
 		"&::-webkit-scrollbar": {
 			display: "none",
@@ -22,14 +21,6 @@ export const useStyles = makeStyles({
 		flexDirection: "column",
 		justifyContent: "flex-start",
 		alignItems: "center",
-	},
-	closeButton: {
-		width: "40px",
-		position: "absolute",
-		top: "0px",
-		right: "0px",
-		margin: "20px",
-		cursor: "pointer",
 	},
 	pageTitle: {
 		position: "absolute",

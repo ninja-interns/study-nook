@@ -1,9 +1,5 @@
 import { makeStyles } from "@material-ui/styles"
 
-import backgrounds from "../../assets/Backgrounds"
-
-import { ContextContainer } from "../../contexts/ContextContainer"
-
 export const useStyles = makeStyles({
 	container: {
 		width: "400px",

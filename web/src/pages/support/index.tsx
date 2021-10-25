@@ -1,12 +1,11 @@
 import React, { useRef, useState } from "react"
-
-import { useStyles } from "./supportCss"
-
+import { Fab } from "@mui/material"
+import CloseIcon from "@mui/icons-material/Close"
 import { useHistory, Route, Redirect } from "react-router-dom"
-
 import { Color } from "@material-ui/lab"
 import { Modal, Backdrop, Slide, Fade, Button, Typography, TextareaAutosize } from "@material-ui/core"
 
+import { useStyles } from "./supportCss"
 import { ContextContainer } from "../../contexts/ContextContainer"
 import { useGetState } from "./../../utils/getState"
 import { Snackbars } from "../../components"
@@ -123,7 +122,9 @@ export function SupportPage() {
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Slide in={true} direction={"left"} timeout={1000}>
 				<div className={css.container}>
-					<img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
+					<Fab size="medium" color="primary" onClick={() => history.goBack()} sx={{ position: "absolute", top: "0px", right: "0px", margin: "20px" }}>
+						<CloseIcon fontSize="large" />
+					</Fab>
 
 					<Snackbars message={boxMessage} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 
@@ -144,7 +145,7 @@ export function SupportPage() {
 							Submit
 						</Button>
 
-						<div className={css.centralizeModal}>
+						<div>
 							<Modal
 								open={popup}
 								onClose={handlePopupClose}

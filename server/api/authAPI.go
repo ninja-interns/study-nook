@@ -249,6 +249,18 @@ func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	err = c.DB.CreateUserAchievements(id)
+	if err != nil {
+		response := JsonResponse{
+			Message: "Something went wrong, please try again.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		w.WriteHeader(http.StatusInternalServerError)
+
+		return
+	}
+
 	//if it's all successful, this response will be written back.
 	response := JsonResponse{
 		Message: "Success, your email is verified.",

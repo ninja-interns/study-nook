@@ -29,7 +29,7 @@ export function LoginPage() {
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 		setMessage("")
-		setLoading(true)
+		setLoading(false)
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
 			const response = await fetch(`${url}/api/login_user`, {
