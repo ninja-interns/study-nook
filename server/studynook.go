@@ -107,6 +107,7 @@ type Todo struct {
 	UserId      string `json:"userId"`
 	Text        string `json:"todoText"`
 	IsCompleted bool   `json:"isCompleted"`
+	Title			string `json:"todoTitle"`
 }
 
 /**

@@ -1,9 +1,9 @@
-import { createTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles"
 
 export const theme = createTheme({
 	palette: {
 		primary: {
-			main: "#86bbbd",
+			main: "#F4EDDC",
 		},
 		secondary: {
 			main: "#A1CDA8",
@@ -37,4 +37,4 @@ export const theme = createTheme({
 			fontSize: "1.5rem",
 		},
 	},
-});
+})

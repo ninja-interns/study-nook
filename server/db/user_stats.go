@@ -18,7 +18,7 @@ type User_Stats struct {
 func (db *DB) CreateUserStats(id string) error {
 	sqlStatement := `INSERT INTO user_stats VALUES ($1, 50, 50, 0, 0, 0, 0, 0, $2, $3);`
 
-	_, err := db.Conn.Exec(context.Background(), sqlStatement, id, "zone1.jpg", "avatar1.svg")
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id, "zone1", "avatar1")
 	if err != nil {
 		return err
 	}
@@ -167,7 +167,7 @@ func (db *DB) GetEXPAmount(id string) (int, error) {
 // Get Sessions Method
 func (db *DB) GetSessions(id string) (int, error) {
 
-	sqlStatement := `SELECT session_completed FROM user_stats WHERE id = $1;`
+	sqlStatement := `SELECT sessions_completed FROM user_stats WHERE id = $1;`
 
 	var sessions int
 
@@ -195,7 +195,7 @@ func (db *DB) GetHoursNooked(id string) (int, error) {
 // Get Achievements Method
 func (db *DB) GetAchievements(id string) (int, error) {
 
-	sqlStatement := `SELECT achievements FROM user_stats WHERE id = $1;`
+	sqlStatement := `SELECT achievements_unlocked FROM user_stats WHERE id = $1;`
 
 	var achievementsUnlocked int
 
@@ -209,7 +209,7 @@ func (db *DB) GetAchievements(id string) (int, error) {
 // Get Backgrounds Unlocked Method
 func (db *DB) GetBackgroundsUnlocked(id string) (int, error) {
 
-	sqlStatement := `SELECT background_unlocked FROM user_stats WHERE id = $1;`
+	sqlStatement := `SELECT backgrounds_unlocked FROM user_stats WHERE id = $1;`
 
 	var backgroundsUnlocked int
 

@@ -1,8 +1,7 @@
 import * as React from "react"
 import { v4 as uuidv4 } from "uuid"
 import { TodoContent, TodoFormInterface } from "../interfaces"
-import { TextField } from "@mui/material"
-import { Box } from "@mui/system"
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, TextField, Box } from "@mui/material"
 
 /**
  * * TODO FORM COMPONENT
@@ -11,15 +10,21 @@ import { Box } from "@mui/system"
 const TodoForm = (props: TodoFormInterface) => {
 	const inputRef = React.useRef<HTMLInputElement>(null)
 	const [inputText, setInputText] = React.useState("")
+	const [inputTitle, setInputTitle] = React.useState("")
 
 	//* Updates the input text with what the user is typing into the TextField - Runs when the input changes
-	function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+	function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
+		console.log(event.target.value)
+		setInputTitle(event.target.value)
+	}
+	function handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
+		console.log(event.target.value)
 		setInputText(event.target.value)
 	}
 
 	//* Creates a new todo item and resets the input field to blank - Runs when the user hits enter to add a new todo
-	function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault() // Prevent the page from reloading
+	function handleSubmit() {
+		console.log("handle submit")
 
 		// Create new todo item
 		const newTodo: TodoContent = {
@@ -27,25 +32,67 @@ const TodoForm = (props: TodoFormInterface) => {
 			userId: "",
 			todoText: inputText,
 			isCompleted: false,
+			todoTitle: inputTitle,
 		}
 		props.handleTodoCreate(newTodo)
+		console.log(newTodo)
 
-		// Reset the input field
-		if (inputRef && inputRef.current) {
-			inputRef.current.value = ""
-		}
+		//Close the form
+		setOpen(false)
+	}
+
+	//* MUI Component
+	const [open, setOpen] = React.useState(false)
+	const handleClickOpen = () => {
+		setOpen(true)
 	}
 
 	return (
-		<Box
-			component="form"
-			onSubmit={handleSubmit}
-			sx={{
-				width: 200,
-				maxWidth: "50%",
-			}}
-		>
-			<TextField variant="outlined" label="Add a todo" inputRef={inputRef} onChange={handleInputChange} color="secondary" />
+		<Box sx={{ display: "flex", alignItems: "center", pt: 2 }}>
+			<Button
+				variant="outlined"
+				onClick={handleClickOpen}
+				size="large"
+				sx={{
+					fontSize: 26,
+				}}
+			>
+				Create New Task
+			</Button>
+			<Dialog disableEscapeKeyDown open={open}>
+				<DialogTitle>Create New Task</DialogTitle>
+				<DialogContent>
+					<Box component="form" sx={{ display: "flex", flexWrap: "wrap" }}>
+						<FormControl fullWidth sx={{ m: 1 }}>
+							<TextField
+								variant="filled"
+								label="Title"
+								inputRef={inputRef}
+								onChange={handleTitleChange}
+								color="secondary"
+								sx={{
+									width: "100%",
+								}}
+							/>
+							<TextField
+								variant="filled"
+								label="Description"
+								inputRef={inputRef}
+								onChange={handleTextChange}
+								color="secondary"
+								sx={{
+									width: "100%",
+								}}
+							/>
+						</FormControl>
+					</Box>
+				</DialogContent>
+				<DialogActions>
+					<Button type="submit" onClick={handleSubmit}>
+						Ok
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</Box>
 	)
 }

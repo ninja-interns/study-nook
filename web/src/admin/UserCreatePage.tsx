@@ -80,7 +80,7 @@ const UserCreatePage = () => {
 		e.preventDefault()
 		// Hitting the API endpoint: POST /admin/users
 		try {
-			const res = await fetch("/admin/users", {
+			const res = await fetch("http://localhost:8080/admin/users", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({

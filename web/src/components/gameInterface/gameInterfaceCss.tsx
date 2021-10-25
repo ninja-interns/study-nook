@@ -1,15 +1,10 @@
 import { makeStyles } from "@material-ui/styles"
 
-import backgrounds from "../../assets/Backgrounds"
-
-import { ContextContainer } from "../../contexts/ContextContainer"
-
 export const useStyles = makeStyles({
 	container: {
 		width: "400px",
 		height: "600px",
 		position: "absolute",
-		border: "solid black",
 	},
 	svgBox: {
 		width: "350px",
@@ -17,10 +12,9 @@ export const useStyles = makeStyles({
 		border: "solid black",
 		position: "absolute",
 		bottom: "100px",
-		margin: "20px",
+		margin: "25px",
 		borderWidth: "1px",
 		backgroundSize: "350px 200px",
-
 		display: "block",
 	},
 	svgCharacter: {

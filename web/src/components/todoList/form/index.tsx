@@ -1,3 +1,4 @@
+import { Box, Paper } from "@mui/material"
 import * as React from "react"
 import { DomainContainer } from "../../../contexts/DomainContext"
 import { TodoContent } from "../interfaces"
@@ -92,10 +93,10 @@ const TodoListApp = () => {
 	}
 
 	return (
-		<div>
-			<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
+		<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 			<TodoListForm todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} />
-		</div>
+			<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
+		</Box>
 	)
 }
 

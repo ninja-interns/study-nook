@@ -2,8 +2,8 @@ import { Slide, Fade, Typography } from "@material-ui/core"
 import { useStyles } from "./changeBackgroundCss"
 import { useHistory, Route, Redirect } from "react-router-dom"
 import { useState } from "react"
-
-import closeButton from "../../assets/close-button.png"
+import { Fab } from "@mui/material"
+import CloseIcon from "@mui/icons-material/Close"
 
 import { Background } from "../../components/background"
 
@@ -19,7 +19,14 @@ export function ChangeBackgroundPage() {
 				<div className={css.container}>
 					<div className={css.topWrapper}>
 						<Typography className={css.pageTitle}>Change Focus Zone</Typography>
-						<img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
+						<Fab
+							size="small"
+							color="primary"
+							onClick={() => history.goBack()}
+							sx={{ position: "absolute", top: "0px", right: "0px", margin: "20px" }}
+						>
+							<CloseIcon fontSize="medium" />
+						</Fab>
 					</div>
 
 					<Fade in={true} timeout={2000}>

@@ -17,10 +17,8 @@ export function GameInterface() {
 	return (
 		<>
 			<Fade in={true} timeout={1000}>
-				<div className={css.container}>
-					<div className={css.svgBox} style={imageStyle}>
-						<img src={images[currentUser.currentAvatar]} className={css.svgCharacter} />
-					</div>
+				<div className={css.svgBox} style={imageStyle}>
+					<img src={images[currentUser.currentAvatar]} className={css.svgCharacter} />
 				</div>
 			</Fade>
 		</>

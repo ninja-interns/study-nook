@@ -1,8 +1,8 @@
-import * as React from "react"
-import { TimerInterface } from "../interfaces"
 import { Typography } from "@material-ui/core"
-import { Box, Card, CardContent, CircularProgress } from "@mui/material"
+import { Box, CircularProgress, createTheme, CssBaseline, ThemeProvider } from "@mui/material"
+import * as React from "react"
 import { DomainContainer } from "../../../contexts/DomainContext"
+import { TimerInterface } from "../interfaces"
 
 /**
  * * TIMER COMPONENT
@@ -31,6 +31,7 @@ const Timer = () => {
 					isCompleted: false,
 				}
 				setTimer(newTimer)
+				setTimeLeft("No Timer")
 			} else if (!response.ok) {
 				console.error("Error creating timer: " + response.statusText)
 			} else {
@@ -51,6 +52,7 @@ const Timer = () => {
 				const data: TimerInterface = await response.json()
 				if (data.timeLeft === 0 || data.isCompleted === true) {
 					data.timeLeft = 0
+					setTimeLeft("Finished")
 					setMounted(false)
 					setCompleted()
 				} else if (data.timeLeft) {
@@ -107,9 +109,12 @@ const Timer = () => {
 		}
 	}, [timer?.timeLeft, timer?.timerDuration])
 
-	return (
-		<Box sx={{ position: "relative", display: "inline-flex" }}>
-			<CircularProgress variant="determinate" value={progress} size={120} />
+	return <Box>{timeLeft}</Box>
+}
+
+export { Timer }
+
+/* <CircularProgress variant="determinate" value={progress} size={120} />
 			<Box
 				sx={{
 					top: 0,
@@ -121,13 +126,6 @@ const Timer = () => {
 					alignItems: "center",
 					justifyContent: "center",
 				}}
-			>
-				<Typography variant="h5" component="div">
-					{timeLeft}
-				</Typography>
-			</Box>
-		</Box>
-	)
-}
+			> */
 
-export { Timer }
+/* </Box> */
