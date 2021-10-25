@@ -1,18 +1,14 @@
-import React, { useRef, useState } from "react"
-import { Fab } from "@mui/material"
-import CloseIcon from "@mui/icons-material/Close"
-import { useHistory, Route, Redirect } from "react-router-dom"
 import { Color } from "@material-ui/lab"
-import { Modal, Backdrop, Slide, Fade, Button, Typography, TextareaAutosize } from "@material-ui/core"
-
-import { useStyles } from "./supportCss"
-import { ContextContainer } from "../../contexts/ContextContainer"
-import { useGetState } from "./../../utils/getState"
+import CloseIcon from "@mui/icons-material/Close"
+import { Backdrop, Box, Button, Fab, Fade, Modal, Slide, TextareaAutosize, Typography } from "@mui/material"
+import React, { useRef, useState } from "react"
+import { Redirect, Route, useHistory } from "react-router-dom"
 import { Snackbars } from "../../components"
-import { getCurrentDate } from "./../../utils/getDate"
-
-import closeButton from "../../assets/close-button.png"
+import { ContextContainer } from "../../contexts/ContextContainer"
 import { DomainContainer } from "../../contexts/DomainContext"
+import { getCurrentDate } from "./../../utils/getDate"
+import { useGetState } from "./../../utils/getState"
+import { useStyles } from "./supportCss"
 
 interface IData {
 	isValid: boolean
@@ -85,67 +81,78 @@ export function SupportPage() {
 		setRedirect("/menu")
 	}
 
-	const body = (
-		<>
-			<div className={css.popUpBody}>
-				<Typography variant="h5" className={css.popUpTitle}>
-					Confirmation
-				</Typography>
-				<Typography variant="h6" className={css.popUpContent}>
-					Username: {currentUser.username}
-				</Typography>
-				<Typography variant="h6" className={css.popUpContent}>
-					Date: {getCurrentDate()}
-				</Typography>
-				<Typography variant="h6" className={css.popUpContent}>
-					Message: <br />
-					{message}{" "}
-				</Typography>
+	function Body() {
+		return (
+			<>
+				<Box component="div" className={css.popUpBody}>
+					<Typography variant="h5" className={css.popUpTitle}>
+						Confirmation
+					</Typography>
+					<Typography variant="h6" className={css.popUpContent}>
+						Username: {currentUser.username}
+					</Typography>
+					<Typography variant="h6" className={css.popUpContent}>
+						Date: {getCurrentDate()}
+					</Typography>
+					<Typography variant="h6" className={css.popUpContent}>
+						Message: <br />
+						{message}{" "}
+					</Typography>
 
-				<div className={css.buttonsClass}>
-					<Button variant="contained" color="primary" onClick={handleReportSubmit}>
-						{" "}
-						Submit{" "}
-					</Button>
+					<Box component="div" className={css.buttonsClass}>
+						<Button variant="contained" color="primary" onClick={handleReportSubmit}>
+							{" "}
+							Submit{" "}
+						</Button>
 
-					<Button variant="contained" color="primary" onClick={handlePopupClose}>
-						{" "}
-						Cancel{" "}
-					</Button>
-				</div>
-			</div>
-		</>
-	)
+						<Button variant="contained" color="primary" onClick={handlePopupClose}>
+							{" "}
+							Cancel{" "}
+						</Button>
+					</Box>
+				</Box>
+			</>
+		)
+	}
 
 	return (
 		<>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Slide in={true} direction={"left"} timeout={1000}>
-				<div className={css.container}>
+				<Box component="div" className={css.container}>
 					<Fab size="medium" color="primary" onClick={() => history.goBack()} sx={{ position: "absolute", top: "0px", right: "0px", margin: "20px" }}>
 						<CloseIcon fontSize="large" />
 					</Fab>
 
 					<Snackbars message={boxMessage} severity={severity} isOpen={isOpen} handleClose={handleClose} />
 
-					<Typography className={css.pageTitle} variant="h5">
+					<Typography fontSize="30px" variant="h5" sx={{ m: "20px" }}>
 						Submit a ticket
 					</Typography>
 
-					<div>
-						<Typography className={css.userInfo} variant="h5">
+					<Box component="div">
+						<Typography variant="h5" sx={{ margin: "20px", marginTop: "40px" }}>
 							Username: {currentUser.username}
 						</Typography>
-						<Typography className={css.userInfo} variant="h5">
+						<Typography variant="h5" sx={{ margin: "20px", marginTop: "40px" }}>
 							Message:
 						</Typography>
 
-						<TextareaAutosize required className={css.textArea} minRows={15} onKeyUp={handleMessage}></TextareaAutosize>
-						<Button className={css.submitReportButton} variant="contained" color="primary" onClick={handlePopupOpen}>
-							Submit
-						</Button>
+						<TextareaAutosize
+							required
+							minRows={15}
+							onKeyUp={handleMessage}
+							style={{
+								marginLeft: "20px",
+								width: "360px",
+								padding: "10px",
+								borderRadius: "5%",
+								border: "rgb(136 136 255)",
+								boxShadow: "rgb(136 136 255) 0px 0px 0px 2px inset, rgb(136 136 255) 4px 4px 0px 0px, rgb(136 136 255) 4px 4px",
+							}}
+						/>
 
-						<div>
+						<Box component="div">
 							<Modal
 								open={popup}
 								onClose={handlePopupClose}
@@ -156,11 +163,19 @@ export function SupportPage() {
 									timeout: 500,
 								}}
 							>
-								<Fade in={popup}>{body}</Fade>
+								<Body />
 							</Modal>
-						</div>
-					</div>
-				</div>
+						</Box>
+					</Box>
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={handlePopupOpen}
+						sx={{ margin: "0 auto", marginTop: "40px", alignSelf: "center", width: "50%" }}
+					>
+						Submit
+					</Button>
+				</Box>
 			</Slide>
 		</>
 	)

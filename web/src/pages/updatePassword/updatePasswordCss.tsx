@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles"
 
 export const useStyles = makeStyles({
 	container: {
@@ -6,6 +6,7 @@ export const useStyles = makeStyles({
 		width: "100%",
 		display: "flex",
 		alignItems: "center",
+		flexDirection: "column",
 	},
 	content: {
 		display: "flex",
@@ -24,9 +25,11 @@ export const useStyles = makeStyles({
 		display: "flex",
 		width: "100%",
 		justifyContent: "space-around",
+		marginTop: 2,
 	},
 	button: {
 		margin: "1rem",
 		width: "45%",
+		padding: "2px",
 	},
-});
+})

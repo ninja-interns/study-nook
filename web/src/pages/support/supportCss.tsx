@@ -4,8 +4,9 @@ export const useStyles = makeStyles({
 	container: {
 		width: "400px",
 		height: "600px",
-		position: "relative",
 		overflowY: "scroll",
+		display: "flex",
+		flexDirection: "column",
 		"&::-webkit-scrollbar": {
 			display: "none",
 		},
