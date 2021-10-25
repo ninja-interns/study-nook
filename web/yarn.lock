@@ -1602,6 +1602,13 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
+"@lottiefiles/lottie-interactivity@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@lottiefiles/lottie-interactivity/-/lottie-interactivity-1.1.0.tgz#7f66e41d4f1a71e216c715c3233754091d190f96"
+  integrity sha512-7FkLzQY6RpohJJgAqnbiilcm9F+AsBwuO5RtEPHEjmx1lj1KdHu6L9Lb6yuptveX1g1UAAYBKa3a5xO64vJORw==
+  dependencies:
+    core-js "3"
+
 "@lottiefiles/react-lottie-player@^3.4.1":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/@lottiefiles/react-lottie-player/-/react-lottie-player-3.4.1.tgz#e0735aa451a6bb518c7e425a8a43fc527d372f37"
@@ -4278,6 +4285,11 @@ core-js-pure@^3.16.0:
   version "3.18.3"
   resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.18.3.tgz#7eed77dcce1445ab68fd68715856633e2fb3b90c"
   integrity sha512-qfskyO/KjtbYn09bn1IPkuhHl5PlJ6IzJ9s9sraJ1EqcuGyLGKzhSM1cY0zgyL9hx42eulQLZ6WaeK5ycJCkqw==
+
+core-js@3:
+  version "3.19.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.0.tgz#9e40098a9bc326c7e81b486abbd5e12b9d275176"
+  integrity sha512-L1TpFRWXZ76vH1yLM+z6KssLZrP8Z6GxxW4auoCj+XiViOzNPJCAuTIkn03BGdFe6Z5clX5t64wRIRypsZQrUg==
 
 core-js@^1.0.0:
   version "1.2.7"

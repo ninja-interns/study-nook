@@ -3,17 +3,20 @@ import { Box, Button, Fade, Typography } from "@mui/material"
 import { useState } from "react"
 import { Redirect, Route, useHistory } from "react-router-dom"
 import { Player } from "@lottiefiles/react-lottie-player"
+//import { create } from "@lottiefiles/lottie-interactivity"
 
 import { Coins, GameInterface, Level } from "../../components"
 import NavigationBar from "../../components/bottomNavigation"
 import { ContextContainer } from "../../contexts/ContextContainer"
 import { useGetState } from "./../../utils/getState"
+import theme from "../../theme"
 
 export function Dashboard() {
 	useGetState()
 	const history = useHistory()
 	const { currentUser } = ContextContainer.useContainer()
 	const [redirect, setRedirect] = useState<string | null>(null)
+	const studyJson = "https://assets4.lottiefiles.com/packages/lf20_au98facn.json"
 
 	//* This checks if there is a current nooking session, if there is it redirects the user to the nooking page
 	chrome.storage.sync.get(["key"], function (result) {
@@ -28,6 +31,21 @@ export function Dashboard() {
 			<Box component="div" sx={{ position: "relative", width: 400, height: 600 }}>
 				<Fade in={true} timeout={1000}>
 					<div>
+						<Player
+							autoplay
+							loop
+							src={studyJson}
+							background="#fff1ec"
+							style={{
+								position: "absolute",
+								width: "170px",
+								height: "200px",
+								margin: "11px",
+								top: "0px",
+								left: "0px",
+								background: "#fff1ec",
+							}}
+						/>
 						<GameInterface />
 						<Level />
 						<Coins />
