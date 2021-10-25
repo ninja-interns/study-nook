@@ -1,3 +1,4 @@
+import { Player } from "@lottiefiles/react-lottie-player"
 import { Slide, Typography } from "@material-ui/core"
 import { Fab } from "@mui/material"
 import CloseIcon from "@mui/icons-material/Close"

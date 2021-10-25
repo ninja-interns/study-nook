@@ -11,6 +11,7 @@ export const useStyles = makeStyles({
 		},
 	},
 	options: {
+		fontWeight: "bolder",
 		display: "flex",
 		flex: "colunmn",
 		marginLeft: "40px",

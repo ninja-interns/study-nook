@@ -1,8 +1,9 @@
 import { useStyles } from "./dashboardCss"
-
 import { Box, Button, Fade, Typography } from "@mui/material"
 import { useState } from "react"
 import { Redirect, Route, useHistory } from "react-router-dom"
+import { Player } from "@lottiefiles/react-lottie-player"
+
 import { Coins, GameInterface, Level } from "../../components"
 import NavigationBar from "../../components/bottomNavigation"
 import { ContextContainer } from "../../contexts/ContextContainer"
