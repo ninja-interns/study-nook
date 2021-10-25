@@ -1,5 +1,6 @@
 import { linearProgressClasses } from "@mui/material"
 import { LinearProgress, styled } from "@material-ui/core"
+import { Player } from "@lottiefiles/react-lottie-player"
 
 import { ContextContainer } from "../../contexts/ContextContainer"
 import { useGetState } from "./../../utils/getState"
@@ -24,12 +25,18 @@ export function Level() {
 	useGetState()
 	const css = useStyles()
 	const { currentUser } = ContextContainer.useContainer()
+	const levelJson = "https://assets4.lottiefiles.com/packages/lf20_ffkdq9cg.json"
 
 	return (
 		<div className={css.levelItems}>
 			<div className={css.levelWrapper}>
 				<div className={css.levelIcon}>
-					<img className={css.star} src={levelIcon} alt="level-star" id={levelIcon} />
+					<Player
+						autoplay
+						loop
+						src={levelJson}
+						style={{ float: "left", width: "35px", display: "flex", alignItems: "center", justifyContent: "center" }}
+					/>
 					<p className={css.levelNumber}>{currentUser.level}</p>
 				</div>
 				<BorderLinearProgress className={css.levelBar} variant="determinate" value={currentUser.experience} />
