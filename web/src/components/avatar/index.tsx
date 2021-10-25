@@ -5,6 +5,7 @@ import { useHistory } from "react-router"
 import { useStyles } from "./avatarCss"
 
 import avatars from "../../assets/Avatars"
+import { DomainContainer } from "../../contexts/DomainContext"
 
 interface AvatarProps {
 	avatar: keyof typeof avatars
@@ -12,6 +13,7 @@ interface AvatarProps {
 
 export function Avatar({ avatar }: AvatarProps) {
 	const css = useStyles()
+	const { url } = DomainContainer.useContainer()
 	const history = useHistory() // user route history
 
 	const imageStyle = {
@@ -21,7 +23,7 @@ export function Avatar({ avatar }: AvatarProps) {
 	async function handleSelectSubmit() {
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("http://localhost:8080/api/change_avatar", {
+			const response = await fetch(`${url}/api/change_avatar`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ currentAvatar: avatar }),

@@ -22,8 +22,11 @@ function ContextDataContainer() {
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
 		chrome.cookies.get({ url: "http://localhost:3000", name: "session" }, function (cookie) {
 			if (cookie) {
-				return true
-			} else return false
+				setIsLoggedIn(true)
+				return
+			}
+			setIsLoggedIn(false)
+			return
 		}) !== null,
 	)
 	const [currentUser, setCurrentUser] = useState<IAuthCurrentUser>({

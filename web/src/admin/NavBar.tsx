@@ -3,6 +3,7 @@ import { Mail, Notifications } from "@material-ui/icons"
 import LogoutIcon from "@mui/icons-material/Logout"
 import { ContextContainer } from "../contexts/ContextContainer"
 import { useHistory } from "react-router"
+import { DomainContainer } from "../contexts/DomainContext"
 
 const useStyles = makeStyles((theme) => ({
 	toolbar: {
@@ -45,11 +46,16 @@ interface IResponse {
 
 const NavBar = () => {
 	const { setIsLoggedIn } = ContextContainer.useContainer()
+	const { url } = DomainContainer.useContainer()
 	const classes = useStyles()
 	let history = useHistory()
 	const logoutAdmin = async () => {
 		try {
+<<<<<<< HEAD
 			const res = await fetch("http://localhost:8080/api/logout_admin", {
+=======
+			const res = await fetch(`${url}/api/logout_admin`, {
+>>>>>>> adcab154a417c1a196c316c5dce76c4a30dd4557
 				method: "POST",
 			})
 			const data: IResponse = await res.json()

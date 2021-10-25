@@ -3,6 +3,7 @@ import { Color } from "@material-ui/lab/Alert"
 import React, { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { ContextContainer } from "../../contexts/ContextContainer"
+import { DomainContainer } from "../../contexts/DomainContext"
 import { Snackbars } from "./../../components/snackbar/index"
 import { useGetState } from "./../../utils/getState"
 import { useStyles } from "./updateUserCss"
@@ -25,6 +26,7 @@ export function UpdateUser() {
 	const [severity, setSeverity] = useState<Color | undefined>(undefined)
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 	const { currentUser } = ContextContainer.useContainer()
+	const { url } = DomainContainer.useContainer()
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
@@ -33,7 +35,7 @@ export function UpdateUser() {
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("http://localhost:8080/api/update_user", {
+			const response = await fetch(`${url}/api/update_user`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({

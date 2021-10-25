@@ -5,6 +5,7 @@ import { useHistory, Route, Redirect } from "react-router-dom"
 import { Logout } from "../../components"
 
 import closeButton from "../../assets/close-button.png"
+import NavigationBar from "../../components/bottomNavigation"
 
 export function MenuPage() {
 	const css = useStyles()
@@ -30,6 +31,7 @@ export function MenuPage() {
 					<Typography className={css.options} variant="h4">
 						<Logout />
 					</Typography>
+					<NavigationBar />
 				</div>
 			</Fade>
 		</>

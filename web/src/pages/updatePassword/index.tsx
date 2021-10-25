@@ -2,6 +2,7 @@ import { Button, TextField, Typography } from "@material-ui/core"
 import { Color } from "@material-ui/lab/Alert"
 import React, { useRef, useState } from "react"
 import { useHistory } from "react-router"
+import { DomainContainer } from "../../contexts/DomainContext"
 import { useGetState } from "../../utils/getState"
 import { Snackbars } from "./../../components/snackbar/index"
 import { useStyles } from "./updatePasswordCss"
@@ -15,6 +16,7 @@ export function UpdatePassword() {
 	useGetState()
 	const css = useStyles()
 	const history = useHistory()
+	const { url } = DomainContainer.useContainer()
 	const currentPasswordRef = useRef<HTMLInputElement>()
 	const newPasswordRef = useRef<HTMLInputElement>()
 	const confirmationRef = useRef<HTMLInputElement>()
@@ -30,7 +32,7 @@ export function UpdatePassword() {
 
 		//hitting the backend route of /loginUser with the body of necessary values
 		try {
-			const response = await fetch("http://localhost:8080/api/update_password", {
+			const response = await fetch(`${url}/api/update_password`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({
