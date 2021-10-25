@@ -239,10 +239,12 @@ func (c *Controller) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 
 	err = c.DB.CreateUserStats(id)
 	if err != nil {
+		fmt.Println(err)
 		response := JsonResponse{
 			Message: "Something went wrong, please try again.",
 			IsValid: false,
 		}
+
 		json.NewEncoder(w).Encode(response)
 		w.WriteHeader(http.StatusInternalServerError)
 

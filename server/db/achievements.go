@@ -2,13 +2,15 @@ package db
 
 import (
 	"context"
+	"fmt"
 )
 
 // Creates User Achivements will create a new row for user achievements
 func (db *DB) CreateUserAchievements(id string) error {
+	fmt.Println("Inserting into db")
 	sqlStatement := `INSERT INTO user_achievements VALUES ($1, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false);`
 
-	_, err := db.Conn.Exec(context.Background(), sqlStatement, id, "zone1", "avatar1")
+	_, err := db.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
 		return err
 	}
