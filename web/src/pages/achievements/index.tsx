@@ -2,9 +2,10 @@ import { Slide, Fade } from "@material-ui/core"
 import { useStyles } from "./achievementsCss"
 import { useHistory, Route, Redirect } from "react-router-dom"
 import { useState, useEffect } from "react"
+import { Fab } from "@mui/material"
+import CloseIcon from "@mui/icons-material/Close"
 
 import { ContextContainer } from "../../contexts/ContextContainer"
-import closeButton from "../../assets/close-button.png"
 import { Badge } from "../../components"
 
 interface IResponse {
@@ -36,7 +37,6 @@ interface IUnlocked {
 
 export function AchievementsPage() {
 	const css = useStyles()
-	const { currentUser } = ContextContainer.useContainer()
 	const history = useHistory()
 	const [redirect, setRedirect] = useState<string | null>(null)
 	const [unlocked, setUnlocked] = useState<IUnlocked>()
@@ -74,7 +74,9 @@ export function AchievementsPage() {
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Slide in={true} direction={"left"} timeout={1000}>
 				<div className={css.container}>
-					<img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
+					<Fab size="medium" color="primary" onClick={() => history.goBack()} sx={{ position: "absolute", top: "0px", right: "0px", margin: "20px" }}>
+						<CloseIcon fontSize="medium" />
+					</Fab>
 
 					<Fade in={true} timeout={2000}>
 						<div className={css.badgesTable}>

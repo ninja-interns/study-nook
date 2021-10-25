@@ -5,18 +5,12 @@ export const useStyles = makeStyles({
 		width: "400px",
 		height: "600px",
 		position: "absolute",
-		border: "solid black",
-		backgroundColor: "white",
 		WebkitFontSmoothing: "antialiased",
 		MozOsxFontSmoothing: "grayscale",
-	},
-	closeButton: {
-		width: "40px",
-		position: "absolute",
-		top: "0px",
-		right: "0px",
-		margin: "20px",
-		cursor: "pointer",
+		overflowY: "scroll",
+		"&::-webkit-scrollbar": {
+			display: "none",
+		},
 	},
 	option: {
 		maxWidth: "fit-content",

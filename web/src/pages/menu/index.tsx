@@ -4,7 +4,6 @@ import { Typography, Fade } from "@material-ui/core"
 import { useHistory, Route, Redirect } from "react-router-dom"
 import { Logout } from "../../components"
 
-import closeButton from "../../assets/close-button.png"
 import NavigationBar from "../../components/bottomNavigation"
 
 export function MenuPage() {
@@ -15,25 +14,25 @@ export function MenuPage() {
 	return (
 		<>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-			<Fade in={true} timeout={1000}>
-				<div className={css.container}>
-					<img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
-
-					<Typography className={css.options} variant="h4" onClick={() => history.push("./settings")}>
-						Settings
-					</Typography>
-					<Typography className={css.options} variant="h4" onClick={() => history.push("./achievements")}>
-						Achievements
-					</Typography>
-					<Typography className={css.options} variant="h4" onClick={() => history.push("./support")}>
-						Support
-					</Typography>
-					<Typography className={css.options} variant="h4">
-						<Logout />
-					</Typography>
-					<NavigationBar />
-				</div>
-			</Fade>
+			<div className={css.container}>
+				<Fade in={true} timeout={1000}>
+					<div>
+						<Typography className={css.options} variant="h4" onClick={() => history.push("./settings")}>
+							Settings
+						</Typography>
+						<Typography className={css.options} variant="h4" onClick={() => history.push("./achievements")}>
+							Achievements
+						</Typography>
+						<Typography className={css.options} variant="h4" onClick={() => history.push("./support")}>
+							Support
+						</Typography>
+						<Typography className={css.options} variant="h4">
+							<Logout />
+						</Typography>
+					</div>
+				</Fade>
+				<NavigationBar />
+			</div>
 		</>
 	)
 }

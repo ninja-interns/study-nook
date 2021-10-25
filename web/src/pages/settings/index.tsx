@@ -1,18 +1,16 @@
-import { Button, Slide, Typography } from "@material-ui/core"
+import { Slide, Typography } from "@material-ui/core"
+import { Fab } from "@mui/material"
+import CloseIcon from "@mui/icons-material/Close"
 import { useHistory, Route, Redirect } from "react-router-dom"
 import { useState } from "react"
 
-import { ContextContainer } from "../../contexts/ContextContainer"
 import { useGetState } from "./../../utils/getState"
 
 import { useStyles } from "./settingsCss"
 
-import closeButton from "../../assets/close-button.png"
-
 export function Settings() {
 	useGetState()
 	const css = useStyles()
-	const { currentUser } = ContextContainer.useContainer()
 	const history = useHistory()
 	const [redirect, setRedirect] = useState<string | null>(null)
 
@@ -21,7 +19,9 @@ export function Settings() {
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Slide in={true} direction={"left"} timeout={1000}>
 				<div className={css.container}>
-					<img className={css.closeButton} src={closeButton} alt="Close button" onClick={() => history.goBack()}></img>
+					<Fab size="medium" color="primary" onClick={() => history.goBack()} sx={{ position: "absolute", top: "0px", right: "0px", margin: "20px" }}>
+						<CloseIcon fontSize="medium" />
+					</Fab>
 
 					<div className={css.optionsContainer}>
 						<Typography className={css.option} variant={"h4"} onClick={() => history.push("./updateUser")}>

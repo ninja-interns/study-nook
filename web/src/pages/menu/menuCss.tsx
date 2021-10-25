@@ -10,14 +10,6 @@ export const useStyles = makeStyles({
 			display: "none",
 		},
 	},
-	closeButton: {
-		width: "40px",
-		position: "absolute",
-		top: "0px",
-		right: "0px",
-		margin: "20px",
-		cursor: "pointer",
-	},
 	options: {
 		display: "flex",
 		flex: "colunmn",
