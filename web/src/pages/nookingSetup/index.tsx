@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom"
 import { Box, Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button } from "@mui/material"
 import { IconButton, AppBar } from "@mui/material"
 import { Brightness4, Brightness7, Menu } from "@mui/icons-material"
+import NavigationBar from "../../components/bottomNavigation"
 
 /**
  * * NOOKING SETUP PAGE
@@ -18,31 +19,11 @@ const NookingSetupPage = () => {
 	const colorMode = React.useContext(ColorModeContext)
 
 	return (
-		<Box
-			sx={{
-				height: "100%",
-				width: "100%",
-				padding: 1,
-				bgcolor: "background.default",
-				color: "text.primary",
-			}}
-		>
-			<AppBar position="static">
-				<Toolbar>
-					<IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-						<Menu />
-					</IconButton>
-					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-						Nooking Setup
-					</Typography>
-					<IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit" edge="end">
-						{theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
-					</IconButton>
-				</Toolbar>
-			</AppBar>
+		<Box>
 			<TimerForm />
 			<TodoListApp />
 			<Button onClick={() => history.push("/nooking")}>Start Nooking</Button>
+			<NavigationBar />
 		</Box>
 	)
 }

@@ -1,6 +1,7 @@
 import * as React from "react"
 import { TimerInterface } from "../interfaces"
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Box } from "@mui/material"
+import { DomainContainer } from "../../../contexts/DomainContext"
 
 /**
  * * TIMER FORM COMPONENT
@@ -9,6 +10,7 @@ import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Box } fro
  * * If the user selects a different duration the old duration is deleted before a new one is created
  **/
 const TimerForm = () => {
+	const { url } = DomainContainer.useContainer()
 	const [duration, setDuration] = React.useState(0)
 
 	//* Updates the timer duration whenever the input is changed timer.IsCompleted = true
@@ -28,7 +30,7 @@ const TimerForm = () => {
 	//* Posts the new timer duration to the database
 	async function createTimerDuration(newTimer: TimerInterface) {
 		// Sends request to the API to initialise a new timer with the timer duration
-		const response = await fetch("/api/init_timer", {
+		const response = await fetch(`${url}/api/init_timer`, {
 			method: "POST",
 			headers: { "content-type": "application/json" },
 			body: JSON.stringify(newTimer),

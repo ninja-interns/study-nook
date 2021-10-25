@@ -5,6 +5,7 @@ import { Redirect, Route } from "react-router"
 import { Snackbars } from ".."
 import { Color } from "@material-ui/lab/Alert"
 import { useStyles } from "./deleteAccountCss"
+import { DomainContainer } from "../../contexts/DomainContext"
 
 interface IData {
 	isValid: boolean
@@ -12,6 +13,7 @@ interface IData {
 }
 
 export function DeleteAccount() {
+	const { url } = DomainContainer.useContainer()
 	const css = useStyles()
 	const [redirect, setRedirect] = useState<string | null>(null)
 	const currentPasswordRef = useRef<HTMLInputElement>()
@@ -24,7 +26,7 @@ export function DeleteAccount() {
 		e.preventDefault()
 		setLoading(true)
 		try {
-			const response = await fetch("/api/delete_account", {
+			const response = await fetch(`${url}/api/delete_account`, {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ currentPassword: currentPasswordRef?.current?.value }),

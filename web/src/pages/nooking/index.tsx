@@ -4,6 +4,8 @@ import { TodoList } from "../../components/todoList/list"
 import { useHistory } from "react-router-dom"
 import { Box, Toolbar, Typography, createTheme, ThemeProvider, useTheme, IconButton, AppBar, Menu, MenuItem } from "@mui/material"
 import { Brightness4 as Brightness4Icon, Brightness7 as Brightness7Icon, Menu as MenuIcon } from "@mui/icons-material"
+import { DomainContainer } from "../../contexts/DomainContext"
+import NavigationBar from "../../components/bottomNavigation"
 
 /**
  * * NOOKING PAGE
@@ -13,6 +15,7 @@ import { Brightness4 as Brightness4Icon, Brightness7 as Brightness7Icon, Menu as
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} }) // Toggles dark / light mode
 const NookingPage = () => {
 	const history = useHistory() // user route history
+	const { url } = DomainContainer.useContainer()
 
 	//* Theme
 	const theme = useTheme()
@@ -30,7 +33,7 @@ const NookingPage = () => {
 
 	//* Delete the timer and route the user to the dashboard
 	async function handleStopNooking() {
-		const response = await fetch("/api/delete_timer")
+		const response = await fetch(`${url}/api/delete_timer`)
 		if (!response.ok) {
 			console.error("Error deleting timer: " + response.statusText)
 		}
@@ -38,51 +41,10 @@ const NookingPage = () => {
 	}
 
 	return (
-		<Box
-			sx={{
-				height: "100%",
-				width: "100%",
-				padding: 1,
-				bgcolor: "background.default",
-				color: "text.primary",
-			}}
-		>
-			<AppBar position="static">
-				<Toolbar>
-					<IconButton
-						size="large"
-						edge="start"
-						color="inherit"
-						id="menu-button"
-						aria-controls="basic-menu"
-						aria-haspopup="true"
-						aria-expanded={open ? "true" : undefined}
-						onClick={handleClick}
-						sx={{ mr: 2 }}
-					>
-						<MenuIcon />
-					</IconButton>
-					<Menu
-						id="basic-menu"
-						anchorEl={anchorEl}
-						open={open}
-						onClose={handleClose}
-						MenuListProps={{
-							"aria-labelledby": "menu-button",
-						}}
-					>
-						<MenuItem onClick={handleStopNooking}>Stop Nooking</MenuItem>
-					</Menu>
-					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-						Nooking
-					</Typography>
-					<IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit" edge="end">
-						{theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
-					</IconButton>
-				</Toolbar>
-			</AppBar>
+		<Box>
 			<Timer />
 			<TodoList />
+			<NavigationBar />
 		</Box>
 	)
 }
