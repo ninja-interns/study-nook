@@ -1,29 +1,31 @@
-import { Button, Fade, Typography } from "@material-ui/core"
-import { useHistory, Route, Redirect } from "react-router-dom"
+import { Box, Button, Fade, Typography } from "@mui/material"
 import { useState } from "react"
-
+import { Redirect, Route, useHistory } from "react-router-dom"
+import { Coins, GameInterface, Level } from "../../components"
+import NavigationBar from "../../components/bottomNavigation"
 import { ContextContainer } from "../../contexts/ContextContainer"
 import { useGetState } from "./../../utils/getState"
-
-import { GameInterface } from "../../components"
-import { Level } from "../../components"
-import { Coins } from "../../components"
-
 import { useStyles } from "./dashboardCss"
-import NavigationBar from "../../components/bottomNavigation"
 
 export function Dashboard() {
 	useGetState()
 	const css = useStyles()
-	const { currentUser } = ContextContainer.useContainer()
 	const history = useHistory()
+	const { currentUser } = ContextContainer.useContainer()
 	const [redirect, setRedirect] = useState<string | null>(null)
+
+	//* This checks if there is a current nooking session, if there is it redirects the user to the nooking page
+	chrome.storage.sync.get(["key"], function (result) {
+		if (result.key === true) {
+			setRedirect("/nooking")
+		}
+	})
 
 	return (
 		<div>
 			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
 			<Fade in={true} timeout={1000}>
-				<div className={css.container}>
+				<Box component="div" sx={{ position: "relative", width: 400, height: 600 }}>
 					<GameInterface />
 					<Level />
 					<Coins />
@@ -38,12 +40,8 @@ export function Dashboard() {
 						Change Background
 					</Button>
 
-					<Button className={css.startNookingButton} variant="contained" color="primary" onClick={() => history.push("/nookingSetup")}>
-						Start Nooking
-					</Button>
-
 					<NavigationBar />
-				</div>
+				</Box>
 			</Fade>
 		</div>
 	)

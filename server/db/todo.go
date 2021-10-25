@@ -10,9 +10,9 @@ import (
 /**
 * * CREATE TODO - Insert a todo into the Database
 **/
-func (db *DB) CreateTodo(todoId, userId, todoText string, isCompleted bool) error {
-	query := `INSERT INTO todo (id, user_id, todo_text, is_completed) VALUES ($1, $2, $3, $4)`
-	_, err := db.Conn.Exec(context.Background(), query, todoId, userId, todoText, isCompleted)
+func (db *DB) CreateTodo(todoId, userId, todoText, todoTitle string, isCompleted bool) error {
+	query := `INSERT INTO todo (id, user_id, todo_text, is_completed, todo_title) VALUES ($1, $2, $3, $4, $5)`
+	_, err := db.Conn.Exec(context.Background(), query, todoId, userId, todoText, isCompleted, todoTitle)
 	if err != nil {
 		return err
 	}
@@ -34,6 +34,18 @@ func (db *DB) DeleteTodo(todoId string) error {
 }
 
 //* SETTERS -------------------------------------------------------------------------
+/**
+* * SET TODO TITLE - Update the todos' Title in the Database
+**/
+func (db *DB) SetTodoTitle(todoId, title string) error {
+	query := `UPDATE todo SET todo_title=$1 WHERE id=$2`
+	_, err := db.Conn.Exec(context.Background(), query, title, todoId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 /**
 * * SET TODO TEXT - Update the todos' text in the Database
@@ -80,7 +92,7 @@ func (db *DB) SetTodoUserId(todoId, userId string) error {
 * * GET ALL TODOS - Get the incompleted todos from the database
 **/
 func (db *DB) GetAllTodos(userId string) (pgx.Rows, error) {
-	query := `SELECT id, user_id, todo_text, is_completed FROM todo WHERE user_id=$1 AND is_completed='false'`
+	query := `SELECT id, user_id, todo_text, is_completed, todo_title FROM todo WHERE user_id=$1 AND is_completed='false'`
 	data, err := db.Conn.Query(context.Background(), query, userId)
 	if err != nil {
 		return data, err

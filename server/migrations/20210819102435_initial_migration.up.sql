@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS todo (
     id text PRIMARY KEY,
     user_id text NOT NULL,
     todo_text text NOT NULL,
-    is_completed boolean NOT NULL
+    is_completed boolean NOT NULL,
+    todo_title text NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS user_stats (
@@ -76,4 +77,3 @@ CREATE TABLE IF NOT EXISTS user_achievements (
     avatar_medal_3 boolean NOT NULL,
     CONSTRAINT fk_users FOREIGN KEY (id) REFERENCES users (id)
 );
-
