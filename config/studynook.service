@@ -5,7 +5,7 @@ Description=studynook
 Type=simple
 Restart=always
 RestartSec=5s
-ExecStart=/home/aliciabiggs/go/main s -b true -u aliciabiggs
+ExecStart=/home/aliciabiggs/go/main s -b=true -u=aliciabiggs -p=dev
 
 [Install]
 WantedBy=multi-user.target

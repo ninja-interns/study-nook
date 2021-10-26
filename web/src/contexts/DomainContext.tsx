@@ -8,7 +8,7 @@ import { createContainer } from "unstated-next"
 function DomainContainerProvider() {
 	let url = "http://localhost:8080"
 	if (process.env.NODE_ENV === "production") {
-		url = "http://localhost:8080"
+		url = "https://studynook.xyz"
 	}
 
 	return {
