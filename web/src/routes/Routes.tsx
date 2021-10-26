@@ -18,6 +18,7 @@ import {
 	ChangeBackgroundPage,
 	ChangeAvatarPage,
 	Settings,
+	Credits,
 } from "../pages"
 import { PrivateRoute, AdminPrivateRoute } from "./PrivateRoute"
 import { AdminDashboard } from "../admin/AdminDashboard"
@@ -50,6 +51,7 @@ const Routes = () => {
 					<PrivateRoute path="/changeBackground" component={ChangeBackgroundPage} />
 					<PrivateRoute path="/changeAvatar" component={ChangeAvatarPage} />
 					<PrivateRoute path="/settings" component={Settings} />
+					<PrivateRoute path="/credits" component={Credits} />
 
 					<Route path="/admin-login" component={AdminLoginPage} />
 					<AdminPrivateRoute path="/admin-dashboard" component={AdminDashboard} />

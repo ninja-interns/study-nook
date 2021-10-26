@@ -31,29 +31,15 @@ export function Dashboard() {
 			<Box component="div" sx={{ position: "relative", width: 400, height: 600 }}>
 				<Fade in={true} timeout={1000}>
 					<div>
-						<Player
-							autoplay
-							loop
-							src={studyJson}
-							background="#fff1ec"
-							style={{
-								position: "absolute",
-								width: "170px",
-								height: "200px",
-								margin: "11px",
-								top: "0px",
-								left: "0px",
-								background: "#fff1ec",
-							}}
-						/>
-						<GameInterface />
-						<Level />
-						<Coins />
+						<Typography fontFamily="Pacifico" fontSize="30" sx={{ pb: 2, position: "absolute", top: "0", left: "0", margin: "20px" }}>
+							Study Nook
+						</Typography>
 
 						<Typography
 							sx={{
 								position: "absolute",
 								margin: "25px",
+								marginTop: "35px",
 								top: "0px",
 								right: "0px",
 								fontFamily: "arial",
@@ -63,6 +49,10 @@ export function Dashboard() {
 						>
 							{currentUser.username}
 						</Typography>
+
+						<GameInterface />
+						<Level />
+						<Coins />
 
 						<Button
 							variant="contained"
