@@ -1,1 +1,0 @@
-pages folder, webpages stored here

@@ -1,5 +1,5 @@
 {
-	"name": "admin",
+	"name": "studynookadmin",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
@@ -15,9 +15,6 @@
 		"@material-ui/icons": "^4.11.2",
 		"@material-ui/lab": "^4.0.0-alpha.60",
 		"@material-ui/styles": "^4.11.4",
-		"@mui/icons-material": "^5.0.0",
-		"@mui/material": "^5.0.0",
-		"@mui/system": "^5.0.0",
 		"@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
 		"@svgr/webpack": "5.5.0",
 		"@testing-library/jest-dom": "^5.11.4",
@@ -127,7 +124,7 @@
 			"last 1 safari version"
 		]
 	},
-  "devDependencies": {
+	"devDependencies": {
 		"@types/chrome": "^0.0.158",
 		"@types/react-lottie": "^1.2.6",
 		"@types/react-router-dom": "^5.1.8",
