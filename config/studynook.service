@@ -1,0 +1,11 @@
+[Unit]
+Description=studynook
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5s
+ExecStart=/home/aliciabiggs/go/main s -b true -u aliciabiggs
+
+[Install]
+WantedBy=multi-user.target
