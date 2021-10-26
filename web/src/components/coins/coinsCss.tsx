@@ -19,5 +19,6 @@ export const useStyles = makeStyles({
 	coinsNumber: {
 		float: "right",
 		fontSize: "18px",
+		fontWeight: "bolder",
 	},
 })
