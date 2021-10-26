@@ -35,6 +35,9 @@ export function MenuPage() {
 						<Typography className={css.options} variant="h4" onClick={() => history.push("./support")}>
 							Support
 						</Typography>
+						<Typography className={css.options} variant="h4" onClick={() => history.push("./credits")}>
+							Credits
+						</Typography>
 						<Typography className={css.options} variant="h4">
 							<Logout />
 						</Typography>
