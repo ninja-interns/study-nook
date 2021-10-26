@@ -34,7 +34,7 @@ const Routes = () => {
 		<Router>
 			<LastLocationProvider>
 				<Switch>
-					<Route path="/registration" component={RegisterPage} />
+					{/* <Route path="/registration" component={RegisterPage} />
 					<Route path="/login" component={LoginPage} />
 					<Route path="/verifyEmail" component={EmailVerificationPage} />
 					<Route path="/deletedAccount" component={DeletedAccount} />
@@ -51,7 +51,7 @@ const Routes = () => {
 					<PrivateRoute path="/changeBackground" component={ChangeBackgroundPage} />
 					<PrivateRoute path="/changeAvatar" component={ChangeAvatarPage} />
 					<PrivateRoute path="/settings" component={Settings} />
-					<PrivateRoute path="/credits" component={Credits} />
+					<PrivateRoute path="/credits" component={Credits} /> */}
 
 					<Route path="/admin-login" component={AdminLoginPage} />
 					<AdminPrivateRoute path="/admin-dashboard" component={AdminDashboard} />
