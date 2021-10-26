@@ -23,7 +23,7 @@ export const useStyles = makeStyles({
 		alignItems: "center",
 		justifyContent: "center",
 		flexDirection: "column",
-		animation: "$creditRoll 0.3s linear",
+		animation: "$creditRoll 3s linear",
 		animationDelay: "15s",
 		position: "absolute",
 		visibility: "hidden",
