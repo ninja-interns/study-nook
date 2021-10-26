@@ -34,7 +34,7 @@ const UserListGrid = () => {
 	useEffect(() => {
 		try {
 			//Fetch User list from the API endpoint
-			fetch("/admin/users")
+			fetch("http://localhost:8080/admin/users")
 				.then((response) => response.json())
 				.then((json) => {
 					setUsers(json)

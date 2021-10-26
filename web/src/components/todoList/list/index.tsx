@@ -1,13 +1,12 @@
+import { Box, Checkbox, Divider, List, ListItem, ListItemButton, ListItemIcon, Paper, Typography } from "@mui/material"
 import * as React from "react"
-import { TodoContent } from "../interfaces"
-import { ListItemButton, List, ListItem, ListItemIcon, Checkbox, Typography, Card } from "@mui/material"
 import { DomainContainer } from "../../../contexts/DomainContext"
+import { TodoContent } from "../interfaces"
 
 /**
  * * TODO LIST COMPONENT
  * * Renders the todo list stored in the database
  * * Updates the todo item to completed or not completed when the user clicks the checkbox
- * TODO: Sort the todos - completed at the bottom of the list
  */
 const TodoList = () => {
 	const { url } = DomainContainer.useContainer()
@@ -44,27 +43,44 @@ const TodoList = () => {
 	}
 
 	return (
-		<Card>
+		<Box>
 			<List
 				sx={{
-					height: "10rem",
+					height: 260,
 					overflow: "auto",
+					width: 400,
+					pt: "20px",
+
+					// Scrollbar styling
+					"&::-webkit-scrollbar": {
+						display: "none",
+					},
 				}}
 			>
 				{todos.map((todo) => {
 					return (
-						<ListItem key={todo.id}>
-							<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
-								<ListItemIcon>
-									<Checkbox checked={todo.isCompleted} edge="start" />
-								</ListItemIcon>
-								<Typography>{todo.todoText}</Typography>
-							</ListItemButton>
-						</ListItem>
+						<>
+							<Divider />
+							<ListItem key={todo.id} sx={{ width: "400", p: 0, m: 0 }}>
+								<ListItemButton role={undefined} onClick={() => handleTodoComplete(todo)} dense>
+									<ListItemIcon>
+										<Checkbox checked={todo.isCompleted} edge="start" />
+									</ListItemIcon>
+									<Box sx={{ display: "flex", flexDirection: "column" }}>
+										<Typography color="secondary" component="div" sx={{ pl: 2, fontWeight: 800, letterSpacing: 1 }}>
+											{todo.todoTitle}
+										</Typography>
+										<Typography component="div" sx={{ pl: 2 }}>
+											{todo.todoText}
+										</Typography>
+									</Box>
+								</ListItemButton>
+							</ListItem>
+						</>
 					)
 				})}
 			</List>
-		</Card>
+		</Box>
 	)
 }
 

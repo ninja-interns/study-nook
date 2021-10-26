@@ -5,25 +5,25 @@ export const useStyles = makeStyles({
 		width: "400px",
 		height: "600px",
 		position: "absolute",
+		WebkitFontSmoothing: "antialiased",
+		MozOsxFontSmoothing: "grayscale",
 		overflowY: "scroll",
 		"&::-webkit-scrollbar": {
 			display: "none",
 		},
 	},
-	options: {
-		fontWeight: "bolder",
-		display: "flex",
-		flex: "colunmn",
+	option: {
+		maxWidth: "fit-content",
+		margin: "30px",
 		marginLeft: "40px",
 		fontSize: "25px",
-		marginTop: "60px",
 		cursor: "pointer",
-		maxWidth: "fit-content",
-		paddin: "12px 48px",
+		marginBottom: "60px",
 		"&:hover": {
-			fontSize: "30px",
-			animationPlayState: "paused",
-			WebkitMaskImage: "none",
+			fontSize: "28px",
 		},
+	},
+	optionsContainer: {
+		marginTop: "70px",
 	},
 })

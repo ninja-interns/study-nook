@@ -1,56 +1,68 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useStyles } from "./badgeCss"
+import { linearProgressClasses } from "@mui/material"
+import { LinearProgress, styled } from "@material-ui/core"
 
 import badgeIcon from "../../assets/medal.png"
-import { DomainContainer } from "../../contexts/DomainContext"
+import locker from "../../assets/lock.png"
 
 interface BadgeProps {
 	badgeID: string
 	badgeType: string
 	badgeLevel: string
-	progression: number
+	progression: number | undefined
 	goal: number
+	isUnlocked: boolean | undefined
+	progressBar: number | undefined
 }
 
 interface IResponse {
 	unlocked: boolean
 }
 
-export function Badge({ badgeID, badgeType, badgeLevel, progression, goal }: BadgeProps): JSX.Element {
-	const { url } = DomainContainer.useContainer()
-	const css = useStyles()
+interface Unlocked {
+	unlocked: boolean
+}
 
-	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
+const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+	height: 10,
+	width: 140,
+	borderRadius: 25,
+	[`&.${linearProgressClasses.colorPrimary}`]: {
+		backgroundColor: theme.palette.grey[theme.palette.type === "light" ? 200 : 800],
+	},
+	[`& .${linearProgressClasses.bar}`]: {
+		borderRadius: 5,
+		backgroundColor: theme.palette.type === "light" ? "#1a90ff" : "#308fe8",
+	},
+}))
 
-		try {
-			const response = await fetch(`${url}/api/achievement_check`, {
-				method: "POST",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ badgeID: { badgeID } }),
-			})
-			const data: IResponse = await response.json()
-		} catch (err) {
-			console.error(err)
-		}
+export function Badge({ badgeID, badgeType, badgeLevel, progression, goal, isUnlocked, progressBar }: BadgeProps): JSX.Element {
+	function Locked() {
+		if (!isUnlocked) return <img src={locker} className={css.locker} />
+		else return <></>
 	}
 
+	const css = useStyles()
+
 	return (
-		<figure>
-			<img className={css.badgeElement} src={badgeIcon} alt="badge" id={badgeID} />
-			<figcaption className={css.badgeCaption}>
-				{badgeType} - {badgeLevel}
-			</figcaption>
-			<span className={css.textBox}>
-				{" "}
-				Progression:
-				<p className={css.tracker}>
-					{progression}/{goal}
-				</p>
-				<span className={css.bar}>
-					<span className={css.achievementLevel1}></span>
+		<div className={css.achievementContainer}>
+			<figure>
+				<Locked />
+				<img className={isUnlocked ? css.badgeElement : css.badgeElementLocked} src={badgeIcon} alt="badge" id={badgeID} />
+
+				<figcaption className={css.badgeCaption}>
+					{badgeType} - {badgeLevel}
+				</figcaption>
+				<span className={css.textBox}>
+					{" "}
+					Progression:
+					<p className={css.tracker}>
+						{progression}/{goal}
+					</p>
+					<BorderLinearProgress className={css.bar} variant="determinate" value={progressBar} />
 				</span>
-			</span>
-		</figure>
+			</figure>
+		</div>
 	)
 }

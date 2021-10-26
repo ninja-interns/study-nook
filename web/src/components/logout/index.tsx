@@ -18,7 +18,7 @@ export function Logout() {
 			const data = await response.json()
 			//if the response said that it is valid, it will push to the dashboard, else it will set the error to the message that was sent back
 			if (data.isValid) {
-				setIsLoggedIn(false)
+				setIsLoggedIn(true)
 				setRedirect("/login")
 			}
 		} catch (err) {

@@ -1,61 +1,62 @@
-import React from "react"
+import { Box, Button, Fade } from "@mui/material"
+import { useHistory } from "react-router-dom"
+import NavigationBar from "../../components/bottomNavigation"
 import { TimerForm } from "../../components/countdownTimer/form"
 import { TodoListApp } from "../../components/todoList/form"
-import { useHistory } from "react-router-dom"
-import { Box, Toolbar, Typography, createTheme, ThemeProvider, useTheme, Button } from "@mui/material"
-import { IconButton, AppBar } from "@mui/material"
-import { Brightness4, Brightness7, Menu } from "@mui/icons-material"
-import NavigationBar from "../../components/bottomNavigation"
+import { useStyles } from "../dashboard/dashboardCss"
 
 /**
  * * NOOKING SETUP PAGE
  * * This is the page of the app where the user sets up their todo list and timer duration
  * * The timer will not be created until the user clicks the "Start Nooking" button
  **/
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} }) // Toggles dark / light mode
-const NookingSetupPage = () => {
+const NookingSetup = () => {
 	const history = useHistory() // routes history
-	const theme = useTheme()
-	const colorMode = React.useContext(ColorModeContext)
+	const css = useStyles()
+
+	//* Set the nooking session to true in local storage and routing user to nooking page
+	const handleNookingSession = () => {
+		const isNooking = true
+		chrome.storage.sync.set({ key: isNooking })
+
+		history.push("/nooking")
+	}
 
 	return (
-		<Box>
-			<TimerForm />
-			<TodoListApp />
-			<Button onClick={() => history.push("/nooking")}>Start Nooking</Button>
+		<>
+			<Fade in={true} timeout={1000}>
+				<Box
+					component="div"
+					sx={{
+						pt: 2,
+						pb: 2,
+						display: "grid",
+						gridTemplateColumns: "repeat(4, 1fr)",
+						gap: 2,
+						gridTemplateRows: "auto",
+						gridTemplateAreas: `
+					"form form . ."
+					"form form button button"
+					"form form . ."
+  					"list list list list" `,
+					}}
+				>
+					<Box sx={{ gridArea: "form", pl: 2, pr: 2 }}>
+						<TimerForm />
+					</Box>
+					<Box sx={{ gridArea: "list" }}>
+						<TodoListApp />
+					</Box>
+					<Box sx={{ gridArea: "button", pr: 2, pl: 2 }}>
+						<Button fullWidth variant="contained" onClick={handleNookingSession} sx={{ alignContent: "center" }}>
+							Start Nooking
+						</Button>
+					</Box>
+				</Box>
+			</Fade>
 			<NavigationBar />
-		</Box>
+		</>
 	)
 }
 
-//* This function gives the page a light / dark mode toggle component
-//? I am sure there is an easier / better way to implement light / dark theme
-export function NookingSetup() {
-	const [mode, setMode] = React.useState<"light" | "dark">("light")
-	const colorMode = React.useMemo(
-		() => ({
-			toggleColorMode: () => {
-				setMode((prevMode) => (prevMode === "light" ? "dark" : "light"))
-			},
-		}),
-		[],
-	)
-
-	const theme = React.useMemo(
-		() =>
-			createTheme({
-				palette: {
-					mode,
-				},
-			}),
-		[mode],
-	)
-
-	return (
-		<ColorModeContext.Provider value={colorMode}>
-			<ThemeProvider theme={theme}>
-				<NookingSetupPage />
-			</ThemeProvider>
-		</ColorModeContext.Provider>
-	)
-}
+export { NookingSetup }

@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from "@material-ui/core"
+import { Box, Button, TextField, Typography } from "@mui/material"
 import { Color } from "@material-ui/lab/Alert"
 import React, { useRef, useState } from "react"
 import { useHistory } from "react-router"
@@ -67,24 +67,39 @@ export function UpdatePassword() {
 		setIsOpen(false)
 	}
 	return (
-		<div className={css.container}>
-			<div className={css.content}>
-				<Typography variant="h2">Change Password</Typography>
-				<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-				<form className={css.form} onSubmit={handleUpdatePassword}>
-					<TextField fullWidth required label="Current Password" type="password" inputProps={{ minLength: 6 }} inputRef={currentPasswordRef} />
-					<TextField fullWidth required label="New Password" type="password" inputProps={{ minLength: 6 }} inputRef={newPasswordRef} />
-					<TextField fullWidth required label="Confirm New Password" type="password" inputRef={confirmationRef} />
-					<div className={css.buttonContainer}>
-						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
-							Update
-						</Button>
-						<Button className={css.button} disabled={loading} variant="outlined" color="primary" onClick={() => history.goBack()}>
-							Back
-						</Button>
-					</div>
-				</form>
-			</div>
-		</div>
+		<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", height: 600, width: 400 }}>
+			<Typography variant="h4">Change Password</Typography>
+			<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
+			<Box component="form" onSubmit={handleUpdatePassword} sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+				<TextField
+					variant="standard"
+					required
+					label="New Password"
+					type="password"
+					inputProps={{ minLength: 6 }}
+					inputRef={newPasswordRef}
+					sx={{ width: "75%" }}
+				/>
+				<TextField variant="standard" required label="Confirm New Password" type="password" inputRef={confirmationRef} sx={{ width: "75%" }} />
+				<TextField
+					variant="standard"
+					fullWidth
+					required
+					label="Current Password"
+					type="password"
+					inputProps={{ minLength: 6 }}
+					inputRef={currentPasswordRef}
+					sx={{ width: "75%" }}
+				/>
+				<Box sx={{ display: "flex", justifyContent: "space-evenly", width: "100%", mt: 2 }}>
+					<Button variant="contained" type="submit" sx={{ m: 1, width: "40%" }}>
+						Update
+					</Button>
+					<Button variant="contained" onClick={() => history.goBack()} sx={{ m: 1, width: "45%" }}>
+						Back
+					</Button>
+				</Box>
+			</Box>
+		</Box>
 	)
 }

@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -180,7 +181,13 @@ func (c *Controller) SetIsCompletedHandler(w http.ResponseWriter, r *http.Reques
 
 	err = c.CalculateSessionRewards(int(minutes.TimerDuration), userId)
 	if err != nil {
-		return http.StatusBadRequest, errors.New("error getting timer duration")
+		return http.StatusBadRequest, errors.New("error calculating rewards")
+	}
+
+	err = c.AchievementsUnlockCheck(userId)
+	if err != nil {
+		fmt.Println(err)
+		return http.StatusBadRequest, errors.New("error checking for achievements unlocked")
 	}
 
 	return http.StatusOK, nil

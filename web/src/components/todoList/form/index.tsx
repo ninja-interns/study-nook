@@ -1,3 +1,4 @@
+import { Box } from "@mui/material"
 import * as React from "react"
 import { DomainContainer } from "../../../contexts/DomainContext"
 import { TodoContent } from "../interfaces"
@@ -57,10 +58,13 @@ const TodoListApp = () => {
 	}
 
 	//* Imports a TodoItem and updates the old TodoItem with the new information
-	async function handleTodoUpdate(event: React.ChangeEvent<HTMLInputElement>, todoItem: TodoContent) {
+	async function handleTodoUpdate(todoItem: TodoContent) {
 		// Update the todoList with the new todoItems information - Updates TodoListForm
 		const newTodosState: TodoContent[] = [...todos]
-		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.todoText = event.target.value
+		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.todoText = todoItem.todoText
+		setTodos(newTodosState)
+		// Set new title
+		newTodosState.find((todo: TodoContent) => todo.id === todoItem.id)!.todoTitle = todoItem.todoTitle
 		setTodos(newTodosState)
 
 		// Update the todo in the database
@@ -92,10 +96,10 @@ const TodoListApp = () => {
 	}
 
 	return (
-		<div>
-			<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
+		<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 			<TodoListForm todos={todos} handleTodoUpdate={handleTodoUpdate} handleTodoRemove={handleTodoRemove} />
-		</div>
+			<TodoForm todos={todos} handleTodoCreate={handleTodoCreate} />
+		</Box>
 	)
 }
 

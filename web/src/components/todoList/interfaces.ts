@@ -3,6 +3,7 @@ export interface TodoContent {
 	isCompleted: boolean
 	todoText: string
 	userId: string
+	todoTitle: string
 }
 
 export interface TodoFormInterface {
@@ -12,6 +13,13 @@ export interface TodoFormInterface {
 
 export interface TodoListInterface {
 	todos: TodoContent[]
-	handleTodoUpdate: (event: React.ChangeEvent<HTMLInputElement>, todoItem: TodoContent) => void
+	handleTodoUpdate: (todoItem: TodoContent) => void
+	handleTodoRemove: (todoItem: TodoContent) => void
+}
+
+export interface TodoListUpdateInterface {
+	todo: TodoContent
+	todos: TodoContent[]
+	handleTodoUpdate: (todoItem: TodoContent) => void
 	handleTodoRemove: (todoItem: TodoContent) => void
 }

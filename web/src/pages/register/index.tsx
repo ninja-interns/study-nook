@@ -1,34 +1,13 @@
 //ts-ignore is ignoring error "possibly undefined"
-
-import { Button, Fade, Slide, TextField, Typography } from "@material-ui/core"
+import { Player } from "@lottiefiles/react-lottie-player"
 import { Color } from "@material-ui/lab/Alert"
+import { Box, Button, TextField, Typography } from "@mui/material"
 import React, { useRef, useState } from "react"
 import { Redirect, Route } from "react-router-dom"
-import { useLastLocation } from "react-router-last-location"
+import lottieJson from "../../animation/71439-girl-working-on-computer.json"
 import { DomainContainer } from "../../contexts/DomainContext"
 import { Snackbars } from "./../../components/snackbar/index"
 import { useStyles } from "./registerPageCss"
-
-interface ITransitionProps {
-	children: JSX.Element
-}
-
-function Transition({ children }: ITransitionProps): JSX.Element {
-	const lastLocation: string | undefined = useLastLocation()?.pathname
-	if (lastLocation === "/login") {
-		return (
-			<Slide direction={"left"} in={true} timeout={1000}>
-				{children}
-			</Slide>
-		)
-	} else {
-		return (
-			<Fade in={true} timeout={1000}>
-				{children}
-			</Fade>
-		)
-	}
-}
 
 export function RegisterPage(): JSX.Element {
 	const css = useStyles()
@@ -114,19 +93,29 @@ export function RegisterPage(): JSX.Element {
 	}
 
 	return (
-		<Transition>
-			<div className={css.container}>
-				<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
-				<div className={css.content}>
-					<Typography>StudyNookLogo📚</Typography>
-					<Typography variant="h2">Register</Typography>
+		<>
+			<Route render={() => (redirect !== null ? <Redirect push to={redirect} /> : null)} />
+			<Player autoplay loop src={lottieJson} style={{ height: "150px", width: "400px" }}></Player>
+			<Box component="div" sx={{ display: "flex", alignItems: "center" }}>
+				<Box component="div" className={css.content}>
+					<Typography fontFamily="Pacifico" fontSize="30">
+						Register
+					</Typography>
 					<Snackbars message={message} severity={severity} isOpen={isOpen} handleClose={handleClose} />
-					<form className={css.form} onSubmit={handleRegister}>
-						<TextField fullWidth required label="Username" type="text" inputRef={usernameRef} />
-						<TextField fullWidth required label="Name" type="text" inputRef={nameRef} />
-						<TextField fullWidth required label="Email" type="email" inputRef={emailRef} />
-						<TextField fullWidth required label="Password" type="password" inputProps={{ minLength: 6 }} inputRef={passwordRef} />
-						<TextField fullWidth required label="Confirm Password" type="password" inputRef={passwordConfirmRef} />
+					<Box component="form" className={css.form} onSubmit={handleRegister}>
+						<TextField fullWidth required label="Username" type="text" variant="standard" inputRef={usernameRef} />
+						<TextField fullWidth required label="Name" type="text" variant="standard" inputRef={nameRef} />
+						<TextField fullWidth required label="Email" type="email" variant="standard" inputRef={emailRef} />
+						<TextField
+							fullWidth
+							required
+							label="Password"
+							type="password"
+							variant="standard"
+							inputProps={{ minLength: 6 }}
+							inputRef={passwordRef}
+						/>
+						<TextField fullWidth required label="Confirm Password" type="password" variant="standard" inputRef={passwordConfirmRef} />
 						<Button className={css.button} variant="contained" color="primary" disabled={loading} type="submit">
 							Register
 						</Button>
@@ -136,9 +125,9 @@ export function RegisterPage(): JSX.Element {
 								Log in
 							</Button>
 						</Typography>
-					</form>
-				</div>
-			</div>
-		</Transition>
+					</Box>
+				</Box>
+			</Box>
+		</>
 	)
 }
