@@ -60,9 +60,6 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	//* REPORT
 	r.HandleFunc("/api/report_submission", WithUser(sessionManager, db, c.SubmitReports))
 
-	r.Post("/api/login_admin", c.AdminLoginHandler)   //POST /api/login_admin
-	r.Post("/api/logout_admin", c.AdminLogoutHandler) //POST /api/logout_admin
-
 	// Mount the admin sub-router
 	r.Mount("/admin", c.adminRouter())
 
@@ -145,17 +142,34 @@ func (c *Controller) CurrentUserState(w http.ResponseWriter, r *http.Request, u 
 // A completely separate router for administrator routes
 func (c *Controller) adminRouter() http.Handler {
 	r := chi.NewRouter()
-	r.Route("/", func(r chi.Router) {
-		r.Use(c.AdminOnly)
-		r.Post("/users", c.UserCreateHandler) // POST /admin/users
-		r.Get("/users", c.UserGetAllHandler)  // GET /admin/users
-		r.Route("/users/{id}", func(r chi.Router) {
+
+	r.Post("/login", c.AdminLoginHandler)   // POST /admin/login
+	r.Post("/logout", c.AdminLogoutHandler) // POST /admin/logout
+
+	r.Route("/users", func(r chi.Router) {
+		//	r.Use(c.AdminOnly)
+		r.Post("/", c.UserCreateHandler) // POST /admin/users
+		r.Get("/", c.UserGetAllHandler)  // GET /admin/users
+		r.Route("/{id}", func(r chi.Router) {
 			r.Get("/", c.UserGetHandler)       // GET /admin/users/123
 			r.Put("/", c.UserUpdateHandler)    // PUT /admin/users/123
 			r.Delete("/", c.UserDeleteHandler) // DELETE /admin/users/123
 		})
-		r.Put("/user_details_only/{id}", c.UserUpdateExceptPasswordHandler)
 	})
+	r.Put("/user_details_only/{id}", c.UserUpdateExceptPasswordHandler) // PUT /admin/user_details_only/123
+
+	r.Route("/admins", func(r chi.Router) {
+		//	r.Use(c.AdminOnly)
+		r.Post("/", c.AdminCreateHandler) // POST /admin/admins
+		r.Get("/", c.AdminGetAllHandler)  // GET /admin/admins
+		r.Route("/{id}", func(r chi.Router) {
+			r.Get("/", c.AdminGetHandler)       // GET /admin/admins/123
+			r.Put("/", c.AdminUpdateHandler)    // PUT /admin/admins/123
+			r.Delete("/", c.AdminDeleteHandler) // DELETE /admin/admins/123
+		})
+	})
+	r.Put("/admin_details_only/{id}", c.AdminUpdateExceptPasswordHandler) // PUT /admin/admin_details_only/123
+
 	return r
 }
 

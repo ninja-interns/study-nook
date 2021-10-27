@@ -202,13 +202,13 @@ func (c *Controller) UserDeleteHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	w.Write([]byte("Successfull delete"))
+	w.Write([]byte("Successful delete"))
 	return
 
 }
 
 // UserUpdateExceptPasswordHandler updates user details except password
-// Handles: PUT /user_details_only/123"
+// Handles: PUT /admin/user_details_only/123"
 func (c *Controller) UserUpdateExceptPasswordHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")

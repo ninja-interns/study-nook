@@ -43,14 +43,6 @@ func (u User) ValidateIgnorePassword() error {
 	}.Filter()
 }
 
-// PasswordConfirmation confirms the password is same
-func (u User) PasswordConfirmation() bool {
-	if u.Password == u.ConfirmPassword {
-		return true
-	}
-	return false
-}
-
 // Admin struct
 type Admin struct {
 	ID              string `json:"id"`
@@ -82,14 +74,12 @@ func (a Admin) ValidateIgnorePassword() error {
 	}.Filter()
 }
 
-// ValidateExceptID validates the Admin JSON payload except ID
-func (a Admin) ValidateExceptID() error {
-	return validation.ValidateStruct(&a,
-		// Email cannot be empty and should be in a valid email format.
-		validation.Field(&a.Email, validation.Required, is.Email),
-		// Password cannot be empty.
-		validation.Field(&a.Password, validation.Required),
-	)
+// ValidateIgnoreNameAndPassword validates admin struct ignoring the name and passwordfield
+func (a Admin) ValidateIgnoreNameAndPassword() error {
+	return validation.Errors{
+		"Email":    validation.Validate(a.Email, validation.Required, is.Email),
+		"Password": validation.Validate(a.Password, validation.Required),
+	}.Filter()
 }
 
 /**

@@ -31,7 +31,7 @@ const UserListGrid = () => {
 	const [errorOpen, setErrorOpen] = useState(false)
 	const [successOpen, setSuccessOpen] = useState(false)
 
-	useEffect(async () => {
+	useEffect( () => {
 		//Fetch User list from the API endpoint
 
 		const res = await fetch("https://studynook.xyz/admin/users")

@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+	"errors"
+	"net/http"
 
 	"github.com/georgysavva/scany/pgxscan"
 	"studynook.go"
@@ -10,64 +12,82 @@ import (
 // GetAllUsers fetches all the users from the database
 func (db *DB) GetAllUsers(ctx context.Context) ([]*studynook.User, error) {
 
-	userList := []*studynook.User{}
-	query := `SELECT id, email, name, username, is_verified, token FROM users ORDER BY ID DESC`
-	err := pgxscan.Select(ctx, db.Conn, &userList, query)
+	users := []*studynook.User{}
+	query := `SELECT id, email, name, username, is_verified, token FROM users ORDER BY ID DESC;`
+	err := pgxscan.Select(ctx, db.Conn, &users, query)
 	if err != nil {
-		return userList, err
+		return nil, err
 	}
-	return userList, nil
+	return users, nil
 
 }
 
 // AddUser inserts a user in the database
-func (db *DB) AddUser(ctx context.Context, user *studynook.User) error {
-	query := `INSERT INTO users (id, email, password_hash, name, username, is_verified, token) VALUES ($1, $2, $3, $4, $5, $6, $7)`
-	_, err := db.Conn.Exec(ctx, query, user.ID, user.Email, user.PasswordHash, user.Name, user.Username, user.IsVerified, user.Token)
+func (db *DB) AddUser(ctx context.Context, u *studynook.User) error {
+
+	query := `INSERT INTO users (id, email, password_hash, name, username, is_verified, token) VALUES ($1, $2, $3, $4, $5, $6, $7);`
+	_, err := db.Conn.Exec(ctx, query, u.ID, u.Email, u.PasswordHash, u.Name, u.Username, u.IsVerified, u.Token)
 	if err != nil {
 		return err
 	}
 	return nil
+
 }
 
 // GetUserByID returns a user with given ID
-func (db *DB) GetUserByID(ctx context.Context, userID string) (*studynook.User, error) {
-	query := `SELECT id, email, name, username, is_verified, token FROM users WHERE id = $1`
-	user := &studynook.User{}
-	err := db.Conn.QueryRow(ctx, query, userID).Scan(&user.ID, &user.Email, &user.Name, &user.Username, &user.IsVerified, &user.Token)
-	if err != nil {
-		return user, err
-	}
+func (db *DB) GetUserByID(ctx context.Context, id string) (*studynook.User, error) {
 
-	return user, nil
+	u := &studynook.User{}
+	query := `SELECT id, email, name, username, is_verified, token FROM users WHERE id = $1;`
+	err := db.Conn.QueryRow(ctx, query, id).Scan(&u.ID, &u.Email, &u.Name, &u.Username, &u.IsVerified, &u.Token)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+
 }
 
 // UpdateUser updates the user with given ID
-func (db *DB) UpdateUser(ctx context.Context, userID string, userData *studynook.User) error {
-	query := `UPDATE users SET email=$1, name=$2, username=$3, password_hash=$4, is_verified=$5, token=$6 WHERE id=$7`
-	res, err := db.Conn.Exec(ctx, query, userData.Email, userData.Name, userData.Username, userData.PasswordHash, userData.IsVerified, userData.Token, userID)
+func (db *DB) UpdateUser(ctx context.Context, id string, u *studynook.User) error {
+
+	query := `UPDATE users SET email = $1, name = $2, username = $3, password_hash = $4, is_verified = $5, token = $6 WHERE id = $7;`
+	res, err := db.Conn.Exec(ctx, query, u.Email, u.Name, u.Username, u.PasswordHash, u.IsVerified, u.Token, id)
 	if err != nil || res.RowsAffected() == 0 {
 		return err
 	}
+	if res.RowsAffected() == 0 {
+		return errors.New(http.StatusText(http.StatusNotFound))
+	}
 	return nil
+
 }
 
 // UpdateUserExceptPassword updates the user except password
-func (db *DB) UpdateUserExceptPassword(ctx context.Context, userID string, userData *studynook.User) error {
-	query := `UPDATE users SET email=$1, name=$2, username=$3, is_verified=$4, token=$5 WHERE id=$6`
-	res, err := db.Conn.Exec(ctx, query, userData.Email, userData.Name, userData.Username, userData.IsVerified, userData.Token, userID)
-	if err != nil || res.RowsAffected() == 0 {
+func (db *DB) UpdateUserExceptPassword(ctx context.Context, id string, u *studynook.User) error {
+
+	query := `UPDATE users SET email = $1, name = $2, username = $3, is_verified = $4, token = $5 WHERE id = $6;`
+	res, err := db.Conn.Exec(ctx, query, u.Email, u.Name, u.Username, u.IsVerified, u.Token, id)
+	if err != nil {
 		return err
 	}
+	if res.RowsAffected() == 0 {
+		return errors.New(http.StatusText(http.StatusNotFound))
+	}
 	return nil
+
 }
 
 // DeleteUserByID deletes the user with given ID
-func (db *DB) DeleteUserByID(ctx context.Context, userID string) error {
-	query := `DELETE FROM users where id = $1`
-	res, err := db.Conn.Exec(ctx, query, userID)
-	if err != nil || res.RowsAffected() == 0 {
+func (db *DB) DeleteUserByID(ctx context.Context, id string) error {
+
+	query := `DELETE FROM users where id = $1;`
+	res, err := db.Conn.Exec(ctx, query, id)
+	if err != nil {
 		return err
 	}
+	if res.RowsAffected() == 0 {
+		return errors.New(http.StatusText(http.StatusNotFound))
+	}
 	return nil
+
 }

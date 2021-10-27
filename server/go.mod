@@ -10,6 +10,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.3
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/gofrs/uuid v4.0.0+incompatible
+	github.com/golang/gddo v0.0.0-20210115222349-20d68f94ee1f
 	github.com/jackc/pgx/v4 v4.13.0
 	github.com/lib/pq v1.10.3 // indirect
 	github.com/urfave/cli/v2 v2.3.0
