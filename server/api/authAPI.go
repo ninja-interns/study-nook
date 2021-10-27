@@ -345,9 +345,10 @@ func (c *Controller) DeleteAccount(w http.ResponseWriter, r *http.Request, u *st
 	sqlStatement = `DELETE FROM users WHERE id = $1`
 	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
-			Message: "Something went wrong, please try again.",
+			Message: "Error deleting from DB.",
 			IsValid: false,
 		}
 		json.NewEncoder(w).Encode(response)
@@ -356,9 +357,10 @@ func (c *Controller) DeleteAccount(w http.ResponseWriter, r *http.Request, u *st
 
 	err = c.Sessions.Destroy(r.Context())
 	if err != nil {
+		fmt.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		response := JsonResponse{
-			Message: "Something went wrong, please try again.",
+			Message: "Error destroying session.",
 			IsValid: false,
 		}
 		json.NewEncoder(w).Encode(response)
