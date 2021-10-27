@@ -121,7 +121,7 @@ const UserCreate = () => {
 							<Typography variant="h6" color="primary" gutterBottom>
 								CREATE USER
 							</Typography>
-							<Link to="/admin-users" style={{ textDecoration: "none" }}>
+							<Link to="/users" style={{ textDecoration: "none" }}>
 								<Button color="primary" variant="contained" size="medium">
 									VIEW USERS
 								</Button>
