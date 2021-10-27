@@ -35,7 +35,7 @@ export const useStyles = makeStyles({
 		alignItems: "center",
 		justifyContent: "center",
 		flexDirection: "column",
-		animation: "$creditRollStays 3s linear",
+		animation: "$creditRollStays 5s linear",
 		animationDelay: "25s",
 		animationFillMode: "forwards",
 		WebkitAnimationFillMode: "forwards",
@@ -48,9 +48,12 @@ export const useStyles = makeStyles({
 			top: "600px",
 			visibility: "visible",
 		},
-		"100%": {
+		"30%, 80%": {
 			top: "150px",
 			visibility: "visible",
+		},
+		"100%": {
+			visibility: "hidden",
 		},
 	},
 	"@keyframes creditRollStays": {
@@ -59,7 +62,7 @@ export const useStyles = makeStyles({
 			visibility: "visible",
 		},
 		"100%": {
-			top: "150px",
+			top: "50px",
 			visibility: "visible",
 		},
 	},
