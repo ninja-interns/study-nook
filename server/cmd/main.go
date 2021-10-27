@@ -92,6 +92,7 @@ func main() {
 					//if the production boolean flag (default false) is true it will initialize the emailer struct to use all the configs, or else it will just inialize the emailer as the development emailer struct only holding the username. Checkout server/emails to see how the logic works.
 					var emailer emails.Emailer
 					if production {
+						fmt.Println("user: ", euser, "pass: ", epassword, "server: ", eserver, "port: ", eport)
 						emailer = &emails.Email{
 							Username: euser,
 							Password: epassword,
