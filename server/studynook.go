@@ -23,42 +23,24 @@ type User struct {
 	ConfirmPassword string `json:"confirmPassword,omitempty"` // To tell the JSON encoder to suppress the output of this field when the field is set to the zero value
 }
 
-// Validate function validates the JSON payload
+// Validate function validates the User struct unmarshalled from the request payload
 func (u User) Validate() error {
-	return validation.ValidateStruct(&u,
-		// ID cannot be empity.
-		validation.Field(&u.ID, validation.Required),
-		// Email cannot be empty and should be in a valid email format.
-		validation.Field(&u.Email, validation.Required, is.Email),
-		// Password cannot be empty.
-		validation.Field(&u.Password, validation.Required),
-		// Name cannot be empty.
-		validation.Field(&u.Name, validation.Required),
-		// Username cannot be empty.
-		validation.Field(&u.Username, validation.Required),
-		// IsVerified cannot be empty.
-		validation.Field(&u.IsVerified, validation.Required),
-		// ConfirmPassword cannot be empty.
-		validation.Field(&u.ConfirmPassword, validation.Required),
-	)
+	return validation.Errors{
+		"Name":             validation.Validate(u.Name, validation.Required),
+		"Username":         validation.Validate(u.Username, validation.Required),
+		"Email":            validation.Validate(u.Email, validation.Required, is.Email),
+		"Password":         validation.Validate(u.Password, validation.Required),
+		"Confirm password": validation.Validate(u.ConfirmPassword, validation.Required),
+	}.Filter()
 }
 
 // ValidateIgnorePassword validates the JSON payload, ignores the password validation
 func (u User) ValidateIgnorePassword() error {
-
-	return validation.ValidateStruct(&u,
-		// ID cannot be empity.
-		validation.Field(&u.ID, validation.Required),
-		// Email cannot be empty and should be in a valid email format.
-		validation.Field(&u.Email, validation.Required, is.Email),
-		// Name cannot be empty.
-		validation.Field(&u.Name, validation.Required),
-		// Username cannot be empty.
-		validation.Field(&u.Username, validation.Required),
-		// IsVerified cannot be empty.
-		validation.Field(&u.IsVerified, validation.Required),
-	)
-
+	return validation.Errors{
+		"Name":     validation.Validate(u.Name, validation.Required),
+		"Username": validation.Validate(u.Username, validation.Required),
+		"Email":    validation.Validate(u.Email, validation.Required, is.Email),
+	}.Filter()
 }
 
 // PasswordConfirmation confirms the password is same
@@ -69,24 +51,35 @@ func (u User) PasswordConfirmation() bool {
 	return false
 }
 
-// Admin model
+// Admin struct
 type Admin struct {
-	ID           string `json:"id"`
-	Email        string `json:"email"`
-	Password     string `json:"password"`
-	PasswordHash []byte `json:"-"` // Skip PasswordHash JSON encode
+	ID              string `json:"id"`
+	Name            string `json:"name"`
+	Email           string `json:"email"`
+	Type            string `json:"type"` // "admin" or "superadmin"
+	Password        string `json:"password,omitempty"`
+	ConfirmPassword string `json:"confirmPassword,omitempty"`
+	PasswordHash    []byte `json:"-"`
 }
 
 // Validate function validates the Admin JSON payload
 func (a Admin) Validate() error {
-	return validation.ValidateStruct(&a,
-		// ID cannot be empity.
-		validation.Field(&a.ID, validation.Required),
-		// Email cannot be empty and should be in a valid email format.
-		validation.Field(&a.Email, validation.Required, is.Email),
-		// Password cannot be empty.
-		validation.Field(&a.Password, validation.Required),
-	)
+	return validation.Errors{
+		"Name":             validation.Validate(a.Name, validation.Required),
+		"Email":            validation.Validate(a.Email, validation.Required, is.Email),
+		"Type":             validation.Validate(a.Type, validation.Required),
+		"Password":         validation.Validate(a.Password, validation.Required),
+		"Confirm password": validation.Validate(a.ConfirmPassword, validation.Required),
+	}.Filter()
+}
+
+// ValidateIgnorePassword validates Admin struct ignoring the passwords field
+func (a Admin) ValidateIgnorePassword() error {
+	return validation.Errors{
+		"Name":  validation.Validate(a.Name, validation.Required),
+		"Email": validation.Validate(a.Email, validation.Required, is.Email),
+		"Type":  validation.Validate(a.Type, validation.Required),
+	}.Filter()
 }
 
 // ValidateExceptID validates the Admin JSON payload except ID
@@ -107,7 +100,7 @@ type Todo struct {
 	UserId      string `json:"userId"`
 	Text        string `json:"todoText"`
 	IsCompleted bool   `json:"isCompleted"`
-	Title			string `json:"todoTitle"`
+	Title       string `json:"todoTitle"`
 }
 
 /**

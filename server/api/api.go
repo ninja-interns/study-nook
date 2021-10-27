@@ -2,14 +2,18 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/alexedwards/scs/pgxstore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
+	"github.com/golang/gddo/httputil/header"
 	"studynook.go"
 	"studynook.go/db"
 	"studynook.go/emails"
@@ -45,7 +49,7 @@ func New(db *db.DB, emailer *emails.Emailer) (*Controller, error) {
 	r.HandleFunc("/api/delete_account", WithUser(sessionManager, db, c.DeleteAccount))
 	r.HandleFunc("/api/update_user", WithUser(sessionManager, db, c.UpdateUser))
 	r.HandleFunc("/api/update_password", WithUser(sessionManager, db, c.UpdatePassword))
-	
+
 	//* GAME INTERFACE
 	r.HandleFunc("/api/change_background", WithUser(sessionManager, db, c.ChangeBackgroundHandler))
 	r.HandleFunc("/api/change_avatar", WithUser(sessionManager, db, c.ChangeAvatarHandler))
@@ -84,11 +88,11 @@ type currentUserState struct {
 	Name     string `json:"name"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
-	Coins	 string	`json:"coins"`
-	Level    string	`json:"level"`
-	EXP      string	`json:"experience"`
-	Zone	 string `json:"currentBackground"`
-	Avatar	 string `json:"currentAvatar"`
+	Coins    string `json:"coins"`
+	Level    string `json:"level"`
+	EXP      string `json:"experience"`
+	Zone     string `json:"currentBackground"`
+	Avatar   string `json:"currentAvatar"`
 }
 
 //will hit when the API from main.go is invoked- can be called from multiple components on frontend using useGetState() from utils folder, custom hook. Backend solution to persisting data through a refresh
@@ -123,11 +127,11 @@ func (c *Controller) CurrentUserState(w http.ResponseWriter, r *http.Request, u 
 	currentUser := &currentUserState{Email: u.Email,
 		Name:     u.Name,
 		Username: u.Username,
-		Coins:	  strconv.Itoa(coins),
-		Level:	  strconv.Itoa(userLevel),
-		EXP:	  strconv.Itoa(userExp),
-		Zone:	  currentBackground,
-		Avatar:	  currentAvatar,
+		Coins:    strconv.Itoa(coins),
+		Level:    strconv.Itoa(userLevel),
+		EXP:      strconv.Itoa(userExp),
+		Zone:     currentBackground,
+		Avatar:   currentAvatar,
 	}
 
 	err = json.NewEncoder(w).Encode(currentUser)
@@ -145,12 +149,81 @@ func (c *Controller) adminRouter() http.Handler {
 		r.Use(c.AdminOnly)
 		r.Post("/users", c.UserCreateHandler) // POST /admin/users
 		r.Get("/users", c.UserGetAllHandler)  // GET /admin/users
-		r.Route("/users/{userID}", func(r chi.Router) {
+		r.Route("/users/{id}", func(r chi.Router) {
 			r.Get("/", c.UserGetHandler)       // GET /admin/users/123
 			r.Put("/", c.UserUpdateHandler)    // PUT /admin/users/123
 			r.Delete("/", c.UserDeleteHandler) // DELETE /admin/users/123
 		})
-		r.Put("/user_details_only/{userID}", c.UserUpdateExceptPasswordHandler)
+		r.Put("/user_details_only/{id}", c.UserUpdateExceptPasswordHandler)
 	})
 	return r
+}
+
+// Validation and error handling of the incoming JSON payload
+type malformedRequest struct {
+	status int
+	msg    string
+}
+
+func (mr *malformedRequest) Error() string {
+	return mr.msg
+}
+
+func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) error {
+	if r.Header.Get("Content-Type") != "" {
+		value, _ := header.ParseValueAndParams(r.Header, "Content-Type")
+		if value != "application/json" {
+			msg := "Content-Type header is not application/json"
+			http.Error(w, msg, http.StatusUnsupportedMediaType)
+			return &malformedRequest{status: http.StatusUnsupportedMediaType, msg: msg}
+		}
+	}
+	r.Body = http.MaxBytesReader(w, r.Body, 1048576) // 1MB
+
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+
+	err := dec.Decode(&dst)
+	if err != nil {
+		var syntaxError *json.SyntaxError
+		var unmarshalTypeError *json.UnmarshalTypeError
+
+		switch {
+		case errors.As(err, &syntaxError):
+			msg := fmt.Sprintf("Request body contains badly-formed JSON (at postion %d)", syntaxError.Offset)
+			return &malformedRequest{status: http.StatusBadRequest, msg: msg}
+
+		case errors.Is(err, io.ErrUnexpectedEOF):
+			msg := fmt.Sprintf("Request body contains badly-formed JSON")
+			return &malformedRequest{status: http.StatusBadRequest, msg: msg}
+
+		case errors.As(err, &unmarshalTypeError):
+			msg := fmt.Sprintf("Request body cotains an invalid value for the %q field (at position %d)", unmarshalTypeError.Field, unmarshalTypeError.Offset)
+			return &malformedRequest{status: http.StatusBadRequest, msg: msg}
+
+		case strings.HasPrefix(err.Error(), "json: unknown filed "):
+			filedName := strings.TrimPrefix(err.Error(), "json: unknown field ")
+			msg := fmt.Sprintf("Request body contains unknown filed %s", filedName)
+			return &malformedRequest{status: http.StatusBadRequest, msg: msg}
+
+		case errors.Is(err, io.EOF):
+			msg := "Request body must not be empty"
+			return &malformedRequest{status: http.StatusBadRequest, msg: msg}
+
+		case err.Error() == "http: request body too large":
+			msg := "Request body must not be larger than 1MB"
+			return &malformedRequest{status: http.StatusRequestEntityTooLarge, msg: msg}
+
+		default:
+			return err
+
+		}
+	}
+	err = dec.Decode(&struct{}{})
+	if err != io.EOF {
+		msg := "Request body must only contain a single JSON object"
+		return &malformedRequest{status: http.StatusBadRequest, msg: msg}
+
+	}
+	return nil
 }

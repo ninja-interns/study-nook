@@ -62,8 +62,8 @@ func (db *DB) UpdateUserExceptPassword(ctx context.Context, userID string, userD
 	return nil
 }
 
-// DeleteUser deletes the user with given ID
-func (db *DB) DeleteUser(ctx context.Context, userID string) error {
+// DeleteUserByID deletes the user with given ID
+func (db *DB) DeleteUserByID(ctx context.Context, userID string) error {
 	query := `DELETE FROM users where id = $1`
 	res, err := db.Conn.Exec(ctx, query, userID)
 	if err != nil || res.RowsAffected() == 0 {
