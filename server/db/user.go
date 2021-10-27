@@ -10,7 +10,7 @@ import (
 // GetAllUsers fetches all the users from the database
 func (db *DB) GetAllUsers(ctx context.Context) ([]*studynook.User, error) {
 
-	var userList []*studynook.User
+	userList := []*studynook.User{}
 	query := `SELECT id, email, name, username, is_verified, token FROM users ORDER BY ID DESC`
 	err := pgxscan.Select(ctx, db.Conn, &userList, query)
 	if err != nil {
