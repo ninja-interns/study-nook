@@ -20,7 +20,7 @@ export interface IAuthCurrentUser {
 function ContextDataContainer() {
 	//Auth
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
-		chrome.cookies.get({ url: "http://localhost:3000", name: "session" }, function (cookie) {
+		chrome.cookies.get({ url: "https://studynook.xyz", name: "session" }, function (cookie) {
 			if (cookie) {
 				setIsLoggedIn(true)
 				return

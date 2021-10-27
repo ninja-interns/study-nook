@@ -7,6 +7,7 @@ import CloseIcon from "@mui/icons-material/Close"
 
 import { ContextContainer } from "../../contexts/ContextContainer"
 import { Badge } from "../../components"
+import { DomainContainer } from "../../contexts/DomainContext"
 
 interface IResponse {
 	unlocked: boolean
@@ -40,12 +41,13 @@ export function AchievementsPage() {
 	const history = useHistory()
 	const [redirect, setRedirect] = useState<string | null>(null)
 	const [unlocked, setUnlocked] = useState<IUnlocked>()
+	const { url } = DomainContainer.useContainer()
 
 	useEffect(() => {
 		let isMounted = true
 		;(async () => {
 			try {
-				const response = await fetch("http://localhost:8080/api/achievement_check", {
+				const response = await fetch(`${url}/api/achievement_check`, {
 					method: "POST",
 					headers: { "content-type": "application/json" },
 				})
