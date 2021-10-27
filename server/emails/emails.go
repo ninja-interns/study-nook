@@ -58,7 +58,7 @@ func (e *Email) SendEmail(emailStr string, subjectStr string, file string, data 
 	//necessary to be able to send the email
 	address := e.Server + ":" + e.Port
 
-	auth := smtp.PlainAuth("", e.Username, e.Password, address)
+	auth := smtp.PlainAuth("", e.Username, e.Password, e.Server)
 	//Filling our email with variable content
 	to := []string{emailStr}
 	subject := "Subject:" + subjectStr + "\n"
