@@ -5,8 +5,6 @@ import Avatar from "@material-ui/core/Avatar"
 import Button from "@material-ui/core/Button"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import TextField from "@material-ui/core/TextField"
-import FormControlLabel from "@material-ui/core/FormControlLabel"
-import Checkbox from "@material-ui/core/Checkbox"
 import Link from "@material-ui/core/Link"
 import Box from "@material-ui/core/Box"
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined"
@@ -68,15 +66,16 @@ const Login = () => {
 		e.preventDefault()
 		// Hitting the backend POST /admin/login
 		try {
-			const res = await fetch("/api/login_admin", {
+			const res = await fetch("https://studynook.xyz/api/login_admin", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({ email: emailRef?.current?.value, password: passwordRef?.current?.value }),
 			})
 			const data: IResponse = await res.json()
+			console.log(data)
 			if (res.status === 200 && data.isValid) {
 				setIsLoggedIn(true)
-				history.push("/admin-dashboard")
+				history.push("/dashboard")
 			} else {
 				setResponse(data)
 				setIsError(true)
@@ -124,7 +123,6 @@ const Login = () => {
 						/>
 						{isError && <Alert severity="error">{response?.message === undefined ? "Internal server error! Try again." : response.message}</Alert>}
 
-						<FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
 						<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
 							Log In
 						</Button>

@@ -1,5 +1,6 @@
 {
 	"name": "studynookadmin",
+	"proxy": "https://studynook.xyz",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {

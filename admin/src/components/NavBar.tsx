@@ -49,13 +49,13 @@ const NavBar = () => {
 	let history = useHistory()
 	const logoutAdmin = async () => {
 		try {
-			const res = await fetch("/api/logout_admin", {
+			const res = await fetch("https://studynook.xyz/api/logout_admin", {
 				method: "POST",
 			})
 			const data: IResponse = await res.json()
 			if (res.status === 200 && data.isValid) {
 				setIsLoggedIn(false)
-				history.push("/admin-login")
+				history.push("/login")
 			}
 		} catch (err) {}
 	}

@@ -74,7 +74,7 @@ const UserEdit = () => {
 	useEffect(() => {
 		try {
 			//Fetch User from the API endpoint
-			fetch(`http://localhost:8080/admin/users/${userID}`)
+			fetch(`https://studynook.xyz/admin/users/${userID}`)
 				.then((response) => response.json())
 				.then((json) => (json === undefined ? setIsError(true) : setUser(json)))
 		} catch (err) {
@@ -88,7 +88,7 @@ const UserEdit = () => {
 		if (updatePassword) {
 			try {
 				// Hitting the API endpoint: PUT /admin/users/123
-				const res = await fetch(`http://localhost:8080/admin/users/${userID}`, {
+				const res = await fetch(`https://studynook.xyz/admin/users/${userID}`, {
 					method: "PUT",
 					headers: { "content-type": "application/json" },
 					body: JSON.stringify({
@@ -105,7 +105,7 @@ const UserEdit = () => {
 
 				const data: IUser | IErrorMessage = await res.json()
 				if (res.status === 200 && !isIErrorMessage(data)) {
-					history.push("/admin-users")
+					history.push("/users")
 				} else {
 					setIsError(true)
 					setResponse(data)
@@ -116,7 +116,7 @@ const UserEdit = () => {
 		} else {
 			try {
 				// Hitting the API endpoint: PUT /admin/user_details_only/123
-				const res = await fetch(`http://localhost:8080/admin/user_details_only/${userID}`, {
+				const res = await fetch(`https://studynook.xyz/admin/user_details_only/${userID}`, {
 					method: "PUT",
 					headers: { "content-type": "application/json" },
 					body: JSON.stringify({
@@ -131,7 +131,7 @@ const UserEdit = () => {
 
 				const data: IUser | IErrorMessage = await res.json()
 				if (res.status === 200 && !isIErrorMessage(data)) {
-					history.push("/admin-users")
+					history.push("/users")
 				} else {
 					setIsError(true)
 					setResponse(data)
@@ -186,7 +186,7 @@ const UserEdit = () => {
 								>
 									DELETE USER
 								</Button>
-								<Link to="/admin-users-create" style={{ textDecoration: "none" }}>
+								<Link to="/users-create" style={{ textDecoration: "none" }}>
 									<Button color="primary" size="medium" startIcon={<AddIcon />} variant="contained">
 										CREATE USER
 									</Button>
@@ -375,7 +375,7 @@ const UserEdit = () => {
 								message="Successfully deleted the user."
 								setOpen={setSuccessOpen}
 								onConfirm={() => {
-									history.push("/admin-users")
+									history.push("/users")
 								}}
 							/>
 						</div>

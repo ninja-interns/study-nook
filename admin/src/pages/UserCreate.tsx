@@ -80,7 +80,7 @@ const UserCreate = () => {
 		e.preventDefault()
 		// Hitting the API endpoint: POST /admin/users
 		try {
-			const res = await fetch("/admin/users", {
+			const res = await fetch("https://studynook.xyz/admin/users", {
 				method: "POST",
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({
@@ -94,7 +94,7 @@ const UserCreate = () => {
 
 			const data: IUser | IErrorMessage = await res.json()
 			if (res.status === 200 && !isIErrorMessage(data)) {
-				history.push("/admin-users")
+				history.push("/users")
 			} else {
 				setIsError(true)
 				setResponse(data)
