@@ -6,7 +6,7 @@ Type=simple
 Restart=always
 RestartSec=5s
 ExecStart=/home/aliciabiggs/go/main s -b=true -u=aliciabiggs -p=bxBGDRYtgaRbHyJiBdaS -a=:8081
-EnvFile=/home/aliciabriggs/studynook.prod.env
+EnvironmentFile=/home/aliciabiggs/studynook.prod.env
 
 [Install]
 WantedBy=multi-user.target
