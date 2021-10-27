@@ -342,6 +342,32 @@ func (c *Controller) DeleteAccount(w http.ResponseWriter, r *http.Request, u *st
 		return
 	}
 
+	sqlStatement = `DELETE FROM user_stats WHERE id = $1`
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Error deleting from DB.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	sqlStatement = `DELETE FROM user_achievements WHERE id = $1`
+	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, id)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		response := JsonResponse{
+			Message: "Error deleting from DB.",
+			IsValid: false,
+		}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
 	sqlStatement = `DELETE FROM users WHERE id = $1`
 	_, err = c.DB.Conn.Exec(context.Background(), sqlStatement, id)
 	if err != nil {
