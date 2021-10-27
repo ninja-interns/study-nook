@@ -67,7 +67,7 @@ func (e *Email) SendEmail(emailStr string, subjectStr string, file string, data 
 	//sending the email
 	err = smtp.SendMail(address, auth, e.Username, to, message)
 	if err != nil {
-		fmt.Println("smtp", err)
+		fmt.Println("smtp", err, address, auth, e.Username, to, message)
 		return err
 	}
 	return nil
