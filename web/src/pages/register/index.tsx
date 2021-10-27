@@ -75,10 +75,13 @@ export function RegisterPage(): JSX.Element {
 				setIsOpen(true)
 			} else {
 				setMessage(data.message)
+				console.log(data.message)
 				setSeverity("error")
 				setIsOpen(true)
 			}
 		} catch (err) {
+			console.log(message)
+			console.log(err)
 			console.error(err)
 		}
 		setLoading(false)
