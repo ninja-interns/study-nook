@@ -29,7 +29,7 @@ func (c *Controller) AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.ValidateIgnoreNameAndPassword()
+	err = a.ValidateIgnoreNameAndType()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -59,7 +59,7 @@ func (c *Controller) AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	c.Sessions.Put(r.Context(), "id", a.ID)
 	c.Sessions.Put(r.Context(), "email", a.Email)
-	c.Sessions.Put(r.Context(), "type", a.Type)
+	c.Sessions.Put(r.Context(), "type", a.AdminType)
 
 	w.Write([]byte("Successful login"))
 	return

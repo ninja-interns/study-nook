@@ -14,7 +14,7 @@ func (db *DB) GetAdminByID(ctx context.Context, id string) (*studynook.Admin, er
 
 	a := &studynook.Admin{}
 	query := `SELECT id, name, email, type FROM admins WHERE id = $1;`
-	err := db.Conn.QueryRow(ctx, query, id).Scan(&a.ID, &a.Name, &a.Email, &a.Type)
+	err := db.Conn.QueryRow(ctx, query, id).Scan(&a.ID, &a.Name, &a.Email, &a.AdminType)
 	if err != nil {
 		return nil, err
 	}
@@ -23,9 +23,9 @@ func (db *DB) GetAdminByID(ctx context.Context, id string) (*studynook.Admin, er
 
 // GetAdminByEmail returns a admin with password_hash for given email
 func (db *DB) GetAdminByEmail(ctx context.Context, email string) (*studynook.Admin, error) {
-	query := `SELECT id, email, password_hash FROM admins WHERE id = $1`
+	query := `SELECT id, email, password_hash, admin_type FROM admins WHERE email = $1;`
 	a := &studynook.Admin{}
-	err := db.Conn.QueryRow(ctx, query, email).Scan(&a.ID, &a.Email, &a.PasswordHash)
+	err := db.Conn.QueryRow(ctx, query, email).Scan(&a.ID, &a.Email, &a.PasswordHash, &a.AdminType)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (db *DB) GetAllAdmins(ctx context.Context) ([]*studynook.Admin, error) {
 func (db *DB) AddAdmin(ctx context.Context, a *studynook.Admin) error {
 
 	query := `INSERT INTO admins (id, name, email, type, password_hash) VALUES ($1, $2, $3, $4, $5);`
-	_, err := db.Conn.Exec(ctx, query, a.ID, a.Name, a.Email, a.Type, a.PasswordHash)
+	_, err := db.Conn.Exec(ctx, query, a.ID, a.Name, a.Email, a.AdminType, a.PasswordHash)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (db *DB) AddAdmin(ctx context.Context, a *studynook.Admin) error {
 func (db *DB) UpdateAdmin(ctx context.Context, id string, a *studynook.Admin) error {
 
 	query := `UPDATE admins SET name = $1, email = $2, type = $3, password_hash = $4 WHERE id = $5;`
-	res, err := db.Conn.Exec(ctx, query, a.Name, a.Email, a.Type, a.PasswordHash, id)
+	res, err := db.Conn.Exec(ctx, query, a.Name, a.Email, a.AdminType, a.PasswordHash, id)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (db *DB) UpdateAdmin(ctx context.Context, id string, a *studynook.Admin) er
 func (db *DB) UpdateAdminExceptPassword(ctx context.Context, id string, a *studynook.Admin) error {
 
 	query := `UPDATE admins SET name = $1, email = $2, type = $3 WHERE id = $4;`
-	res, err := db.Conn.Exec(ctx, query, a.Name, a.Email, a.Type, id)
+	res, err := db.Conn.Exec(ctx, query, a.Name, a.Email, a.AdminType, id)
 	if err != nil {
 		return err
 	}

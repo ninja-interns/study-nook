@@ -225,7 +225,6 @@ func (c *Controller) UserUpdateExceptPasswordHandler(w http.ResponseWriter, r *h
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-
 	err = u.ValidateIgnorePassword()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

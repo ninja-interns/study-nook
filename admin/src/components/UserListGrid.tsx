@@ -7,8 +7,7 @@ import CheckIcon from "@material-ui/icons/Check"
 import ClearIcon from "@material-ui/icons/Clear"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { deleteUserByID } from "../api/api"
-import { IUser } from "../pages/UserCreate"
+import { deleteUser, getAllUsers, IResponse, isIResponse, IUserResponse } from "../api/api"
 import { SimpleDialog } from "./SimpleDialog"
 import { DeleteAlertDialog } from "./DeleteAlertDialog"
 
@@ -25,22 +24,22 @@ const useStyles = makeStyles((theme) => ({
 
 const UserListGrid = () => {
 	const classes = useStyles()
-	const [users, setUsers] = useState([])
+	const [users, setUsers] = useState<IUserResponse[]>([])
 	const [open, setOpen] = useState(false)
 	const [userID, setUserID] = useState("")
 	const [errorOpen, setErrorOpen] = useState(false)
 	const [successOpen, setSuccessOpen] = useState(false)
 
-	useEffect( () => {
-		//Fetch User list from the API endpoint
-
-		const res = await fetch("https://studynook.xyz/admin/users")
-		const json = res.json()
-		setUsers(json)
-			
-		} catch (err) {
-			setErrorOpen(true)
+	useEffect(() => {
+		async function fetchAllUsers() {
+			const res: IResponse | IUserResponse[] = await getAllUsers()
+			if (isIResponse(res)) {
+				setErrorOpen(true)
+			} else {
+				setUsers(res)
+			}
 		}
+		fetchAllUsers()
 	}, [])
 
 	//Columns of Datagrid
@@ -116,8 +115,8 @@ const UserListGrid = () => {
 
 	const handleDelete = async () => {
 		try {
-			const msg = await deleteUserByID(userID)
-			if (msg.isValid) {
+			const res = await deleteUser(userID)
+			if (res.status === 200) {
 				setSuccessOpen(true)
 			} else {
 				setErrorOpen(true)
@@ -140,7 +139,7 @@ const UserListGrid = () => {
 				</Link>
 			</div>
 
-			<DataGrid rows={users} columns={columns} pageSize={8} checkboxSelection disableSelectionOnClick />
+			<DataGrid autoHeight rows={users} columns={columns} pageSize={8} checkboxSelection disableSelectionOnClick />
 
 			<DeleteAlertDialog
 				title="Delete User?"
@@ -156,7 +155,7 @@ const UserListGrid = () => {
 				title="Success"
 				message="Successfully deleted the user."
 				setOpen={setSuccessOpen}
-				onConfirm={() => setUsers(users.filter((user: IUser) => user.id !== userID))}
+				onConfirm={() => setUsers(users.filter((user: IUserResponse) => user.id !== userID))}
 			/>
 		</div>
 	)

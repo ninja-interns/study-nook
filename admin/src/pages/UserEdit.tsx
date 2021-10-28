@@ -13,9 +13,8 @@ import { Link } from "react-router-dom"
 import React, { useState, useRef, useEffect } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import { FormLabel } from "@material-ui/core"
-import { IUser, IErrorMessage, isIErrorMessage } from "./UserCreate"
+import { IUserResponse, IResponse, isIResponse, deleteUser, getUserByID, updateUser, IUserRequest, updateUserExceptPassword } from "../api/api"
 import { Alert } from "@material-ui/lab"
-import { deleteUserByID } from "../api/api"
 import { SimpleDialog } from "../components/SimpleDialog"
 import { DeleteAlertDialog } from "../components/DeleteAlertDialog"
 
@@ -56,13 +55,13 @@ const UserEdit = () => {
 	const classes = useStyles()
 	const history = useHistory()
 	const { userID } = useParams<ParamTypes>()
-	const [user, setUser] = useState<IUser>()
+	const [user, setUser] = useState<IUserResponse>()
 	const [open, setOpen] = useState(false)
 	const [errorOpen, setErrorOpen] = useState(false)
 	const [successOpen, setSuccessOpen] = useState(false)
 
 	const [updatePassword, setUpdatePassword] = useState(false)
-	const [response, setResponse] = useState<IUser | IErrorMessage>()
+	const [response, setResponse] = useState<IUserResponse | IResponse>()
 	const [isError, setIsError] = useState(false)
 
 	const usernameRef = useRef<HTMLInputElement>()
@@ -72,69 +71,66 @@ const UserEdit = () => {
 	const confirmPasswordRef = useRef<HTMLInputElement>()
 
 	useEffect(() => {
-		try {
-			//Fetch User from the API endpoint
-			fetch(`https://studynook.xyz/admin/users/${userID}`)
-				.then((response) => response.json())
-				.then((json) => (json === undefined ? setIsError(true) : setUser(json)))
-		} catch (err) {
-			setIsError(true)
+		async function fetchUserByID() {
+			try {
+				const res = await getUserByID(userID)
+				isIResponse(res) ? setIsError(true) : setUser(res)
+			} catch (err) {
+				setIsError(true)
+			}
 		}
+		fetchUserByID()
 	}, [])
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
+		let username = usernameRef?.current?.value
+		let name = nameRef?.current?.value
+		let email = emailRef?.current?.value
+		let password = passwordRef?.current?.value
+		let confirmPassword = confirmPasswordRef?.current?.value
+		let user: IUserRequest
 		if (updatePassword) {
 			try {
-				// Hitting the API endpoint: PUT /admin/users/123
-				const res = await fetch(`https://studynook.xyz/admin/users/${userID}`, {
-					method: "PUT",
-					headers: { "content-type": "application/json" },
-					body: JSON.stringify({
-						id: user?.id,
-						username: usernameRef?.current?.value,
-						name: nameRef?.current?.value,
-						email: emailRef?.current?.value,
-						password: passwordRef?.current?.value,
-						isVerified: user?.isVerified,
-						token: user?.token,
-						confirmPassword: confirmPasswordRef?.current?.value,
-					}),
-				})
-
-				const data: IUser | IErrorMessage = await res.json()
-				if (res.status === 200 && !isIErrorMessage(data)) {
-					history.push("/users")
+				if (username !== undefined && name !== undefined && email !== undefined && password !== undefined && confirmPassword !== undefined) {
+					user = {
+						username: username,
+						name: name,
+						email: email,
+						password: password,
+						confirmPassword: confirmPassword,
+					}
+					const res = await updateUser(userID, user)
+					if (!isIResponse(res)) {
+						history.push("/users")
+					} else {
+						setIsError(true)
+						setResponse(res)
+					}
 				} else {
 					setIsError(true)
-					setResponse(data)
 				}
 			} catch (err) {
 				setErrorOpen(true)
 			}
 		} else {
 			try {
-				// Hitting the API endpoint: PUT /admin/user_details_only/123
-				const res = await fetch(`https://studynook.xyz/admin/user_details_only/${userID}`, {
-					method: "PUT",
-					headers: { "content-type": "application/json" },
-					body: JSON.stringify({
-						id: user?.id,
-						username: usernameRef?.current?.value,
-						name: nameRef?.current?.value,
-						email: emailRef?.current?.value,
-						isVerified: user?.isVerified,
-						token: user?.token,
-					}),
-				})
-
-				const data: IUser | IErrorMessage = await res.json()
-				if (res.status === 200 && !isIErrorMessage(data)) {
-					history.push("/users")
+				if (username !== undefined && name !== undefined && email !== undefined) {
+					user = {
+						username: username,
+						name: name,
+						email: email,
+					}
+					const res = await updateUserExceptPassword(userID, user)
+					if (!isIResponse(res)) {
+						history.push("/users")
+					} else {
+						setIsError(true)
+						setResponse(res)
+					}
 				} else {
 					setIsError(true)
-					setResponse(data)
 				}
 			} catch (err) {
 				setErrorOpen(true)
@@ -150,9 +146,8 @@ const UserEdit = () => {
 
 	const handleDelete = async () => {
 		try {
-			const msg = await deleteUserByID(userID)
-			console.log(msg)
-			if (msg.isValid) {
+			const res = await deleteUser(userID)
+			if (res.status === 200) {
 				setSuccessOpen(true)
 			} else {
 				setErrorOpen(true)
@@ -347,9 +342,7 @@ const UserEdit = () => {
 									)}
 									{isError && (
 										<Grid item xs={12}>
-											<Alert severity="error">
-												{response?.message === undefined ? "Internal server error. Try again." : response.message}
-											</Alert>
+											<Alert severity="error">{response?.text === undefined ? "Internal server error, try again" : response.text}</Alert>
 										</Grid>
 									)}
 									<Grid item xs={4} sm={4}>

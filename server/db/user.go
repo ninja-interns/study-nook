@@ -50,9 +50,9 @@ func (db *DB) GetUserByID(ctx context.Context, id string) (*studynook.User, erro
 // UpdateUser updates the user with given ID
 func (db *DB) UpdateUser(ctx context.Context, id string, u *studynook.User) error {
 
-	query := `UPDATE users SET email = $1, name = $2, username = $3, password_hash = $4, is_verified = $5, token = $6 WHERE id = $7;`
-	res, err := db.Conn.Exec(ctx, query, u.Email, u.Name, u.Username, u.PasswordHash, u.IsVerified, u.Token, id)
-	if err != nil || res.RowsAffected() == 0 {
+	query := `UPDATE users SET email = $1, name = $2, username = $3, password_hash = $4 WHERE id = $5;`
+	res, err := db.Conn.Exec(ctx, query, u.Email, u.Name, u.Username, u.PasswordHash, id)
+	if err != nil {
 		return err
 	}
 	if res.RowsAffected() == 0 {
@@ -65,8 +65,8 @@ func (db *DB) UpdateUser(ctx context.Context, id string, u *studynook.User) erro
 // UpdateUserExceptPassword updates the user except password
 func (db *DB) UpdateUserExceptPassword(ctx context.Context, id string, u *studynook.User) error {
 
-	query := `UPDATE users SET email = $1, name = $2, username = $3, is_verified = $4, token = $5 WHERE id = $6;`
-	res, err := db.Conn.Exec(ctx, query, u.Email, u.Name, u.Username, u.IsVerified, u.Token, id)
+	query := `UPDATE users SET email = $1, name = $2, username = $3 WHERE id = $4;`
+	res, err := db.Conn.Exec(ctx, query, u.Email, u.Name, u.Username, id)
 	if err != nil {
 		return err
 	}

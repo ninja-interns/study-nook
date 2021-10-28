@@ -11,6 +11,7 @@ import { NavBar } from "../components/NavBar"
 import { Link } from "react-router-dom"
 import React, { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
+import { IUserResponse, IResponse, createUser, IUserRequest, isIResponse } from "../api/api"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -40,34 +41,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export interface IUser {
-	[k: string]: string | boolean
-	id: string
-	username: string
-	name: string
-	email: string
-	isVerified: boolean
-	token: string
-}
-
-export interface IErrorMessage {
-	[k: string]: string | boolean
-	message: string
-	isValid: boolean
-}
-
-// isErrorMessage checks if the response is IErrorMessage or not
-const isIErrorMessage = (response: IUser | IErrorMessage | undefined): response is IErrorMessage => {
-	if (response !== undefined) {
-		return (response as IErrorMessage).message !== undefined
-	}
-	return false
-}
-
 const UserCreate = () => {
 	const classes = useStyles()
 	const history = useHistory()
-	const [response, setResponse] = useState<IUser | IErrorMessage>()
+	const [response, setResponse] = useState<IUserResponse | IResponse>()
 	const [isError, setIsError] = useState(false)
 
 	const usernameRef = useRef<HTMLInputElement>()
@@ -78,31 +55,34 @@ const UserCreate = () => {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		// Hitting the API endpoint: POST /admin/users
-		try {
-			const res = await fetch("https://studynook.xyz/admin/users", {
-				method: "POST",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({
-					username: usernameRef?.current?.value,
-					name: nameRef?.current?.value,
-					email: emailRef?.current?.value,
-					password: passwordRef?.current?.value,
-					confirmPassword: confirmPasswordRef?.current?.value,
-				}),
-			})
 
-			const data: IUser | IErrorMessage = await res.json()
-			if (res.status === 200 && !isIErrorMessage(data)) {
+		let user: IUserRequest
+		let r: IUserResponse | IResponse
+		let username = usernameRef?.current?.value
+		let name = nameRef?.current?.value
+		let email = emailRef?.current?.value
+		let password = passwordRef?.current?.value
+		let confirmPassword = confirmPasswordRef?.current?.value
+		if (username !== undefined && name !== undefined && email !== undefined && password !== undefined && confirmPassword !== undefined) {
+			user = {
+				username: username,
+				name: name,
+				email: email,
+				password: password,
+				confirmPassword: confirmPassword,
+			}
+			r = await createUser(user)
+			if (!isIResponse(r)) {
 				history.push("/users")
 			} else {
 				setIsError(true)
-				setResponse(data)
+				setResponse(r)
 			}
-		} catch (err) {
+		} else {
 			setIsError(true)
 		}
 	}
+
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		setIsError(false)
 	}
@@ -200,9 +180,7 @@ const UserCreate = () => {
 									</Grid>
 									{isError && (
 										<Grid item xs={12}>
-											<Alert severity="error">
-												{response?.message === undefined ? "Internal server error! Try again." : response.message}
-											</Alert>
+											<Alert severity="error">{response?.text === undefined ? "Interbal server error, try again" : response.text}</Alert>
 										</Grid>
 									)}
 									<Grid item xs={4} sm={4}>
@@ -219,4 +197,4 @@ const UserCreate = () => {
 		</div>
 	)
 }
-export { UserCreate, isIErrorMessage }
+export { UserCreate }

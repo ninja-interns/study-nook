@@ -55,7 +55,8 @@ CREATE TABLE IF NOT EXISTS reports (
 CREATE TABLE IF NOT EXISTS admins (
     id text PRIMARY KEY,
     email text UNIQUE NOT NULL,
-    password_hash bytea NOT NULL
+    password_hash bytea NOT NULL,
+    admin_type TEXT CHECK (admin_type IN ('admin', 'superadmin')) 
 );
 
 CREATE TABLE IF NOT EXISTS user_achievements (

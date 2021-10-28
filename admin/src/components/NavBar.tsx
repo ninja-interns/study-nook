@@ -3,6 +3,7 @@ import { Mail, Notifications } from "@material-ui/icons"
 import { ExitToApp } from "@material-ui/icons"
 import { ContextContainer } from "../contexts/ContextContainer"
 import { useHistory } from "react-router"
+import { logout, IResponse } from "../api/api"
 
 const useStyles = makeStyles((theme) => ({
 	toolbar: {
@@ -38,26 +39,16 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-interface IResponse {
-	message: string
-	isValid: boolean
-}
-
 const NavBar = () => {
 	const { setIsLoggedIn } = ContextContainer.useContainer()
 	const classes = useStyles()
 	let history = useHistory()
-	const logoutAdmin = async () => {
-		try {
-			const res = await fetch("https://studynook.xyz/api/logout_admin", {
-				method: "POST",
-			})
-			const data: IResponse = await res.json()
-			if (res.status === 200 && data.isValid) {
-				setIsLoggedIn(false)
-				history.push("/login")
-			}
-		} catch (err) {}
+	const handleLogout = async () => {
+		const r: IResponse = await logout()
+		if (r.status === 200) {
+			setIsLoggedIn(false)
+			history.push("/login")
+		}
 	}
 	return (
 		<AppBar position="fixed">
@@ -79,7 +70,7 @@ const NavBar = () => {
 						alt="Sanam Limbu"
 						src="https://images.pexels.com/photos/4355346/pexels-photo-4355346.jpeg?cs=srgb&dl=pexels-murat-esibatir-4355346.jpg&fm=jpg"
 					/>
-					<ExitToApp className={classes.icon} onClick={logoutAdmin} display="pointer" />
+					<ExitToApp className={classes.icon} onClick={handleLogout} display="pointer" />
 				</div>
 			</Toolbar>
 		</AppBar>

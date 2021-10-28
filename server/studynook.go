@@ -48,7 +48,7 @@ type Admin struct {
 	ID              string `json:"id"`
 	Name            string `json:"name"`
 	Email           string `json:"email"`
-	Type            string `json:"type"` // "admin" or "superadmin"
+	AdminType       string `json:"adminType"` // "admin" or "superadmin"
 	Password        string `json:"password,omitempty"`
 	ConfirmPassword string `json:"confirmPassword,omitempty"`
 	PasswordHash    []byte `json:"-"`
@@ -59,7 +59,7 @@ func (a Admin) Validate() error {
 	return validation.Errors{
 		"Name":             validation.Validate(a.Name, validation.Required),
 		"Email":            validation.Validate(a.Email, validation.Required, is.Email),
-		"Type":             validation.Validate(a.Type, validation.Required),
+		"Admin Type":       validation.Validate(a.AdminType, validation.Required),
 		"Password":         validation.Validate(a.Password, validation.Required),
 		"Confirm password": validation.Validate(a.ConfirmPassword, validation.Required),
 	}.Filter()
@@ -68,14 +68,14 @@ func (a Admin) Validate() error {
 // ValidateIgnorePassword validates Admin struct ignoring the passwords field
 func (a Admin) ValidateIgnorePassword() error {
 	return validation.Errors{
-		"Name":  validation.Validate(a.Name, validation.Required),
-		"Email": validation.Validate(a.Email, validation.Required, is.Email),
-		"Type":  validation.Validate(a.Type, validation.Required),
+		"Name":       validation.Validate(a.Name, validation.Required),
+		"Email":      validation.Validate(a.Email, validation.Required, is.Email),
+		"Admin Type": validation.Validate(a.AdminType, validation.Required),
 	}.Filter()
 }
 
-// ValidateIgnoreNameAndPassword validates admin struct ignoring the name and passwordfield
-func (a Admin) ValidateIgnoreNameAndPassword() error {
+// ValidateIgnoreNameAndType validates admin struct ignoring the name and type field
+func (a Admin) ValidateIgnoreNameAndType() error {
 	return validation.Errors{
 		"Email":    validation.Validate(a.Email, validation.Required, is.Email),
 		"Password": validation.Validate(a.Password, validation.Required),

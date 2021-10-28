@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { ContextContainer } from "../contexts/ContextContainer"
+import { login, IResponse } from "../api/api"
 const Copyright = () => {
 	return (
 		<Typography variant="body2" color="textSecondary" align="center">
@@ -47,10 +48,6 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(3, 0, 2),
 	},
 }))
-interface IResponse {
-	message: string
-	isValid: boolean
-}
 
 const Login = () => {
 	const { setIsLoggedIn } = ContextContainer.useContainer()
@@ -64,23 +61,18 @@ const Login = () => {
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
-		// Hitting the backend POST /admin/login
-		try {
-			const res = await fetch("https://studynook.xyz/api/login_admin", {
-				method: "POST",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ email: emailRef?.current?.value, password: passwordRef?.current?.value }),
-			})
-			const data: IResponse = await res.json()
-			console.log(data)
-			if (res.status === 200 && data.isValid) {
+		let email = emailRef?.current?.value
+		let password = passwordRef?.current?.value
+		if (email !== undefined && password !== undefined) {
+			const r: IResponse = await login(email, password)
+			if (r.status === 200) {
 				setIsLoggedIn(true)
 				history.push("/dashboard")
 			} else {
-				setResponse(data)
+				setResponse(r)
 				setIsError(true)
 			}
-		} catch (err) {
+		} else {
 			setIsError(true)
 		}
 	}
@@ -121,7 +113,7 @@ const Login = () => {
 							autoComplete="current-password"
 							inputRef={passwordRef}
 						/>
-						{isError && <Alert severity="error">{response?.message === undefined ? "Internal server error! Try again." : response.message}</Alert>}
+						{isError && <Alert severity="error">{response?.text === undefined ? "Please fill out all fields" : response.text}</Alert>}
 
 						<Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
 							Log In

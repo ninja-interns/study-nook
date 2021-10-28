@@ -1,5 +1,5 @@
 import { Container, makeStyles, Typography } from "@material-ui/core"
-import { Group, Home, ShowChart } from "@material-ui/icons"
+import { Group, Home, People, ShowChart } from "@material-ui/icons"
 import { Link } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
@@ -53,16 +53,22 @@ const LeftBar = () => {
 					<Typography className={classes.text}>Home</Typography>
 				</div>
 			</Link>
+			<Link to="/users" style={{ textDecoration: "none" }}>
+				<div className={classes.item}>
+					<Group className={classes.icon} />
+					<Typography className={classes.text}>Users</Typography>
+				</div>
+			</Link>
 			<Link to="/analytics" style={{ textDecoration: "none" }}>
 				<div className={classes.item}>
 					<ShowChart className={classes.icon} />
 					<Typography className={classes.text}>Analytics</Typography>
 				</div>
 			</Link>
-			<Link to="/users" style={{ textDecoration: "none" }}>
+			<Link to="/admins" style={{ textDecoration: "none" }}>
 				<div className={classes.item}>
-					<Group className={classes.icon} />
-					<Typography className={classes.text}>Users</Typography>
+					<People className={classes.icon} />
+					<Typography className={classes.text}>Analytics</Typography>
 				</div>
 			</Link>
 		</Container>
