@@ -37,9 +37,9 @@ func WithError(next ErrorHandler) http.HandlerFunc {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		code, err := next(w, r)
 		if err != nil {
-				http.Error(w, err.Error(), code)
-				fmt.Println(err)
-				return
+			http.Error(w, err.Error(), code)
+			fmt.Println(err)
+			return
 		}
 		w.WriteHeader(code)
 	}
@@ -51,7 +51,19 @@ func (c *Controller) AdminOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		adminID := c.Sessions.GetString(r.Context(), "id")
 		if adminID == "" {
-			http.Error(w, "You are not logged in", http.StatusForbidden)
+			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+// SuperAdminOnly middleware checks that the admin is logged in as superadmin
+func (c *Controller) SuperAdminOnly(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		adminType := c.Sessions.GetString(r.Context(), "adminType")
+		if adminType != "superadmin" {
+			http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 			return
 		}
 		next.ServeHTTP(w, r)

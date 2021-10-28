@@ -59,7 +59,7 @@ func (c *Controller) AdminLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	c.Sessions.Put(r.Context(), "id", a.ID)
 	c.Sessions.Put(r.Context(), "email", a.Email)
-	c.Sessions.Put(r.Context(), "type", a.AdminType)
+	c.Sessions.Put(r.Context(), "adminType", a.AdminType)
 
 	w.Write([]byte("Successful login"))
 	return
@@ -103,6 +103,11 @@ func (c *Controller) AdminCreateHandler(w http.ResponseWriter, r *http.Request) 
 
 	if a.Password != a.ConfirmPassword {
 		http.Error(w, "Entered passwords are not same", http.StatusBadRequest)
+		return
+	}
+	// AdminType can only have "admin" or "superadmin"
+	if a.AdminType != "admin" && a.AdminType != "superadmin" {
+		http.Error(w, "Not valid admin type", http.StatusBadRequest)
 		return
 	}
 
@@ -207,6 +212,12 @@ func (c *Controller) AdminUpdateHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	// AdminType can only have "admin" or "superadmin"
+	if a.AdminType != "admin" && a.AdminType != "superadmin" {
+		http.Error(w, "Not valid admin type", http.StatusBadRequest)
+		return
+	}
+
 	if a.Password != a.ConfirmPassword {
 		http.Error(w, "Entered passwords are not same", http.StatusBadRequest)
 		return
@@ -284,6 +295,12 @@ func (c *Controller) AdminUpdateExceptPasswordHandler(w http.ResponseWriter, r *
 	err = a.ValidateIgnorePassword()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// AdminType can only have "admin" or "superadmin"
+	if a.AdminType != "admin" && a.AdminType != "superadmin" {
+		http.Error(w, "Not valid admin type", http.StatusBadRequest)
 		return
 	}
 

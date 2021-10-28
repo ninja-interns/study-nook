@@ -147,7 +147,7 @@ func (c *Controller) adminRouter() http.Handler {
 	r.Post("/logout", c.AdminLogoutHandler) // POST /admin/logout
 
 	r.Route("/users", func(r chi.Router) {
-		//	r.Use(c.AdminOnly)
+		r.Use(c.AdminOnly)
 		r.Post("/", c.UserCreateHandler) // POST /admin/users
 		r.Get("/", c.UserGetAllHandler)  // GET /admin/users
 		r.Route("/{id}", func(r chi.Router) {
@@ -155,11 +155,11 @@ func (c *Controller) adminRouter() http.Handler {
 			r.Put("/", c.UserUpdateHandler)    // PUT /admin/users/123
 			r.Delete("/", c.UserDeleteHandler) // DELETE /admin/users/123
 		})
+		r.Put("/details_only/{id}", c.UserUpdateExceptPasswordHandler) // PUT /admin/users/details_only/123
 	})
-	r.Put("/user_details_only/{id}", c.UserUpdateExceptPasswordHandler) // PUT /admin/user_details_only/123
 
 	r.Route("/admins", func(r chi.Router) {
-		//	r.Use(c.AdminOnly)
+		r.Use(c.SuperAdminOnly)
 		r.Post("/", c.AdminCreateHandler) // POST /admin/admins
 		r.Get("/", c.AdminGetAllHandler)  // GET /admin/admins
 		r.Route("/{id}", func(r chi.Router) {
@@ -167,8 +167,9 @@ func (c *Controller) adminRouter() http.Handler {
 			r.Put("/", c.AdminUpdateHandler)    // PUT /admin/admins/123
 			r.Delete("/", c.AdminDeleteHandler) // DELETE /admin/admins/123
 		})
+		r.Put("/details_only/{id}", c.AdminUpdateExceptPasswordHandler) // PUT /admin/admins/details_only/123
+
 	})
-	r.Put("/admin_details_only/{id}", c.AdminUpdateExceptPasswordHandler) // PUT /admin/admin_details_only/123
 
 	return r
 }

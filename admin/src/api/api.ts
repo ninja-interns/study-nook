@@ -163,7 +163,7 @@ const updateUser = async (id: string, u: IUserRequest): Promise<IUserResponse | 
 const updateUserExceptPassword = async (id: string, u: IUserRequest): Promise<IUserResponse | IResponse> => {
 	let status: number
 	let text: string
-	const res = await fetch(`${ADDRESS}/user_details_only/${id}`, {
+	const res = await fetch(`${ADDRESS}/users/details_only/${id}`, {
 		method: "PUT",
 		headers: { "content-type": "application/json" },
 		body: JSON.stringify({
