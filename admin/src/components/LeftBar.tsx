@@ -53,22 +53,23 @@ const LeftBar = () => {
 					<Typography className={classes.text}>Home</Typography>
 				</div>
 			</Link>
-			<Link to="/users" style={{ textDecoration: "none" }}>
-				<div className={classes.item}>
-					<Group className={classes.icon} />
-					<Typography className={classes.text}>Users</Typography>
-				</div>
-			</Link>
+
 			<Link to="/analytics" style={{ textDecoration: "none" }}>
 				<div className={classes.item}>
 					<ShowChart className={classes.icon} />
 					<Typography className={classes.text}>Analytics</Typography>
 				</div>
 			</Link>
+			<Link to="/users" style={{ textDecoration: "none" }}>
+				<div className={classes.item}>
+					<Group className={classes.icon} />
+					<Typography className={classes.text}>Users</Typography>
+				</div>
+			</Link>
 			<Link to="/admins" style={{ textDecoration: "none" }}>
 				<div className={classes.item}>
 					<People className={classes.icon} />
-					<Typography className={classes.text}>Analytics</Typography>
+					<Typography className={classes.text}>Admins</Typography>
 				</div>
 			</Link>
 		</Container>

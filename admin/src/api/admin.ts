@@ -2,24 +2,22 @@
 const ADDRESS = "/admin"
 
 // JSON payload sent in HTTP request
-interface IUserRequest {
+interface IAdminRequest {
 	[k: string]: string | boolean | undefined
-	username: string
 	name: string
 	email: string
 	password?: string
+	adminType: string
 	confirmPassword?: string
 }
 
 // JSON payload received in HTTP response
-interface IUserResponse {
+interface IAdminResponse {
 	[k: string]: string | boolean
 	id: string
-	username: string
 	name: string
 	email: string
-	isVerified: boolean
-	token: string
+	adminType: string
 }
 
 // HTTP status and text received in HTTP response
@@ -29,7 +27,7 @@ interface IResponse {
 }
 
 // isIResponse checks if the response is IResponse or not
-const isIResponse = (response: IResponse | IUserResponse | IUserResponse[]): response is IResponse => {
+const isIResponse = (response: IResponse | IAdminResponse | IAdminResponse[]): response is IResponse => {
 	return (response as IResponse).text !== undefined
 }
 
@@ -68,10 +66,10 @@ const logout = async (): Promise<IResponse> => {
 	}
 }
 
-const deleteUser = async (id: string): Promise<IResponse> => {
+const deleteAdmin = async (id: string): Promise<IResponse> => {
 	let status: number
 	let text: string
-	const res = await fetch(`${ADDRESS}/users/${id}`, {
+	const res = await fetch(`${ADDRESS}/admins/${id}`, {
 		method: "DELETE",
 	})
 	status = res.status
@@ -83,16 +81,16 @@ const deleteUser = async (id: string): Promise<IResponse> => {
 	}
 }
 
-const getUserByID = async (id: string): Promise<IUserResponse | IResponse> => {
+const getAdminByID = async (id: string): Promise<IAdminResponse | IResponse> => {
 	let status: number
 	let text: string
-	const res = await fetch(`${ADDRESS}/users/${id}`, {
+	const res = await fetch(`${ADDRESS}/admins/${id}`, {
 		method: "GET",
 	})
 	status = res.status
 	if (status === 200) {
-		const user: IUserResponse = await res.json()
-		return user
+		const admin: IAdminResponse = await res.json()
+		return admin
 	}
 	text = await res.text()
 
@@ -102,26 +100,26 @@ const getUserByID = async (id: string): Promise<IUserResponse | IResponse> => {
 	}
 }
 
-const createUser = async (u: IUserRequest): Promise<IUserResponse | IResponse> => {
+const createAdmin = async (a: IAdminRequest): Promise<IAdminResponse | IResponse> => {
 	let status: number
 	let text: string
-	const res = await fetch(`${ADDRESS}/users`, {
+	const res = await fetch(`${ADDRESS}/admins`, {
 		method: "POST",
 		headers: { "content-type": "application/json" },
 		body: JSON.stringify({
-			username: u.username,
-			name: u.name,
-			email: u.email,
-			password: u.password,
-			confirmPassword: u.confirmPassword,
+			name: a.name,
+			email: a.email,
+			adminType: a.adminType,
+			password: a.password,
+			confirmPassword: a.confirmPassword,
 		}),
 	})
 
 	status = res.status
 	// HTTP 201 Created success status code
 	if (status === 201) {
-		const user: IUserResponse = await res.json()
-		return user
+		const admin: IAdminResponse = await res.json()
+		return admin
 	}
 	text = await res.text()
 
@@ -131,26 +129,26 @@ const createUser = async (u: IUserRequest): Promise<IUserResponse | IResponse> =
 	}
 }
 
-const updateUser = async (id: string, u: IUserRequest): Promise<IUserResponse | IResponse> => {
+const updateAdmin = async (id: string, a: IAdminRequest): Promise<IAdminResponse | IResponse> => {
 	let status: number
 	let text: string
-	const res = await fetch(`${ADDRESS}/users/${id}`, {
+	const res = await fetch(`${ADDRESS}/admins/${id}`, {
 		method: "PUT",
 		headers: { "content-type": "application/json" },
 		body: JSON.stringify({
-			username: u.username,
-			name: u.name,
-			email: u.email,
-			password: u.password,
-			confirmPassword: u.confirmPassword,
+			name: a.name,
+			email: a.email,
+			adminType: a.adminType,
+			password: a.password,
+			confirmPassword: a.confirmPassword,
 		}),
 	})
 
 	status = res.status
 	// HTTP 200 OK success status code
 	if (status === 200) {
-		const user: IUserResponse = await res.json()
-		return user
+		const admin: IAdminResponse = await res.json()
+		return admin
 	}
 	text = await res.text()
 
@@ -160,24 +158,24 @@ const updateUser = async (id: string, u: IUserRequest): Promise<IUserResponse | 
 	}
 }
 
-const updateUserExceptPassword = async (id: string, u: IUserRequest): Promise<IUserResponse | IResponse> => {
+const updateAdminExceptPassword = async (id: string, a: IAdminRequest): Promise<IAdminResponse | IResponse> => {
 	let status: number
 	let text: string
-	const res = await fetch(`${ADDRESS}/users/details_only/${id}`, {
+	const res = await fetch(`${ADDRESS}/admins/details_only/${id}`, {
 		method: "PUT",
 		headers: { "content-type": "application/json" },
 		body: JSON.stringify({
-			username: u.username,
-			name: u.name,
-			email: u.email,
+			name: a.name,
+			email: a.email,
+			adminType: a.adminType,
 		}),
 	})
 
 	status = res.status
 	// HTTP 200 OK success status code
 	if (status === 200) {
-		const user: IUserResponse = await res.json()
-		return user
+		const admin: IAdminResponse = await res.json()
+		return admin
 	}
 	text = await res.text()
 
@@ -187,17 +185,17 @@ const updateUserExceptPassword = async (id: string, u: IUserRequest): Promise<IU
 	}
 }
 
-const getAllUsers = async (): Promise<IUserResponse[] | IResponse> => {
+const getAllAdmins = async (): Promise<IAdminResponse[] | IResponse> => {
 	let status: number
 	let text: string
-	const res = await fetch(`${ADDRESS}/users`, {
+	const res = await fetch(`${ADDRESS}/admins`, {
 		method: "GET",
 	})
 	status = res.status
 	// HTTP 200 OK success status code
 	if (status === 200) {
-		const users: IUserResponse[] = await res.json()
-		return users
+		const admins: IAdminResponse[] = await res.json()
+		return admins
 	}
 	text = await res.text()
 
@@ -207,5 +205,5 @@ const getAllUsers = async (): Promise<IUserResponse[] | IResponse> => {
 	}
 }
 
-export { login, logout, createUser, deleteUser, updateUser, updateUserExceptPassword, getAllUsers, getUserByID, isIResponse }
-export type { IResponse, IUserResponse, IUserRequest }
+export { login, logout, createAdmin, deleteAdmin, updateAdmin, updateAdminExceptPassword, getAllAdmins, getAdminByID, isIResponse }
+export type { IResponse, IAdminResponse, IAdminRequest }

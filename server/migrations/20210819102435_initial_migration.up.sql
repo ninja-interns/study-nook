@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS reports (
 
 CREATE TABLE IF NOT EXISTS admins (
     id text PRIMARY KEY,
+    name text NOT NULL,
     email text UNIQUE NOT NULL,
     password_hash bytea NOT NULL,
     admin_type TEXT CHECK (admin_type IN ('admin', 'superadmin')) 

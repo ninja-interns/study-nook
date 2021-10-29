@@ -9,6 +9,9 @@ import { Analytics } from "../pages/Analytics"
 import { UserEdit } from "../pages/UserEdit"
 import { Home } from "../pages/Home"
 import { ContentNotFound } from "../pages/ContentNotFound"
+import { AdminEdit } from "../pages/AdminEdit"
+import { AdminCreate } from "../pages/AdminCreate"
+import { AdminList } from "../pages/AdminList"
 
 const Routes = () => {
 	return (
@@ -22,6 +25,10 @@ const Routes = () => {
 					<PrivateRoute path="/users-create" component={UserCreate} />
 					<PrivateRoute path="/users-edit/:userID" component={UserEdit} />
 					<PrivateRoute path="/users" component={UserList} />
+
+					<PrivateRoute path="/admins-create" component={AdminCreate} />
+					<PrivateRoute path="/admins-edit/:adminID" component={AdminEdit} />
+					<PrivateRoute path="/admins" component={AdminList} />
 					<Route component={ContentNotFound}></Route>
 				</Switch>
 			</LastLocationProvider>

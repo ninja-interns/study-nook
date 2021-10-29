@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core"
+import { FormControlLabel, FormLabel, makeStyles, Radio, RadioGroup } from "@material-ui/core"
 import Alert from "@material-ui/lab/Alert"
 import Button from "@material-ui/core/Button"
 import CssBaseline from "@material-ui/core/CssBaseline"
@@ -11,7 +11,7 @@ import { NavBar } from "../components/NavBar"
 import { Link } from "react-router-dom"
 import React, { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { IUserResponse, IResponse, createUser, IUserRequest, isIResponse } from "../api/user"
+import { IAdminResponse, IResponse, createAdmin, IAdminRequest, isIResponse } from "../api/admin"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -41,13 +41,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const UserCreate = () => {
+const AdminCreate = () => {
 	const classes = useStyles()
 	const history = useHistory()
-	const [response, setResponse] = useState<IUserResponse | IResponse>()
+	const [response, setResponse] = useState<IAdminResponse | IResponse>()
 	const [isError, setIsError] = useState(false)
 
-	const usernameRef = useRef<HTMLInputElement>()
+	const [adminType, setAdminType] = useState("")
 	const nameRef = useRef<HTMLInputElement>()
 	const emailRef = useRef<HTMLInputElement>()
 	const passwordRef = useRef<HTMLInputElement>()
@@ -56,24 +56,23 @@ const UserCreate = () => {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
-		let user: IUserRequest
-		let r: IUserResponse | IResponse
-		let username = usernameRef?.current?.value
+		let admin: IAdminRequest
+		let r: IAdminResponse | IResponse
 		let name = nameRef?.current?.value
 		let email = emailRef?.current?.value
 		let password = passwordRef?.current?.value
 		let confirmPassword = confirmPasswordRef?.current?.value
-		if (username !== undefined && name !== undefined && email !== undefined && password !== undefined && confirmPassword !== undefined) {
-			user = {
-				username: username,
+		if (name !== undefined && email !== undefined && adminType != undefined && password !== undefined && confirmPassword !== undefined) {
+			admin = {
 				name: name,
 				email: email,
+				adminType: adminType,
 				password: password,
 				confirmPassword: confirmPassword,
 			}
-			r = await createUser(user)
+			r = await createAdmin(admin)
 			if (!isIResponse(r)) {
-				history.push("/users")
+				history.push("/admins")
 			} else {
 				setIsError(true)
 				setResponse(r)
@@ -85,6 +84,10 @@ const UserCreate = () => {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		setIsError(false)
+	}
+
+	const handleAdminTypeChange = (e: any) => {
+		setAdminType(e.target.value)
 	}
 
 	return (
@@ -99,30 +102,17 @@ const UserCreate = () => {
 						<CssBaseline />
 						<div className={classes.title}>
 							<Typography variant="h6" color="primary" gutterBottom>
-								CREATE USER
+								CREATE ADMIN
 							</Typography>
-							<Link to="/users" style={{ textDecoration: "none" }}>
+							<Link to="/admins" style={{ textDecoration: "none" }}>
 								<Button color="primary" variant="contained" size="medium">
-									VIEW USERS
+									VIEW ADMINS
 								</Button>
 							</Link>
 						</div>
 						<div className={classes.main}>
 							<form className={classes.form} noValidate onSubmit={handleSubmit}>
 								<Grid container spacing={2}>
-									<Grid item xs={12}>
-										<TextField
-											variant="outlined"
-											required
-											fullWidth
-											id="username"
-											label="Username"
-											name="username"
-											autoComplete="username"
-											inputRef={usernameRef}
-											onChange={handleChange}
-										/>
-									</Grid>
 									<Grid item xs={12}>
 										<TextField
 											variant="outlined"
@@ -148,6 +138,13 @@ const UserCreate = () => {
 											inputRef={emailRef}
 											onChange={handleChange}
 										/>
+									</Grid>
+									<Grid item xs={12}>
+										<FormLabel component="legend">Admin Type</FormLabel>
+										<RadioGroup row aria-label="adminType" name="adminType" value={adminType} onChange={handleAdminTypeChange}>
+											<FormControlLabel value="admin" control={<Radio />} label="Admin" />
+											<FormControlLabel value="superadmin" control={<Radio />} label="Super admin" />
+										</RadioGroup>
 									</Grid>
 
 									<Grid item xs={12}>
@@ -180,7 +177,7 @@ const UserCreate = () => {
 									</Grid>
 									{isError && (
 										<Grid item xs={12}>
-											<Alert severity="error">{response?.text === undefined ? "Interbal server error, try again" : response.text}</Alert>
+											<Alert severity="error">{response?.text === undefined ? "Internal server error, try again" : response.text}</Alert>
 										</Grid>
 									)}
 									<Grid item xs={4} sm={4}>
@@ -197,4 +194,4 @@ const UserCreate = () => {
 		</div>
 	)
 }
-export { UserCreate }
+export { AdminCreate }

@@ -15,7 +15,8 @@ import { makeStyles } from "@material-ui/core/styles"
 import { useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { ContextContainer } from "../contexts/ContextContainer"
-import { login, IResponse } from "../api/api"
+import { login, IResponse } from "../api/admin"
+
 const Copyright = () => {
 	return (
 		<Typography variant="body2" color="textSecondary" align="center">

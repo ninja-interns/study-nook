@@ -3,7 +3,7 @@ import { Mail, Notifications } from "@material-ui/icons"
 import { ExitToApp } from "@material-ui/icons"
 import { ContextContainer } from "../contexts/ContextContainer"
 import { useHistory } from "react-router"
-import { logout, IResponse } from "../api/api"
+import { logout, IResponse } from "../api/admin"
 
 const useStyles = makeStyles((theme) => ({
 	toolbar: {

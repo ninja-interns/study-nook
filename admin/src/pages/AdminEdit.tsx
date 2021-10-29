@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core"
+import { FormControlLabel, makeStyles, Radio, RadioGroup } from "@material-ui/core"
 import AddIcon from "@material-ui/icons/Add"
 import DeleteIcon from "@material-ui/icons/Delete"
 import Button from "@material-ui/core/Button"
@@ -13,10 +13,11 @@ import { Link } from "react-router-dom"
 import React, { useState, useRef, useEffect } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import { FormLabel } from "@material-ui/core"
-import { IUserResponse, IResponse, isIResponse, deleteUser, getUserByID, updateUser, IUserRequest, updateUserExceptPassword } from "../api/user"
+import { IAdminResponse, IResponse, isIResponse, deleteAdmin, getAdminByID, updateAdmin, IAdminRequest, updateAdminExceptPassword } from "../api/admin"
 import { Alert } from "@material-ui/lab"
 import { SimpleDialog } from "../components/SimpleDialog"
 import { DeleteAlertDialog } from "../components/DeleteAlertDialog"
+import { Console } from "console"
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -48,62 +49,67 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface ParamTypes {
-	userID: string
+	adminID: string
 }
 
-const UserEdit = () => {
+const AdminEdit = () => {
 	const classes = useStyles()
 	const history = useHistory()
-	const { userID } = useParams<ParamTypes>()
-	const [user, setUser] = useState<IUserResponse>()
+	const { adminID } = useParams<ParamTypes>()
+	const [admin, setAdmin] = useState<IAdminResponse>()
 	const [open, setOpen] = useState(false)
 	const [errorOpen, setErrorOpen] = useState(false)
 	const [successOpen, setSuccessOpen] = useState(false)
 
 	const [updatePassword, setUpdatePassword] = useState(false)
-	const [response, setResponse] = useState<IUserResponse | IResponse>()
+	const [response, setResponse] = useState<IAdminResponse | IResponse>()
 	const [isError, setIsError] = useState(false)
 
-	const usernameRef = useRef<HTMLInputElement>()
+	const [adminType, setAdminType] = useState("")
 	const nameRef = useRef<HTMLInputElement>()
 	const emailRef = useRef<HTMLInputElement>()
 	const passwordRef = useRef<HTMLInputElement>()
 	const confirmPasswordRef = useRef<HTMLInputElement>()
 
 	useEffect(() => {
-		async function fetchUserByID() {
+		async function fetchAdminByID() {
 			try {
-				const res = await getUserByID(userID)
-				isIResponse(res) ? setIsError(true) : setUser(res)
+				const res = await getAdminByID(adminID)
+				console.log(res)
+				if (isIResponse(res)) {
+					setIsError(true)
+				} else {
+					setAdmin(res)
+					setAdminType(res.adminType)
+				}
 			} catch (err) {
 				setIsError(true)
 			}
 		}
-		fetchUserByID()
+		fetchAdminByID()
 	}, [])
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
-		let username = usernameRef?.current?.value
 		let name = nameRef?.current?.value
 		let email = emailRef?.current?.value
 		let password = passwordRef?.current?.value
 		let confirmPassword = confirmPasswordRef?.current?.value
-		let user: IUserRequest
+		let admin: IAdminRequest
 		if (updatePassword) {
 			try {
-				if (username !== undefined && name !== undefined && email !== undefined && password !== undefined && confirmPassword !== undefined) {
-					user = {
-						username: username,
+				if (adminType !== undefined && name !== undefined && email !== undefined && password !== undefined && confirmPassword !== undefined) {
+					admin = {
+						adminType: adminType,
 						name: name,
 						email: email,
 						password: password,
 						confirmPassword: confirmPassword,
 					}
-					const res = await updateUser(userID, user)
+					const res = await updateAdmin(adminID, admin)
 					if (!isIResponse(res)) {
-						history.push("/users")
+						history.push("/admins")
 					} else {
 						setIsError(true)
 						setResponse(res)
@@ -116,15 +122,15 @@ const UserEdit = () => {
 			}
 		} else {
 			try {
-				if (username !== undefined && name !== undefined && email !== undefined) {
-					user = {
-						username: username,
+				if (adminType !== undefined && name !== undefined && email !== undefined) {
+					admin = {
+						adminType: adminType,
 						name: name,
 						email: email,
 					}
-					const res = await updateUserExceptPassword(userID, user)
+					const res = await updateAdminExceptPassword(adminID, admin)
 					if (!isIResponse(res)) {
-						history.push("/users")
+						history.push("/admins")
 					} else {
 						setIsError(true)
 						setResponse(res)
@@ -141,12 +147,15 @@ const UserEdit = () => {
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		setIsError(false)
 		const { name, value } = e.target
-		setUser((prevState) => ({ ...prevState, [name]: value } as typeof user))
+		setAdmin((prevState) => ({ ...prevState, [name]: value } as typeof admin))
 	}
 
+	const handleAdminTypeChange = (e: any) => {
+		setAdminType(e.target.value)
+	}
 	const handleDelete = async () => {
 		try {
-			const res = await deleteUser(userID)
+			const res = await deleteAdmin(adminID)
 			if (res.status === 200) {
 				setSuccessOpen(true)
 			} else {
@@ -169,7 +178,7 @@ const UserEdit = () => {
 						<CssBaseline />
 						<div className={classes.title}>
 							<Typography variant="h6" color="primary" gutterBottom>
-								EDIT USER
+								EDIT ADMIN
 							</Typography>
 							<div style={{ display: "flex", justifyContent: "right" }}>
 								<Button
@@ -179,11 +188,11 @@ const UserEdit = () => {
 									variant="contained"
 									onClick={() => setOpen(true)}
 								>
-									DELETE USER
+									DELETE ADMIN
 								</Button>
-								<Link to="/users-create" style={{ textDecoration: "none" }}>
+								<Link to="/admins-create" style={{ textDecoration: "none" }}>
 									<Button color="primary" size="medium" startIcon={<AddIcon />} variant="contained">
-										CREATE USER
+										CREATE ADMIN
 									</Button>
 								</Link>
 							</div>
@@ -203,22 +212,7 @@ const UserEdit = () => {
 											id="id"
 											name="id"
 											autoComplete="id"
-											placeholder={user?.id}
-											contentEditable="false"
-										/>
-									</Grid>
-									<Grid item xs={12}>
-										<FormLabel>Token</FormLabel>
-									</Grid>
-									<Grid item xs={12}>
-										<TextField
-											variant="outlined"
-											required
-											fullWidth
-											id="id"
-											name="id"
-											autoComplete="id"
-											placeholder={user?.token}
+											placeholder={admin?.id}
 											contentEditable="false"
 										/>
 									</Grid>
@@ -234,26 +228,11 @@ const UserEdit = () => {
 											name="name"
 											autoComplete="name"
 											inputRef={nameRef}
-											value={user?.name}
+											value={admin?.name}
 											onChange={handleChange}
 										/>
 									</Grid>
-									<Grid item xs={12}>
-										<FormLabel>Username</FormLabel>
-									</Grid>
-									<Grid item xs={12}>
-										<TextField
-											variant="outlined"
-											required
-											fullWidth
-											id="username"
-											name="username"
-											autoComplete="username"
-											value={user?.username}
-											inputRef={usernameRef}
-											onChange={handleChange}
-										/>
-									</Grid>
+
 									<Grid item xs={12}>
 										<FormLabel>Email</FormLabel>
 									</Grid>
@@ -265,10 +244,17 @@ const UserEdit = () => {
 											id="email"
 											name="email"
 											autoComplete="email"
-											value={user?.email}
+											value={admin?.email}
 											inputRef={emailRef}
 											onChange={handleChange}
 										/>
+									</Grid>
+									<Grid item xs={12}>
+										<FormLabel component="legend">Admin Type</FormLabel>
+										<RadioGroup row aria-label="adminType" name="adminType" value={adminType} onChange={handleAdminTypeChange}>
+											<FormControlLabel value="admin" control={<Radio />} label="Admin" />
+											<FormControlLabel value="superadmin" control={<Radio />} label="Super" />
+										</RadioGroup>
 									</Grid>
 
 									{!updatePassword && (
@@ -354,21 +340,21 @@ const UserEdit = () => {
 							</form>
 
 							<DeleteAlertDialog
-								title="Delete User?"
-								message="Are you sure you want to delete this user?"
+								title="Delete Admin?"
+								message="Are you sure you want to delete this admin?"
 								open={open}
 								setOpen={setOpen}
 								onConfirm={handleDelete}
 							/>
 
-							<SimpleDialog open={errorOpen} title="Error" message="Internal server error!" setOpen={setErrorOpen} onConfirm={() => {}} />
+							<SimpleDialog open={errorOpen} title="Error" message="Internal server error" setOpen={setErrorOpen} onConfirm={() => {}} />
 							<SimpleDialog
 								open={successOpen}
 								title="Success"
-								message="Successfully deleted the user."
+								message="Successfully deleted the admin."
 								setOpen={setSuccessOpen}
 								onConfirm={() => {
-									history.push("/users")
+									history.push("/admin")
 								}}
 							/>
 						</div>
@@ -379,4 +365,4 @@ const UserEdit = () => {
 	)
 }
 
-export { UserEdit }
+export { AdminEdit }

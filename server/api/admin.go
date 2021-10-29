@@ -149,6 +149,7 @@ func (c *Controller) AdminCreateHandler(w http.ResponseWriter, r *http.Request) 
 func (c *Controller) AdminGetAllHandler(w http.ResponseWriter, r *http.Request) {
 
 	admins, err := c.DB.GetAllAdmins(context.Background())
+
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return

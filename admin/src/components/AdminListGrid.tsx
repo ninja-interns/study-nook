@@ -7,7 +7,7 @@ import CheckIcon from "@material-ui/icons/Check"
 import ClearIcon from "@material-ui/icons/Clear"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { deleteUser, getAllUsers, IResponse, isIResponse, IUserResponse } from "../api/user"
+import { deleteAdmin, getAllAdmins, IResponse, isIResponse, IAdminResponse } from "../api/admin"
 import { SimpleDialog } from "./SimpleDialog"
 import { DeleteAlertDialog } from "./DeleteAlertDialog"
 
@@ -22,39 +22,33 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const UserListGrid = () => {
+const AdminListGrid = () => {
 	const classes = useStyles()
-	const [users, setUsers] = useState<IUserResponse[]>([])
+	const [admins, setAdmins] = useState<IAdminResponse[]>([])
 	const [open, setOpen] = useState(false)
-	const [userID, setUserID] = useState("")
+	const [adminID, setAdimID] = useState("")
 	const [errorOpen, setErrorOpen] = useState(false)
 	const [successOpen, setSuccessOpen] = useState(false)
 
 	useEffect(() => {
-		async function fetchAllUsers() {
-			const res: IResponse | IUserResponse[] = await getAllUsers()
+		async function fetchAllAdmins() {
+			const res: IResponse | IAdminResponse[] = await getAllAdmins()
 			if (isIResponse(res)) {
 				setErrorOpen(true)
 			} else {
-				setUsers(res)
+				setAdmins(res)
 			}
 		}
-		fetchAllUsers()
+		fetchAllAdmins()
 	}, [])
 
 	//Columns of Datagrid
 	const columns = [
-		{ field: "id", headerName: "ID", width: 90 },
+		{ field: "id", headerName: "ID", width: 200 },
 		{
 			field: "name",
 			headerName: "Full Name ",
-			width: 150,
-			editable: true,
-		},
-		{
-			field: "username",
-			headerName: "Username",
-			width: 150,
+			width: 200,
 			editable: true,
 		},
 		{
@@ -64,22 +58,10 @@ const UserListGrid = () => {
 			editable: true,
 		},
 		{
-			field: "token",
-			headerName: "Token",
-			width: 150,
+			field: "adminType",
+			headerName: "Admin Type",
+			width: 200,
 			editable: true,
-		},
-		{
-			field: "isVerified",
-			headerName: "Is Verified",
-			sortable: false,
-			width: 150,
-			renderCell: (params: any) => {
-				if (params.row.isVerified) {
-					return <CheckIcon color="primary" />
-				}
-				return <ClearIcon color="secondary" />
-			},
 		},
 		{
 			field: "action",
@@ -88,7 +70,7 @@ const UserListGrid = () => {
 			renderCell: (params: any) => {
 				return (
 					<>
-						<Link to={"/users-edit/" + params.row.id} style={{ textDecoration: "none" }}>
+						<Link to={"/admins-edit/" + params.row.id} style={{ textDecoration: "none" }}>
 							<Button variant="contained" size="small" color="primary" className={classes.button} startIcon={<EditIcon />}>
 								Edit
 							</Button>
@@ -101,7 +83,7 @@ const UserListGrid = () => {
 							className={classes.button}
 							startIcon={<DeleteIcon />}
 							onClick={() => {
-								setUserID(params.row.id)
+								setAdimID(params.row.id)
 								setOpen(true)
 							}}
 						>
@@ -115,7 +97,7 @@ const UserListGrid = () => {
 
 	const handleDelete = async () => {
 		try {
-			const res = await deleteUser(userID)
+			const res = await deleteAdmin(adminID)
 			if (res.status === 200) {
 				setSuccessOpen(true)
 			} else {
@@ -130,35 +112,35 @@ const UserListGrid = () => {
 		<div>
 			<div className={classes.title}>
 				<Typography variant="h6" color="primary" gutterBottom>
-					RECENT USERS
+					RECENT ADMINS
 				</Typography>
-				<Link to="/users-create" style={{ textDecoration: "none" }}>
+				<Link to="/admins-create" style={{ textDecoration: "none" }}>
 					<Button color="primary" size="medium" startIcon={<AddIcon />} variant="contained">
-						CREATE USER
+						CREATE ADMIN
 					</Button>
 				</Link>
 			</div>
 
-			<DataGrid autoHeight rows={users} columns={columns} pageSize={8} checkboxSelection disableSelectionOnClick />
+			<DataGrid autoHeight rows={admins} columns={columns} pageSize={8} checkboxSelection disableSelectionOnClick />
 
 			<DeleteAlertDialog
-				title="Delete User?"
-				message="Are you sure you want to delete this user?"
+				title="Delete Admin?"
+				message="Are you sure you want to delete this admin?"
 				open={open}
 				setOpen={setOpen}
 				onConfirm={handleDelete}
 			/>
 
-			<SimpleDialog open={errorOpen} title="Error" message="Internal server error!" setOpen={setErrorOpen} onConfirm={() => {}} />
+			<SimpleDialog open={errorOpen} title="Error" message="Internal server error" setOpen={setErrorOpen} onConfirm={() => {}} />
 			<SimpleDialog
 				open={successOpen}
 				title="Success"
-				message="Successfully deleted the user."
+				message="Successfully deleted the admin"
 				setOpen={setSuccessOpen}
-				onConfirm={() => setUsers(users.filter((user: IUserResponse) => user.id !== userID))}
+				onConfirm={() => setAdmins(admins.filter((user: IAdminResponse) => user.id !== adminID))}
 			/>
 		</div>
 	)
 }
 
-export { UserListGrid }
+export { AdminListGrid }

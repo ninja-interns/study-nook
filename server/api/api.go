@@ -139,13 +139,16 @@ func (c *Controller) CurrentUserState(w http.ResponseWriter, r *http.Request, u 
 	}
 }
 
-// A completely separate router for administrator routes
+// A completely separate router for admin web app
 func (c *Controller) adminRouter() http.Handler {
 	r := chi.NewRouter()
 
+	// Public routes
 	r.Post("/login", c.AdminLoginHandler)   // POST /admin/login
 	r.Post("/logout", c.AdminLogoutHandler) // POST /admin/logout
 
+	// Protected routes
+	// Only admin logged in can access
 	r.Route("/users", func(r chi.Router) {
 		r.Use(c.AdminOnly)
 		r.Post("/", c.UserCreateHandler) // POST /admin/users
@@ -159,15 +162,37 @@ func (c *Controller) adminRouter() http.Handler {
 	})
 
 	r.Route("/admins", func(r chi.Router) {
-		r.Use(c.SuperAdminOnly)
-		r.Post("/", c.AdminCreateHandler) // POST /admin/admins
-		r.Get("/", c.AdminGetAllHandler)  // GET /admin/admins
-		r.Route("/{id}", func(r chi.Router) {
-			r.Get("/", c.AdminGetHandler)       // GET /admin/admins/123
-			r.Put("/", c.AdminUpdateHandler)    // PUT /admin/admins/123
-			r.Delete("/", c.AdminDeleteHandler) // DELETE /admin/admins/123
+		r.Group(func(r chi.Router) {
+
+			// Admin access
+			r.Get("/", c.AdminGetAllHandler) // GET /admin/admins
+
+			// Superadmin only access
+			r.Group(func(r chi.Router) {
+				r.Use(c.SuperAdminOnly)
+				r.Post("/", c.AdminCreateHandler) // POST /admin/admins
+
+			})
+
+			r.Route("/{id}", func(r chi.Router) {
+				// Admin access
+				r.Get("/", c.AdminGetHandler) // GET /admin/admins/123
+
+				// Superadmin only access
+				r.Group(func(r chi.Router) {
+					r.Use(c.SuperAdminOnly)
+					r.Put("/", c.AdminUpdateHandler)    // PUT /admin/admins/123
+					r.Delete("/", c.AdminDeleteHandler) // DELETE /admin/admins/123
+				})
+			})
+
+			// Superadmin only access
+			r.Group(func(r chi.Router) {
+				r.Use(c.SuperAdminOnly)
+				r.Put("/details_only/{id}", c.AdminUpdateExceptPasswordHandler) // PUT /admin/admins/details_only/123
+			})
+
 		})
-		r.Put("/details_only/{id}", c.AdminUpdateExceptPasswordHandler) // PUT /admin/admins/details_only/123
 
 	})
 
